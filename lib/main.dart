@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'everlaenote'),
     );
   }
 }
@@ -29,24 +29,25 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
+  goToNoteSimpleAddPage() {
     setState(() {
-      _counter+=3;
+      print("노트 추가!");
     });
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text(widget.title),
-      ),
+      ),*/ //empty appbar 로 바꿀 예정
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'everlae note, for your pleasure.:',
+              'everlae note, for your pleasure',
             style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),),
             Text(
               '$_counter',
@@ -56,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: goToNoteSimpleAddPage,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
