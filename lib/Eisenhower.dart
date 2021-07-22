@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'model/checkboxMemo.dart';
 
+List<String> iu;
 List<CheckboxMemo> IUlist;
 List<CheckboxMemo> INUlist;
 List<CheckboxMemo> NIUlist;
@@ -11,7 +12,8 @@ List<CheckboxMemo> NINUlist;
 class ImportantUrgent {
   void fullThisList() {
     QueryMaker q = new QueryMaker();
-    IUlist = q.queryForEisen(1);
+    //IUlist = q.queryForEisen(1);
+    IUlist = [new CheckboxMemo("a", "b"),new CheckboxMemo("c", "d")];
   }
 }
 
@@ -78,11 +80,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   initState() {
     super.initState();
     getAllEisenhowerCheckboxMemo();
-
-    List<String> iu;//일단 iu 의 제목들만 출력 확인
-    for(CheckboxMemo i in IUlist){
-      iu.add(i.noteTitle + "\n");
-    }
+    iu = ["a","b"];
   }
 
   @override
@@ -111,7 +109,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                 width: 5,
               ),
               Text(
-                'everlae note',
+                "everlae note",
                 style:
                     TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
               ),
@@ -131,7 +129,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                 child: Icon(Icons.settings),
               ),
             ]),
-            Text("iu : "),
+            for(String i in iu){/////////////////////////퓨처빌더 사용해서 쿼리 후 결과를 받아오는 연습을 할 것. 쿼리 후 결과 받아와지면 이제 모양 만들 것.ㅏ
+              return Text("iu : " + i);
+            }
           ],
         ),
       ),

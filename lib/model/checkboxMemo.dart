@@ -3,5 +3,8 @@ class CheckboxMemo{
   String noteContents = "";
   bool isChecked = false;
 
-  CheckboxMemo({this.noteTitle, this.noteContents});
+  CheckboxMemo(String a,String b){
+    this.noteTitle = a;
+    this.noteContents = b;
+  }
 }
