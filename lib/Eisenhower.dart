@@ -1,3 +1,4 @@
+import 'package:everlaenote/queryMaker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -5,18 +6,38 @@ import 'model/checkboxMemo.dart';
 
 class ImportantUrgent {
   List<CheckboxMemo> IUlist;
+
+  void fullThisList() {
+    QueryMaker q = new QueryMaker();
+    IUlist = q.queryForEisen(1);
+  }
 }
 
 class ImportantNotUrgent {
   List<CheckboxMemo> INUlist;
+
+  void fullThisList() {
+    QueryMaker q = new QueryMaker();
+    INUlist = q.queryForEisen(2);
+  }
 }
 
 class NotImportantUrgent {
   List<CheckboxMemo> NIUlist;
+
+  void fullThisList() {
+    QueryMaker q = new QueryMaker();
+    NIUlist = q.queryForEisen(3);
+  }
 }
 
 class NotImportantNotUrgent {
   List<CheckboxMemo> NINUlist;
+
+  void fullThisList() {
+    QueryMaker q = new QueryMaker();
+    NINUlist = q.queryForEisen(4);
+  }
 }
 
 class EisenhowerPage extends StatefulWidget {
@@ -32,7 +53,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   goToNoteSimpleAddPage() {
     setState(() {
-      print("basic notebook note 작성 페이지로 이동");
+      print("Note 작성 페이지로 이동");
     });
     return true;
   }
@@ -43,6 +64,24 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   goToSettingPage() {
     print("setting page 로 이동");
+  }
+
+  getAllEisenhowerCheckboxMemo() {
+    ImportantUrgent a = new ImportantUrgent();
+    a.fullThisList();
+    ImportantNotUrgent b = new ImportantNotUrgent();
+    b.fullThisList();
+    NotImportantUrgent c = new NotImportantUrgent();
+    c.fullThisList();
+    NotImportantNotUrgent d = new NotImportantNotUrgent();
+    d.fullThisList();
+    setState(() {});
+  }
+
+  @override
+  initState() {
+    super.initState();
+    getAllEisenhowerCheckboxMemo();
   }
 
   @override
@@ -58,29 +97,46 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               FloatingActionButton(
                 onPressed: showSidebar,
-                tooltip: 'Increment',
+                tooltip: 'side menu',
                 child: Icon(Icons.menu),
+              ),
+              Container(
+                width: 5,
+              ),
+              Container(
+                width: 5,
+              ),
+              Container(
+                width: 5,
               ),
               Text(
                 'everlae note',
                 style:
                     TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
               ),
+              Container(
+                width: 5,
+              ),
+              Container(
+                width: 5,
+              ),
+              Container(
+                width: 5,
+              ), //need to find a better way
+
               FloatingActionButton(
                 onPressed: goToSettingPage,
-                tooltip: 'Increment',
+                tooltip: 'setting',
                 child: Icon(Icons.settings),
               ),
             ]),
-            Text(
-              "Eisenhower page"
-            ),
+            Text("Eisenhower page"),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: goToNoteSimpleAddPage,
-        tooltip: 'Increment',
+        tooltip: 'add note',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
