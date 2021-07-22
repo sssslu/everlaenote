@@ -1,12 +1,14 @@
 import 'package:everlaenote/queryMaker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'model/checkboxMemo.dart';
 
-class ImportantUrgent {
-  List<CheckboxMemo> IUlist;
+List<CheckboxMemo> IUlist;
+List<CheckboxMemo> INUlist;
+List<CheckboxMemo> NIUlist;
+List<CheckboxMemo> NINUlist;
 
+class ImportantUrgent {
   void fullThisList() {
     QueryMaker q = new QueryMaker();
     IUlist = q.queryForEisen(1);
@@ -14,8 +16,6 @@ class ImportantUrgent {
 }
 
 class ImportantNotUrgent {
-  List<CheckboxMemo> INUlist;
-
   void fullThisList() {
     QueryMaker q = new QueryMaker();
     INUlist = q.queryForEisen(2);
@@ -23,8 +23,6 @@ class ImportantNotUrgent {
 }
 
 class NotImportantUrgent {
-  List<CheckboxMemo> NIUlist;
-
   void fullThisList() {
     QueryMaker q = new QueryMaker();
     NIUlist = q.queryForEisen(3);
@@ -32,8 +30,6 @@ class NotImportantUrgent {
 }
 
 class NotImportantNotUrgent {
-  List<CheckboxMemo> NINUlist;
-
   void fullThisList() {
     QueryMaker q = new QueryMaker();
     NINUlist = q.queryForEisen(4);
@@ -82,6 +78,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   initState() {
     super.initState();
     getAllEisenhowerCheckboxMemo();
+
+    List<String> iu;//일단 iu 의 제목들만 출력 확인
+    for(CheckboxMemo i in IUlist){
+      iu.add(i.noteTitle + "\n");
+    }
   }
 
   @override
@@ -130,7 +131,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                 child: Icon(Icons.settings),
               ),
             ]),
-            Text("Eisenhower page"),
+            Text("iu : "),
           ],
         ),
       ),
