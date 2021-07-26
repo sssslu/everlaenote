@@ -15,9 +15,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: EisenhowerPage(title: 'everlaenote'),
+      home: Scaffold(appBar: EmptyAppBar(), body: EisenhowerPage()),
     );
   }
 }
 
+class EmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 
+  @override
+  Size get preferredSize => Size(0.0, 0.0);
+}

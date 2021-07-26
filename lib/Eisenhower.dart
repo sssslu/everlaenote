@@ -3,43 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'model/checkboxMemo.dart';
 
-List<String> iu;
 List<CheckboxMemo> IUlist;
 List<CheckboxMemo> INUlist;
 List<CheckboxMemo> NIUlist;
 List<CheckboxMemo> NINUlist;
 
-class ImportantUrgent {
-  void fullThisList() {
-    QueryMaker q = new QueryMaker();
-    //IUlist = q.queryForEisen(1);
-    IUlist = [new CheckboxMemo("a", "b"),new CheckboxMemo("c", "d")];
-  }
-}
-
-class ImportantNotUrgent {
-  void fullThisList() {
-    QueryMaker q = new QueryMaker();
-    INUlist = q.queryForEisen(2);
-  }
-}
-
-class NotImportantUrgent {
-  void fullThisList() {
-    QueryMaker q = new QueryMaker();
-    NIUlist = q.queryForEisen(3);
-  }
-}
-
-class NotImportantNotUrgent {
-  void fullThisList() {
-    QueryMaker q = new QueryMaker();
-    NINUlist = q.queryForEisen(4);
-  }
-}
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
+
   final String title;
 
   @override
@@ -50,9 +22,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   int _counter = 0;
 
   goToNoteSimpleAddPage() {
-    setState(() {
       print("Note 작성 페이지로 이동");
-    });
     return true;
   }
 
@@ -64,77 +34,96 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     print("setting page 로 이동");
   }
 
-  getAllEisenhowerCheckboxMemo() {
-    ImportantUrgent a = new ImportantUrgent();
-    a.fullThisList();
-    ImportantNotUrgent b = new ImportantNotUrgent();
-    b.fullThisList();
-    NotImportantUrgent c = new NotImportantUrgent();
-    c.fullThisList();
-    NotImportantNotUrgent d = new NotImportantNotUrgent();
-    d.fullThisList();
-    setState(() {});
+  getAllEisenhowerCheckboxMemo() async {
+    /// put method filling 4 lists (iu inu niu ninu)
+    print("getAECB 실행됨!!!!!!!!");
+    QueryMaker q = new QueryMaker();
+    IUlist = await q.queryForEisen(1);
+    INUlist = await q.queryForEisen(2);
+    NIUlist = await q.queryForEisen(3);
+    NINUlist = await q.queryForEisen(4);
+    return "getAllEisenhowerCheckboxMemo Done!";
   }
 
   @override
-  initState() {
+  initState(){
     super.initState();
-    getAllEisenhowerCheckboxMemo();
-    iu = ["a","b"];
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      /*appBar: AppBar(
-        title: Text(widget.title),
-      ),*/ //empty appbar 로 바꿀 예정
-      body: Center(
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
+      body:
+        Column(
           children: <Widget>[
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               FloatingActionButton(
                 onPressed: showSidebar,
                 tooltip: 'side menu',
                 child: Icon(Icons.menu),
-              ),
-              Container(
-                width: 5,
-              ),
-              Container(
-                width: 5,
-              ),
-              Container(
-                width: 5,
               ),
               Text(
                 "everlae note",
                 style:
                     TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
               ),
-              Container(
-                width: 5,
-              ),
-              Container(
-                width: 5,
-              ),
-              Container(
-                width: 5,
-              ), //need to find a better way
-
               FloatingActionButton(
                 onPressed: goToSettingPage,
                 tooltip: 'setting',
                 child: Icon(Icons.settings),
               ),
             ]),
-            for(String i in iu){/////////////////////////퓨처빌더 사용해서 쿼리 후 결과를 받아오는 연습을 할 것. 쿼리 후 결과 받아와지면 이제 모양 만들 것.ㅏ
-              return Text("iu : " + i);
-            }
+            ///put some checkboxmemo retriveing method and widgets here
+            FutureBuilder(future : getAllEisenhowerCheckboxMemo(), builder: (context, snapshot){
+              if (snapshot.hasData == false) {
+                return CircularProgressIndicator();
+              }
+              else
+                return
+                  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          decoration: BoxDecoration(color: Colors.green),
+                          child: Text("iulist\nasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasfdasdf"),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          decoration: BoxDecoration(color: Colors.blue),
+                          child: Text("inulist\ni am inu inu inu yasha\n inu in u i n u"),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          decoration: BoxDecoration(color: Colors.yellow),
+                          child: Text("niulist\nnio : I am the one"),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.48,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          decoration: BoxDecoration(color: Colors.redAccent),
+                          child: Text("ninulist\nninuninuniadsfasdbfvajhsdlcvkajsdcvklasndkj"),
+                        ),
+                      ],
+                    ),
+                  ]
+                );
+            })
           ],
         ),
-      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: goToNoteSimpleAddPage,
         tooltip: 'add note',
