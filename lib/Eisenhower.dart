@@ -8,7 +8,6 @@ List<CheckboxMemo> INUlist;
 List<CheckboxMemo> NIUlist;
 List<CheckboxMemo> NINUlist;
 
-
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
 
@@ -22,7 +21,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   int _counter = 0;
 
   goToNoteSimpleAddPage() {
-      print("Note 작성 페이지로 이동");
+    print("Note 작성 페이지로 이동");
     return true;
   }
 
@@ -46,83 +45,266 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   @override
-  initState(){
+  initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body:
-        Column(
-          children: <Widget>[
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              FloatingActionButton(
-                onPressed: showSidebar,
-                tooltip: 'side menu',
-                child: Icon(Icons.menu),
-              ),
-              Text(
-                "everlae note",
-                style:
-                    TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-              ),
-              FloatingActionButton(
-                onPressed: goToSettingPage,
-                tooltip: 'setting',
-                child: Icon(Icons.settings),
-              ),
-            ]),
-            ///put some checkboxmemo retriveing method and widgets here
-            FutureBuilder(future : getAllEisenhowerCheckboxMemo(), builder: (context, snapshot){
-              if (snapshot.hasData == false) {
-                return CircularProgressIndicator();
-              }
-              else
-                return
-                  Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
+      body: Column(
+        children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            FloatingActionButton(
+              onPressed: showSidebar,
+              tooltip: 'side menu',
+              child: Icon(Icons.menu),
+            ),
+            Text(
+              "everlae note",
+              style:
+                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+            ),
+            FloatingActionButton(
+              onPressed: goToSettingPage,
+              tooltip: 'setting',
+              child: Icon(Icons.settings),
+            ),
+          ]),
+
+          ///put some checkboxmemo retriveing method and widgets here
+          FutureBuilder(
+              future: getAllEisenhowerCheckboxMemo(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData == false) {
+                  return CircularProgressIndicator();
+                } else
+                  return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          decoration: BoxDecoration(color: Colors.green),
-                          child: Text("iulist\nasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdfasfdasdf"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.009),
+                              width: MediaQuery.of(context).size.width * 0.48,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              decoration: BoxDecoration(color: Colors.green),
+                              child: Column(
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.001,
+                                      ),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.46,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.03,
+                                      decoration: BoxDecoration(
+                                          color: Colors.green.shade700),
+                                      child: Center(
+                                        child: Text(
+                                          "Important & Urgent",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.001,
+                                    ),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.46,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.358,
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.009),
+                              width: MediaQuery.of(context).size.width * 0.48,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              decoration: BoxDecoration(color: Colors.blue),
+                              child: Column(
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.001,
+                                      ),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.46,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.03,
+                                      decoration: BoxDecoration(
+                                          color: Colors.blue.shade700),
+                                      child: Center(
+                                        child: Text(
+                                          "Important & Not Urgent",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.001,
+                                    ),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.46,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.358,
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          decoration: BoxDecoration(color: Colors.blue),
-                          child: Text("inulist\ni am inu inu inu yasha\n inu in u i n u"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.009),
+                              width: MediaQuery.of(context).size.width * 0.48,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              decoration: BoxDecoration(color: Colors.yellow),
+                              child: Column(
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.001,
+                                      ),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.46,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.03,
+                                      decoration: BoxDecoration(
+                                          color: Colors.yellow.shade700),
+                                      child: Center(
+                                        child: Text(
+                                          "Not Important & Urgent",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.001,
+                                    ),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.46,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.358,
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.009),
+                              width: MediaQuery.of(context).size.width * 0.48,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              decoration:
+                                  BoxDecoration(color: Colors.redAccent),
+                              child: Column(
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.001,
+                                      ),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.46,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.03,
+                                      decoration: BoxDecoration(
+                                          color: Colors.redAccent.shade700),
+                                      child: Center(
+                                        child: Text(
+                                          "Not Important & Not Urgent",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.001,
+                                    ),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.46,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.358,
+                                    decoration:
+                                        BoxDecoration(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          decoration: BoxDecoration(color: Colors.yellow),
-                          child: Text("niulist\nnio : I am the one"),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.48,
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          decoration: BoxDecoration(color: Colors.redAccent),
-                          child: Text("ninulist\nninuninuniadsfasdbfvajhsdlcvkajsdcvklasndkj"),
-                        ),
-                      ],
-                    ),
-                  ]
-                );
-            })
-          ],
-        ),
+                      ]);
+              })
+        ],
+      ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: goToNoteSimpleAddPage,
