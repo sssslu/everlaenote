@@ -90,7 +90,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   MediaQuery.of(context).size.width * 0.009),
                               width: MediaQuery.of(context).size.width * 0.48,
                               height: MediaQuery.of(context).size.height * 0.4,
-                              decoration: BoxDecoration(color: Colors.green),
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -110,6 +113,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           MediaQuery.of(context).size.height *
                                               0.03,
                                       decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           color: Colors.green.shade700),
                                       child: Center(
                                         child: Text(
@@ -131,8 +136,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -142,7 +149,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   MediaQuery.of(context).size.width * 0.009),
                               width: MediaQuery.of(context).size.width * 0.48,
                               height: MediaQuery.of(context).size.height * 0.4,
-                              decoration: BoxDecoration(color: Colors.blue),
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -162,6 +172,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           MediaQuery.of(context).size.height *
                                               0.03,
                                       decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           color: Colors.blue.shade700),
                                       child: Center(
                                         child: Text(
@@ -183,8 +195,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -199,7 +213,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   MediaQuery.of(context).size.width * 0.009),
                               width: MediaQuery.of(context).size.width * 0.48,
                               height: MediaQuery.of(context).size.height * 0.4,
-                              decoration: BoxDecoration(color: Colors.yellow),
+                              decoration: BoxDecoration(
+                                color: Colors.yellow,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -219,6 +236,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           MediaQuery.of(context).size.height *
                                               0.03,
                                       decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           color: Colors.yellow.shade700),
                                       child: Center(
                                         child: Text(
@@ -240,8 +259,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -251,8 +272,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   MediaQuery.of(context).size.width * 0.009),
                               width: MediaQuery.of(context).size.width * 0.48,
                               height: MediaQuery.of(context).size.height * 0.4,
-                              decoration:
-                                  BoxDecoration(color: Colors.redAccent),
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -272,7 +295,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           MediaQuery.of(context).size.height *
                                               0.03,
                                       decoration: BoxDecoration(
-                                          color: Colors.redAccent.shade700),
+                                        color: Colors.deepPurple.shade700,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
                                       child: Center(
                                         child: Text(
                                           "Not Important & Not Urgent",
@@ -293,8 +318,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -305,12 +332,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               })
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: goToNoteSimpleAddPage,
         tooltip: 'add note',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
