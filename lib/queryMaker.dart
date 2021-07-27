@@ -11,16 +11,19 @@ class QueryMaker {
     //case 3 : checkbox memo for NIU
     //case 4 : checkbox memo for NINU
     //일단 더미데이터 삽입기를 여기 만들기
-    CheckboxMemo dummy1 =
-        new CheckboxMemo("i am dummy1", "this is detail of dummy1");
-    CheckboxMemo dummy2 =
-        new CheckboxMemo("i am dummy2", "this is detail of dummy2");
-    CheckboxMemo dummy3 =
-        new CheckboxMemo("i am dummy3", "this is detail of dummy3");
+    CheckboxMemo dummy1 = new CheckboxMemo("A title", "context of a");
+    CheckboxMemo dummy2 = new CheckboxMemo("B title", "context of b");
+    CheckboxMemo dummy3 = new CheckboxMemo("C title", "context of c");
 
     List<CheckboxMemo> dumlist1 = [];
     dumlist1.add(dummy1);
     dumlist1.add(dummy2);
+    dumlist1.add(dummy3);
+    dumlist1.add(dummy3);
+    dumlist1.add(dummy3);
+    dumlist1.add(dummy3);
+    dumlist1.add(dummy3);
+    dumlist1.add(dummy3);
     dumlist1.add(dummy3);
     List<CheckboxMemo> dumlist2 = [];
     dumlist2.add(dummy1);
@@ -36,6 +39,8 @@ class QueryMaker {
     dumlist4.add(dummy3);
     dumlist4.add(dummy3);
     dumlist4.add(dummy3);
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
     switch (caseNum) {
       case 1:
         print("case 1 !! returning dummy data for query");

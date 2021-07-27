@@ -7,10 +7,6 @@ List<CheckboxMemo> IUlist;
 List<CheckboxMemo> INUlist;
 List<CheckboxMemo> NIUlist;
 List<CheckboxMemo> NINUlist;
-List<String> IUTitleList = [];
-List<String> INUTitleList = [];
-List<String> NIUTitleList = [];
-List<String> NINUTitleList = [];
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
@@ -45,24 +41,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     INUlist = await q.queryForEisen(2);
     NIUlist = await q.queryForEisen(3);
     NINUlist = await q.queryForEisen(4);
-    ///to remove hot reload bug, resetting Lists.
-    IUTitleList=[];
-    INUTitleList=[];
-    NIUTitleList=[];
-    NINUTitleList=[];
-    ///method filling arrays of Strings only with their titles.
-    for(CheckboxMemo i in IUlist){
-      IUTitleList.add(i.noteTitle);
-    }
-    for(CheckboxMemo i in INUlist){
-      INUTitleList.add(i.noteTitle);
-    }
-    for(CheckboxMemo i in NIUlist){
-      NIUTitleList.add(i.noteTitle);
-    }
-    for(CheckboxMemo i in NINUlist){
-      NINUTitleList.add(i.noteTitle);
-    }
     return "getAllEisenhowerCheckboxMemo Done!";
   }
 
@@ -93,7 +71,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               child: Icon(Icons.settings),
             ),
           ]),
-
           FutureBuilder(
               future: getAllEisenhowerCheckboxMemo(),
               builder: (context, snapshot) {
@@ -106,16 +83,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              margin: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width * 0.009),
-                              width: MediaQuery.of(context).size.width * 0.48,
-                              height: MediaQuery.of(context).size.height * 0.4,
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
+
+                              Column(
                                 children: [
                                   Container(
                                       margin: EdgeInsets.fromLTRB(
@@ -126,7 +95,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         MediaQuery.of(context).size.width *
                                             0.005,
                                         MediaQuery.of(context).size.width *
-                                            0.001,
+                                            0,
                                       ),
                                       width: MediaQuery.of(context).size.width *
                                           0.46,
@@ -136,12 +105,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: Colors.green.shade700),
+                                          border: Border.all(color: Colors.green, width: 2),
+                                          color: Colors.white),
                                       child: Center(
                                         child: Text(
-                                          "Important & Urgent",
+                                          "긴급 & 중요",
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black,
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -155,22 +125,55 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                     ),
                                     width: MediaQuery.of(context).size.width *
                                         0.46,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.358,
-                                    child : Text(IUTitleList.toString()),
+                                    height: MediaQuery.of(context).size.height * 0.397-45,
+                                    child: ListView.separated(
+                                      separatorBuilder:
+                                          (BuildContext b, int i) =>
+                                              const Divider(),
+                                      padding: EdgeInsets.all(8),
+                                      itemCount: IUlist.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                            height: 40,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.459,
+                                            child: Row(children: [
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      IUlist[index].noteTitle,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(IUlist[index]
+                                                        .noteContents)
+                                                  ]),
+                                            ]));
+                                      },
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: Colors.green, width: 2),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
+
                             Container(
                               margin: EdgeInsets.all(
                                   MediaQuery.of(context).size.width * 0.009),
-                              width: MediaQuery.of(context).size.width * 0.48,
-                              height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width * 0.47,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.397,
                               decoration: BoxDecoration(
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(10),
@@ -196,12 +199,12 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: Colors.blue.shade700),
+                                          color: Colors.white),
                                       child: Center(
                                         child: Text(
-                                          "Important & Not Urgent",
+                                          "긴급 & 안중요",
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black,
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -217,6 +220,39 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
+                                    child: ListView.separated(
+                                      separatorBuilder:
+                                          (BuildContext b, int i) =>
+                                              const Divider(),
+                                      padding: EdgeInsets.all(8),
+                                      itemCount: INUlist.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                            height: 40,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.459,
+                                            child: Row(children: [
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      INUlist[index].noteTitle,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(INUlist[index]
+                                                        .noteContents)
+                                                  ]),
+                                            ]));
+                                      },
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
@@ -233,8 +269,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                             Container(
                               margin: EdgeInsets.all(
                                   MediaQuery.of(context).size.width * 0.009),
-                              width: MediaQuery.of(context).size.width * 0.48,
-                              height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width * 0.47,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.397,
                               decoration: BoxDecoration(
                                 color: Colors.yellow,
                                 borderRadius: BorderRadius.circular(10),
@@ -260,12 +297,12 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: Colors.yellow.shade700),
+                                          color: Colors.white),
                                       child: Center(
                                         child: Text(
-                                          "Not Important & Urgent",
+                                          "안긴급 & 중요",
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black,
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -281,6 +318,39 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
+                                    child: ListView.separated(
+                                      separatorBuilder:
+                                          (BuildContext b, int i) =>
+                                              const Divider(),
+                                      padding: EdgeInsets.all(8),
+                                      itemCount: NIUlist.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                            height: 40,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.459,
+                                            child: Row(children: [
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      NIUlist[index].noteTitle,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(NIUlist[index]
+                                                        .noteContents)
+                                                  ]),
+                                            ]));
+                                      },
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
@@ -292,8 +362,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                             Container(
                               margin: EdgeInsets.all(
                                   MediaQuery.of(context).size.width * 0.009),
-                              width: MediaQuery.of(context).size.width * 0.48,
-                              height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width * 0.47,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.397,
                               decoration: BoxDecoration(
                                 color: Colors.redAccent,
                                 borderRadius: BorderRadius.circular(10),
@@ -317,14 +388,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           MediaQuery.of(context).size.height *
                                               0.03,
                                       decoration: BoxDecoration(
-                                        color: Colors.redAccent.shade700,
+                                        color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          "Not Important & Not Urgent",
+                                          "안긴급 & 안중요",
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black,
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -340,6 +411,39 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
+                                    child: ListView.separated(
+                                      separatorBuilder:
+                                          (BuildContext b, int i) =>
+                                              const Divider(),
+                                      padding: EdgeInsets.all(8),
+                                      itemCount: NINUlist.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Container(
+                                            height: 40,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.459,
+                                            child: Row(children: [
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      NINUlist[index].noteTitle,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(NINUlist[index]
+                                                        .noteContents)
+                                                  ]),
+                                            ]));
+                                      },
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
