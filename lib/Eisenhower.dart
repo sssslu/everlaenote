@@ -7,6 +7,10 @@ List<CheckboxMemo> IUlist;
 List<CheckboxMemo> INUlist;
 List<CheckboxMemo> NIUlist;
 List<CheckboxMemo> NINUlist;
+List<String> IUTitleList = [];
+List<String> INUTitleList = [];
+List<String> NIUTitleList = [];
+List<String> NINUTitleList = [];
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
@@ -34,13 +38,31 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   getAllEisenhowerCheckboxMemo() async {
-    /// put method filling 4 lists (iu inu niu ninu)
-    print("getAECB 실행됨!!!!!!!!");
+    ///method filling 4 lists (iu inu niu ninu)
+    print("getAECB 실행됨!!");
     QueryMaker q = new QueryMaker();
     IUlist = await q.queryForEisen(1);
     INUlist = await q.queryForEisen(2);
     NIUlist = await q.queryForEisen(3);
     NINUlist = await q.queryForEisen(4);
+    ///to remove hot reload bug, resetting Lists.
+    IUTitleList=[];
+    INUTitleList=[];
+    NIUTitleList=[];
+    NINUTitleList=[];
+    ///method filling arrays of Strings only with their titles.
+    for(CheckboxMemo i in IUlist){
+      IUTitleList.add(i.noteTitle);
+    }
+    for(CheckboxMemo i in INUlist){
+      INUTitleList.add(i.noteTitle);
+    }
+    for(CheckboxMemo i in NIUlist){
+      NIUTitleList.add(i.noteTitle);
+    }
+    for(CheckboxMemo i in NINUlist){
+      NINUTitleList.add(i.noteTitle);
+    }
     return "getAllEisenhowerCheckboxMemo Done!";
   }
 
@@ -72,7 +94,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
             ),
           ]),
 
-          ///put some checkboxmemo retriveing method and widgets here
           FutureBuilder(
               future: getAllEisenhowerCheckboxMemo(),
               builder: (context, snapshot) {
@@ -136,6 +157,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
                                         0.358,
+                                    child : Text(IUTitleList.toString()),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
@@ -273,7 +295,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                               width: MediaQuery.of(context).size.width * 0.48,
                               height: MediaQuery.of(context).size.height * 0.4,
                               decoration: BoxDecoration(
-                                color: Colors.deepPurple,
+                                color: Colors.redAccent,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
@@ -295,7 +317,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           MediaQuery.of(context).size.height *
                                               0.03,
                                       decoration: BoxDecoration(
-                                        color: Colors.deepPurple.shade700,
+                                        color: Colors.redAccent.shade700,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Center(
