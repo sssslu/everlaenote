@@ -14,7 +14,7 @@ class QueryMaker {
     CheckboxMemo dummy1 = new CheckboxMemo("A title", "context of a");
     CheckboxMemo dummy2 = new CheckboxMemo("B title", "context of b");
     CheckboxMemo dummy3 = new CheckboxMemo("C title", "context of c");
-
+    ////////////////////////////////////////////////////////////////////////////////////////////// dummy query maker
     List<CheckboxMemo> dumlist1 = [];
     dumlist1.add(dummy1);
     dumlist1.add(dummy2);
