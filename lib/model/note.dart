@@ -1,8 +1,8 @@
 class Note {
   String noteTitle = "";
-  String noteContents = "";
+  String noteContexts = "";
   DateTime creationDT;
   String noteBookName = "basic notebook";
 
-  Note({this.noteTitle,this.noteContents,this.creationDT,this.noteBookName});
+  Note({this.noteTitle,this.noteContexts,this.creationDT,this.noteBookName});
 }

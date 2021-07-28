@@ -35,13 +35,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   getAllEisenhowerCheckboxMemo() async {
     ///method filling 4 lists (iu inu niu ninu)
-    print("getAECB 실행됨!!");
+    print("getAllEisenhowerCheckboxMemo 실행됨!!");
     QueryMaker q = new QueryMaker();
     IUlist = await q.queryForEisen(1);
     INUlist = await q.queryForEisen(2);
     NIUlist = await q.queryForEisen(3);
     NINUlist = await q.queryForEisen(4);
-    return "getAllEisenhowerCheckboxMemo Done!";
+    return ".";
   }
 
   @override
@@ -146,7 +146,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      IUlist[index].noteTitle,
+                                                      IUlist[index].memoTitle,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 11,
@@ -154,7 +154,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                               FontWeight.bold),
                                                     ),
                                                     Text(IUlist[index]
-                                                        .noteContents)
+                                                        .memoContexts)
                                                   ]),
                                             ]));
                                       },
@@ -240,7 +240,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      INUlist[index].noteTitle,
+                                                      INUlist[index].memoTitle,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 11,
@@ -248,7 +248,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                               FontWeight.bold),
                                                     ),
                                                     Text(INUlist[index]
-                                                        .noteContents)
+                                                        .memoContexts)
                                                   ]),
                                             ]));
                                       },
@@ -338,7 +338,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      NIUlist[index].noteTitle,
+                                                      NIUlist[index].memoTitle,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 11,
@@ -346,7 +346,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                               FontWeight.bold),
                                                     ),
                                                     Text(NIUlist[index]
-                                                        .noteContents)
+                                                        .memoContexts)
                                                   ]),
                                             ]));
                                       },
@@ -431,7 +431,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      NINUlist[index].noteTitle,
+                                                      NINUlist[index].memoTitle,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 11,
@@ -439,7 +439,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                               FontWeight.bold),
                                                     ),
                                                     Text(NINUlist[index]
-                                                        .noteContents)
+                                                        .memoContexts)
                                                   ]),
                                             ]));
                                       },

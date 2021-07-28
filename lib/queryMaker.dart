@@ -1,59 +1,68 @@
 import 'package:everlaenote/model/checkboxMemo.dart';
-import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import 'model/note.dart';
 import 'model/notebook.dart';
 
 class QueryMaker {
-  List<CheckboxMemo> queryForEisen(int caseNum) {
-    /////////////////////sqlite 와 연동할 쿼리머신 (일단 쉐어드프리퍼런스사용)
-    //case 1 : checkbox memo for UI
-    //case 2 : checkbox memo for INU
-    //case 3 : checkbox memo for NIU
-    //case 4 : checkbox memo for NINU
-    //일단 더미데이터 삽입기를 여기 만들기
-    CheckboxMemo dummy1 = new CheckboxMemo("A title", "context of a");
-    CheckboxMemo dummy2 = new CheckboxMemo("B title", "context of b");
-    CheckboxMemo dummy3 = new CheckboxMemo("C title", "context of c");
-    ////////////////////////////////////////////////////////////////////////////////////////////// dummy query maker
-    List<CheckboxMemo> dumlist1 = [];
-    dumlist1.add(dummy1);
-    dumlist1.add(dummy2);
-    dumlist1.add(dummy3);
-    dumlist1.add(dummy3);
-    dumlist1.add(dummy3);
-    dumlist1.add(dummy3);
-    dumlist1.add(dummy3);
-    dumlist1.add(dummy3);
-    dumlist1.add(dummy3);
-    List<CheckboxMemo> dumlist2 = [];
-    dumlist2.add(dummy1);
-    dumlist2.add(dummy1);
-    List<CheckboxMemo> dumlist3 = [];
-    dumlist3.add(dummy1);
-    dumlist3.add(dummy2);
-    dumlist3.add(dummy2);
-    dumlist3.add(dummy3);
-    List<CheckboxMemo> dumlist4 = [];
-    dumlist4.add(dummy1);
-    dumlist4.add(dummy2);
-    dumlist4.add(dummy3);
-    dumlist4.add(dummy3);
-    dumlist4.add(dummy3);
-    /////////////////////////////////////////////////////////////////////////////////////////////
+  Future<List<CheckboxMemo>> queryForEisen(int caseNum) async {
+    ///case  : checkbox memo for UI INU NIU NINU
+    List<CheckboxMemo> wholeEisenCheckboxMemo = [];
+    List<CheckboxMemo> case1list = [];
+    List<CheckboxMemo> case2list = [];
+    List<CheckboxMemo> case3list = [];
+    List<CheckboxMemo> case4list = [];
 
+
+    final database = openDatabase(
+      join(await getDatabasesPath(),'checkboxmemo_database.db'),
+      onCreate: (db, version){
+        return db.execute('CREATE TABLE checkboxmemo(id INTEGER PRIMARY KEY, memotitle TEXT, memocontext TEXT, whatmatrix INTEGER, ischecked INTEGER)',);
+      },
+      version: 1,
+    );
+
+    ///get query in wholeEisenCheckboxMemo
+
+
+
+    for (CheckboxMemo i in wholeEisenCheckboxMemo) {
+      if (i.whatMatrix == 1) {
+        case1list.add(i);
+      }
+      if (i.whatMatrix == 2) {
+        case2list.add(i);
+      }
+      if (i.whatMatrix == 3) {
+        case3list.add(i);
+      }
+      if (i.whatMatrix == 4) {
+        case4list.add(i);
+      } else {
+        print("error occurred. matrix number is" + caseNum.toString());
+      }
+    }
     switch (caseNum) {
       case 1:
-        print("case 1 !! returning dummy data for query");
-        return dumlist1;
+        if (case1list.toString() != "[]")
+          print("case 1 !! returning data for query");
+        return case1list;
+        break;
       case 2:
-        print("case 2 !! returning dummy data for query");
-        return dumlist2;
+        if (case2list.toString() != "[]")
+          print("case 2 !! returning data for query");
+        return case2list;
+        break;
       case 3:
-        print("case 3 !! returning dummy data for query");
-        return dumlist3;
+        if (case3list.toString() != "[]")
+          print("case 3 !! returning data for query");
+        return case3list;
+        break;
       case 4:
-        print("case 4 !! returning dummy data for query");
-        return dumlist4;
+        if (case4list.toString() != "[]")
+          print("case 4 !! returning data for query");
+        return case4list;
+        break;
     }
   }
 
