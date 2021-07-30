@@ -1,15 +1,15 @@
+import 'package:everlaenote/dbConnector.dart';
 import 'package:everlaenote/queryMaker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'model/checkboxMemo.dart';
 
-List<CheckboxMemo> IUlist;
-List<CheckboxMemo> INUlist;
-List<CheckboxMemo> NIUlist;
-List<CheckboxMemo> NINUlist;
+Database cmdatabase;///global database
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
+
 
   final String title;
 
@@ -18,6 +18,10 @@ class EisenhowerPage extends StatefulWidget {
 }
 
 class _EisenhowerPageState extends State<EisenhowerPage> {
+  List<CheckboxMemo> IUlist;
+  List<CheckboxMemo> INUlist;
+  List<CheckboxMemo> NIUlist;
+  List<CheckboxMemo> NINUlist;
   int _counter = 0;
 
   goToNoteSimpleAddPage() {
@@ -46,7 +50,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   @override
   initState() {
+    print('이닛스테이트 시작');
     super.initState();
+    dbConnector dbc = new dbConnector();
+    print('이닛스이트 - 디비커낵터 만듦.');
+    dbc.getCMDB();
   }
 
   @override
