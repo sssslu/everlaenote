@@ -1,15 +1,15 @@
-import 'package:everlaenote/dbConnector.dart';
-import 'package:everlaenote/queryMaker.dart';
+import 'package:everlaenote/model/checkboxMemoDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'model/checkboxMemo.dart';
 
-Database cmdatabase;///global database
+Database cmdatabase;
+
+///global database
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
-
 
   final String title;
 
@@ -18,6 +18,7 @@ class EisenhowerPage extends StatefulWidget {
 }
 
 class _EisenhowerPageState extends State<EisenhowerPage> {
+  List<CheckboxMemo> wholeList;
   List<CheckboxMemo> IUlist;
   List<CheckboxMemo> INUlist;
   List<CheckboxMemo> NIUlist;
@@ -37,24 +38,28 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     print("setting page 로 이동");
   }
 
-  getAllEisenhowerCheckboxMemo() async {
+  getAllCheckboxMemo() async {
+    print("getAllCheckboxMemo 실행");
+    wholeList = [];
+    IUlist = [];
+    INUlist = [];
+    NIUlist = [];
+    NINUlist = [];
+    ///method filling wholeList
+    wholeList=await new CheckboxMemoDAO().getEveryCheckboxMemoFromDB();
     ///method filling 4 lists (iu inu niu ninu)
-    print("getAllEisenhowerCheckboxMemo 실행됨!!");
-    QueryMaker q = new QueryMaker();
-    IUlist = await q.queryForEisen(1);
-    INUlist = await q.queryForEisen(2);
-    NIUlist = await q.queryForEisen(3);
-    NINUlist = await q.queryForEisen(4);
-    return ".";
+    ///
+    ///
+    //adding dummy
+    IUlist.add(new CheckboxMemo(0, 'dummy', 'i am so dumb', 1, 0));
+    NINUlist.add(new CheckboxMemo.fromMap(new CheckboxMemo(1, "dummy", "but you are, too", 4, 0).toMap()));
+    return true;
   }
 
   @override
   initState() {
-    print('이닛스테이트 시작');
+    print('이닛스테이트');
     super.initState();
-    dbConnector dbc = new dbConnector();
-    print('이닛스이트 - 디비커낵터 만듦.');
-    dbc.getCMDB();
   }
 
   @override
@@ -62,7 +67,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Container(height: MediaQuery.of(context).size.height*0.03,
+              child:Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             FloatingActionButton(
               onPressed: showSidebar,
               tooltip: 'side menu',
@@ -78,9 +84,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               tooltip: 'setting',
               child: Icon(Icons.settings),
             ),
-          ]),
+          ])),
           FutureBuilder(
-              future: getAllEisenhowerCheckboxMemo(),
+              future: getAllCheckboxMemo(),
               builder: (context, snapshot) {
                 if (snapshot.hasData == false) {
                   return CircularProgressIndicator();
@@ -91,374 +97,326 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-
-                              Column(
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0,
-                                      ),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.46,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.03,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(color: Colors.green, width: 2),
-                                          color: Colors.white),
-                                      child: Center(
-                                        child: Text(
-                                          "긴급 & 중요",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      )),
-                                  Container(
+                            Column(
+                              children: [
+                                Container(
                                     margin: EdgeInsets.fromLTRB(
                                       MediaQuery.of(context).size.width * 0.005,
                                       MediaQuery.of(context).size.width * 0.005,
                                       MediaQuery.of(context).size.width * 0.005,
-                                      MediaQuery.of(context).size.width * 0.001,
-                                    ),
-                                    width: MediaQuery.of(context).size.width *
-                                        0.46,
-                                    height: MediaQuery.of(context).size.height * 0.397-45,
-                                    child: ListView.separated(
-                                      separatorBuilder:
-                                          (BuildContext b, int i) =>
-                                              const Divider(),
-                                      padding: EdgeInsets.all(8),
-                                      itemCount: IUlist.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                            height: 40,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.459,
-                                            child: Row(children: [
-                                              Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      IUlist[index].memoTitle,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(IUlist[index]
-                                                        .memoContexts)
-                                                  ]),
-                                            ]));
-                                      },
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.green, width: 2),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                            Container(
-                              margin: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width * 0.009),
-                              width: MediaQuery.of(context).size.width * 0.47,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.397,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.001,
-                                      ),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.46,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.03,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.white),
-                                      child: Center(
-                                        child: Text(
-                                          "긴급 & 안중요",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      )),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(
-                                      MediaQuery.of(context).size.width * 0.005,
-                                      MediaQuery.of(context).size.width * 0.005,
-                                      MediaQuery.of(context).size.width * 0.005,
-                                      MediaQuery.of(context).size.width * 0.001,
+                                      MediaQuery.of(context).size.width * 0,
                                     ),
                                     width: MediaQuery.of(context).size.width *
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
-                                        0.358,
-                                    child: ListView.separated(
-                                      separatorBuilder:
-                                          (BuildContext b, int i) =>
-                                              const Divider(),
-                                      padding: EdgeInsets.all(8),
-                                      itemCount: INUlist.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                            height: 40,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.459,
-                                            child: Row(children: [
-                                              Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      INUlist[index].memoTitle,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(INUlist[index]
-                                                        .memoContexts)
-                                                  ]),
-                                            ]));
-                                      },
-                                    ),
+                                        0.03,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Colors.green, width: 2),
+                                        color: Colors.white),
+                                    child: Center(
+                                      child: Text(
+                                        "긴급 & 중요",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.001,
                                   ),
-                                ],
-                              ),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height *
+                                          0.42,
+                                  child: ListView.separated(
+                                    separatorBuilder: (BuildContext b, int i) =>
+                                        const Divider(),
+                                    padding: EdgeInsets.all(8),
+                                    itemCount: IUlist.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                          height: 40,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.459,
+                                          child: Row(children: [
+                                            Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    IUlist[index].memoTitle,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(IUlist[index]
+                                                      .memoContexts)
+                                                ]),
+                                          ]));
+                                    },
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: Colors.green, width: 2),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0.005,
+                                      MediaQuery.of(context).size.width * 0,
+                                    ),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.46,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.03,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Colors.blue, width: 2),
+                                        color: Colors.white),
+                                    child: Center(
+                                      child: Text(
+                                        "안긴급 & 중요",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.001,
+                                  ),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height *
+                                          0.42,
+                                  child: ListView.separated(
+                                    separatorBuilder: (BuildContext b, int i) =>
+                                        const Divider(),
+                                    padding: EdgeInsets.all(8),
+                                    itemCount: INUlist.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                          height: 40,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.459,
+                                          child: Row(children: [
+                                            Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    INUlist[index].memoTitle,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(INUlist[index]
+                                                      .memoContexts)
+                                                ]),
+                                          ]));
+                                    },
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: Colors.blue, width: 2),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              margin: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width * 0.009),
-                              width: MediaQuery.of(context).size.width * 0.47,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.397,
-                              decoration: BoxDecoration(
-                                color: Colors.yellow,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.001,
-                                      ),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.46,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.03,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.white),
-                                      child: Center(
-                                        child: Text(
-                                          "안긴급 & 중요",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      )),
-                                  Container(
+                            Column(
+                              children: [
+                                Container(
                                     margin: EdgeInsets.fromLTRB(
                                       MediaQuery.of(context).size.width * 0.005,
                                       MediaQuery.of(context).size.width * 0.005,
                                       MediaQuery.of(context).size.width * 0.005,
-                                      MediaQuery.of(context).size.width * 0.001,
+                                      MediaQuery.of(context).size.width * 0,
                                     ),
                                     width: MediaQuery.of(context).size.width *
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
-                                        0.358,
-                                    child: ListView.separated(
-                                      separatorBuilder:
-                                          (BuildContext b, int i) =>
-                                              const Divider(),
-                                      padding: EdgeInsets.all(8),
-                                      itemCount: NIUlist.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                            height: 40,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.459,
-                                            child: Row(children: [
-                                              Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      NIUlist[index].memoTitle,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(NIUlist[index]
-                                                        .memoContexts)
-                                                  ]),
-                                            ]));
-                                      },
-                                    ),
+                                        0.03,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width * 0.009),
-                              width: MediaQuery.of(context).size.width * 0.47,
-                              height:
-                                  MediaQuery.of(context).size.height * 0.397,
-                              decoration: BoxDecoration(
-                                color: Colors.redAccent,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.001,
-                                      ),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.46,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.03,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Colors.yellow, width: 2),
+                                        color: Colors.white),
+                                    child: Center(
+                                      child: Text(
+                                        "긴급 & 안중요",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          "안긴급 & 안중요",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      )),
-                                  Container(
+                                    )),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.001,
+                                  ),
+                                  width:
+                                  MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.42,
+                                  child: ListView.separated(
+                                    separatorBuilder: (BuildContext b, int i) =>
+                                    const Divider(),
+                                    padding: EdgeInsets.all(8),
+                                    itemCount: NIUlist.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                          height: 40,
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                              0.459,
+                                          child: Row(children: [
+                                            Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    NIUlist[index].memoTitle,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                  Text(NIUlist[index]
+                                                      .memoContexts)
+                                                ]),
+                                          ]));
+                                    },
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: Colors.yellow, width: 2),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Container(
                                     margin: EdgeInsets.fromLTRB(
                                       MediaQuery.of(context).size.width * 0.005,
                                       MediaQuery.of(context).size.width * 0.005,
                                       MediaQuery.of(context).size.width * 0.005,
-                                      MediaQuery.of(context).size.width * 0.001,
+                                      MediaQuery.of(context).size.width * 0,
                                     ),
                                     width: MediaQuery.of(context).size.width *
                                         0.46,
                                     height: MediaQuery.of(context).size.height *
-                                        0.358,
-                                    child: ListView.separated(
-                                      separatorBuilder:
-                                          (BuildContext b, int i) =>
-                                              const Divider(),
-                                      padding: EdgeInsets.all(8),
-                                      itemCount: NINUlist.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                            height: 40,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.459,
-                                            child: Row(children: [
-                                              Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      NINUlist[index].memoTitle,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(NINUlist[index]
-                                                        .memoContexts)
-                                                  ]),
-                                            ]));
-                                      },
-                                    ),
+                                        0.03,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Colors.redAccent, width: 2),
+                                        color: Colors.white),
+                                    child: Center(
+                                      child: Text(
+                                        "안긴급 & 안중요",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.001,
                                   ),
-                                ],
-                              ),
+                                  width:
+                                  MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.42,
+                                  child: ListView.separated(
+                                    separatorBuilder: (BuildContext b, int i) =>
+                                    const Divider(),
+                                    padding: EdgeInsets.all(8),
+                                    itemCount: NINUlist.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                          height: 40,
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                              0.459,
+                                          child: Row(children: [
+                                            Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    NINUlist[index].memoTitle,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                  Text(NINUlist[index]
+                                                      .memoContexts)
+                                                ]),
+                                          ]));
+                                    },
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: Colors.redAccent, width: 2),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
