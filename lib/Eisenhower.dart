@@ -43,21 +43,36 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   getAllCheckboxMemo() async {
     print("getAllCheckboxMemo 실행");
     wholeList = [];
-    IUlist = [];
+    IUlist = [new CheckboxMemo(123123, "memoTitle", "memoContexts", 1, 1)];
     INUlist = [];
     NIUlist = [];
     NINUlist = [];
     CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     wholeList=await cmd.getEveryCheckboxMemoFromDB();
-    ///method filling 4 lists (iu inu niu ninu)
-    ///
-    ///
-    return true;
+    for (CheckboxMemo i in wholeList) {
+      if (i.whatMatrix == 1) {
+        IUlist.add(i);
+      }
+      if (i.whatMatrix == 2) {
+        INUlist.add(i);
+      }
+      if (i.whatMatrix == 3) {
+        NIUlist.add(i);
+      }
+      if (i.whatMatrix == 4) {
+        NINUlist.add(i);
+      }
+    }
+    print("whole list is "+wholeList.toString());
+    print("iu list is "+IUlist.toString());
+    print("niu list is "+ NIUlist.toString());
+    print("@@@"+ IUlist[7].memoTitle);
+    return "done";
   }
 
   @override
   initState() {
-    print('이닛스테이트');
+    print('initState 실행');
     super.initState();
   }
 

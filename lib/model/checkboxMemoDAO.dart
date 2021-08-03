@@ -34,6 +34,12 @@ class CheckboxMemoDAO {
   ///method converting MAP of checkboxmemo to checkboxmemo
   Future<List<CheckboxMemo>> getEveryCheckboxMemoFromDB() async {
     final db = await database;
-    print(await db.query("checkboxmemo"));
+    List<Map<String,dynamic>> mapList = await db.query("checkboxmemo");
+    List<CheckboxMemo> cbmList =[];
+    for(Map<String,dynamic>map in mapList){
+      cbmList.add(CheckboxMemo.fromMap(map));
+    }
+    print(cbmList.toString());
+    return cbmList;
   }
 }
