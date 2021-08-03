@@ -25,9 +25,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   List<CheckboxMemo> NINUlist;
   int _counter = 0;
 
-  goToNoteSimpleAddPage() {
+  goToNoteSimpleAddPage() async{
     print("Note 작성 페이지로 이동");
-    return true;
+    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
+    cmd.insertCheckboxMemo();///putting dummy in
+    setState(() {});
   }
 
   showSidebar() {
@@ -45,14 +47,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     INUlist = [];
     NIUlist = [];
     NINUlist = [];
-    ///method filling wholeList
-    wholeList=await new CheckboxMemoDAO().getEveryCheckboxMemoFromDB();
+    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
+    wholeList=await cmd.getEveryCheckboxMemoFromDB();
     ///method filling 4 lists (iu inu niu ninu)
     ///
     ///
-    //adding dummy
-    IUlist.add(new CheckboxMemo(0, 'dummy', 'i am so dumb', 1, 0));
-    NINUlist.add(new CheckboxMemo.fromMap(new CheckboxMemo(1, "dummy", "but you are, too", 4, 0).toMap()));
     return true;
   }
 

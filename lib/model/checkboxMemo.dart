@@ -15,10 +15,10 @@ class CheckboxMemo {
   }
   CheckboxMemo.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
-    this.memoTitle = map['memoTitle'];
-    this.memoContexts = map['memoContexts'];
-    this.whatMatrix = map['whatMatrix'];
-    this.isChecked = map['isChecked'];
+    this.memoTitle = map['memotitle'];
+    this.memoContexts = map['memocontexts'];
+    this.whatMatrix = map['whatmatrix'];
+    this.isChecked = map['ischecked'];
   }
 
   Map<String, dynamic> toMap() {
