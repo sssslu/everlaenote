@@ -18,12 +18,6 @@ class EisenhowerPage extends StatefulWidget {
 }
 
 class _EisenhowerPageState extends State<EisenhowerPage> {
-  List<CheckboxMemo> wholeList;
-  List<CheckboxMemo> IUlist;
-  List<CheckboxMemo> INUlist;
-  List<CheckboxMemo> NIUlist;
-  List<CheckboxMemo> NINUlist;
-  int _counter = 0;
 
   goToNoteSimpleAddPage() async{
     print("Note 작성 페이지로 이동");
@@ -40,13 +34,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     print("setting page 로 이동");
   }
 
-  getAllCheckboxMemo() async {
+  Future<List<List<CheckboxMemo>>> getAllCheckboxMemo() async {
     print("getAllCheckboxMemo 실행");
-    wholeList = [];
-    IUlist = [new CheckboxMemo(123123, "memoTitle", "memoContexts", 1, 1)];
-    INUlist = [];
-    NIUlist = [];
-    NINUlist = [];
+    List<CheckboxMemo> wholeList = [];
+    List<CheckboxMemo> IUlist = [new CheckboxMemo(123123, "SampleMemo", "this is a sample of an evelae checkbox note", 1, 1)];
+    List<CheckboxMemo> INUlist = [];
+    List<CheckboxMemo> NIUlist = [];
+    List<CheckboxMemo> NINUlist = [];
+    List<List<CheckboxMemo>> wholeListList = [];
     CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     wholeList=await cmd.getEveryCheckboxMemoFromDB();
     for (CheckboxMemo i in wholeList) {
@@ -63,11 +58,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         NINUlist.add(i);
       }
     }
-    print("whole list is "+wholeList.toString());
-    print("iu list is "+IUlist.toString());
-    print("niu list is "+ NIUlist.toString());
-    print("@@@"+ IUlist[7].memoTitle);
-    return "done";
+    wholeListList.add(IUlist);wholeListList.add(INUlist);wholeListList.add(NIUlist);wholeListList.add(NINUlist);
+    print("returning future builder snap");
+    return wholeListList;
   }
 
   @override
@@ -152,12 +145,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   child: ListView.separated(
                                     separatorBuilder: (BuildContext b, int i) =>
                                         const Divider(),
-                                    padding: EdgeInsets.all(8),
-                                    itemCount: IUlist.length,
+                                    padding: EdgeInsets.all(5),
+                                    itemCount: snapshot.data[0].length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Container(
-                                          height: 40,
+                                          height: MediaQuery.of(context).size.height *
+                                              0.03,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -168,15 +162,17 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    IUlist[index].memoTitle,
+                                                    snapshot.data[0].toString(),
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 11,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  Text(IUlist[index]
-                                                      .memoContexts)
+                                                  Text(" @ ",style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 8,
+                                                      ),)
                                                 ]),
                                           ]));
                                     },
