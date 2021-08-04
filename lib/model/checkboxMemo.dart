@@ -1,22 +1,22 @@
 class CheckboxMemo {
-  int id = -1;
-  String memoTitle = "";
-  String memoContexts = "";
-  int whatMatrix = 0;
-  int isChecked = 0;
+  int id;
+  String memoTitle;
+  String memoContext;
+  int whatMatrix;
+  int isChecked;
 
-  CheckboxMemo(int uid, String memoTitle, String memoContexts, int whatMatrix,
+  CheckboxMemo(int id, String memoTitle, String memoContexts, int whatMatrix,
       int isChecked) {
-    this.id = uid;
+    this.id = id;
     this.memoTitle = memoTitle;
-    this.memoContexts = memoContexts;
+    this.memoContext = memoContexts;
     this.whatMatrix = whatMatrix;
     this.isChecked = isChecked;
   }
   CheckboxMemo.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
     this.memoTitle = map['memotitle'];
-    this.memoContexts = map['memocontexts'];
+    this.memoContext = map['memocontext'];
     this.whatMatrix = map['whatmatrix'];
     this.isChecked = map['ischecked'];
   }
@@ -25,7 +25,7 @@ class CheckboxMemo {
     return {
       'id': id,
       'memoTitle': memoTitle,
-      'memoContexts': memoContexts,
+      'memoContexts': memoContext,
       'whatMatrix': whatMatrix,
       'isChecked': isChecked,
     };

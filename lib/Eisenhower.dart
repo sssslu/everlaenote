@@ -18,11 +18,12 @@ class EisenhowerPage extends StatefulWidget {
 }
 
 class _EisenhowerPageState extends State<EisenhowerPage> {
-
-  goToNoteSimpleAddPage() async{
+  goToNoteSimpleAddPage() async {
     print("Note 작성 페이지로 이동");
     CheckboxMemoDAO cmd = new CheckboxMemoDAO();
-    cmd.insertCheckboxMemo();///putting dummy in
+    cmd.insertCheckboxMemo();
+
+    ///putting dummy in
     setState(() {});
   }
 
@@ -37,13 +38,16 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   Future<List<List<CheckboxMemo>>> getAllCheckboxMemo() async {
     print("getAllCheckboxMemo 실행");
     List<CheckboxMemo> wholeList = [];
-    List<CheckboxMemo> IUlist = [new CheckboxMemo(123123, "SampleMemo", "this is a sample of an evelae checkbox note", 1, 1)];
+    List<CheckboxMemo> IUlist = [
+      new CheckboxMemo(123123, "SampleMemo",
+          "this is a sample of an evelae checkbox note", 1, 1)
+    ];
     List<CheckboxMemo> INUlist = [];
     List<CheckboxMemo> NIUlist = [];
     List<CheckboxMemo> NINUlist = [];
     List<List<CheckboxMemo>> wholeListList = [];
     CheckboxMemoDAO cmd = new CheckboxMemoDAO();
-    wholeList=await cmd.getEveryCheckboxMemoFromDB();
+    wholeList = await cmd.getEveryCheckboxMemoFromDB();
     for (CheckboxMemo i in wholeList) {
       if (i.whatMatrix == 1) {
         IUlist.add(i);
@@ -58,11 +62,19 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         NINUlist.add(i);
       }
     }
-    wholeListList.add(IUlist);wholeListList.add(INUlist);wholeListList.add(NIUlist);wholeListList.add(NINUlist);
+    wholeListList.add(IUlist);
+    wholeListList.add(INUlist);
+    wholeListList.add(NIUlist);
+    wholeListList.add(NINUlist);
     print("returning future builder snap");
     return wholeListList;
   }
 
+  int k = 22;
+
+  ///length of ...
+  ///k 와 글자크기는 연관성을 가져야 하며, 화면너비에 종속되어야한다.
+  ///
   @override
   initState() {
     print('initState 실행');
@@ -74,24 +86,27 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Container(height: MediaQuery.of(context).size.height*0.03,
-              child:Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            FloatingActionButton(
-              onPressed: showSidebar,
-              tooltip: 'side menu',
-              child: Icon(Icons.menu),
-            ),
-            Text(
-              "everlae note",
-              style:
-                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-            ),
-            FloatingActionButton(
-              onPressed: goToSettingPage,
-              tooltip: 'setting',
-              child: Icon(Icons.settings),
-            ),
-          ])),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.03,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: showSidebar,
+                      tooltip: 'side menu',
+                      child: Icon(Icons.menu),
+                    ),
+                    Text(
+                      "everlae note",
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
+                    FloatingActionButton(
+                      onPressed: goToSettingPage,
+                      tooltip: 'setting',
+                      child: Icon(Icons.settings),
+                    ),
+                  ])),
           FutureBuilder(
               future: getAllCheckboxMemo(),
               builder: (context, snapshot) {
@@ -140,8 +155,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   ),
                                   width:
                                       MediaQuery.of(context).size.width * 0.46,
-                                  height: MediaQuery.of(context).size.height *
-                                          0.42,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.42,
                                   child: ListView.separated(
                                     separatorBuilder: (BuildContext b, int i) =>
                                         const Divider(),
@@ -150,8 +165,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Container(
-                                          height: MediaQuery.of(context).size.height *
-                                              0.03,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.05,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -162,17 +179,34 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    snapshot.data[0].toString(),
+                                                    snapshot.data[0][index]
+                                                        .memoTitle,
                                                     style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 11,
+                                                        fontSize: 15,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  Text(" @ ",style: TextStyle(
+                                                  Text(
+                                                    snapshot
+                                                                .data[0][index]
+                                                                .memoContext
+                                                                .length >
+                                                            k
+                                                        ? snapshot
+                                                                .data[0][index]
+                                                                .memoContext
+                                                                .substring(
+                                                                    0, k) +
+                                                            ".."
+                                                        : snapshot
+                                                            .data[0][index]
+                                                            .memoContext,
+                                                    style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 8,
-                                                      ),)
+                                                      fontSize: 12,
+                                                    ),
+                                                  )
                                                 ]),
                                           ]));
                                     },
@@ -222,13 +256,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   ),
                                   width:
                                       MediaQuery.of(context).size.width * 0.46,
-                                  height: MediaQuery.of(context).size.height *
-                                          0.42,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.42,
                                   child: ListView.separated(
                                     separatorBuilder: (BuildContext b, int i) =>
                                         const Divider(),
                                     padding: EdgeInsets.all(8),
-                                    itemCount: INUlist.length,
+                                    itemCount: snapshot.data[1].length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Container(
@@ -243,15 +277,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    INUlist[index].memoTitle,
+                                                    " INUlist[index].memoTitle",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 11,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  Text(INUlist[index]
-                                                      .memoContexts)
+                                                  Text("@")
                                                 ]),
                                           ]));
                                     },
@@ -305,37 +338,37 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                     MediaQuery.of(context).size.width * 0.001,
                                   ),
                                   width:
-                                  MediaQuery.of(context).size.width * 0.46,
-                                  height: MediaQuery.of(context).size.height *
-                                      0.42,
+                                      MediaQuery.of(context).size.width * 0.46,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.42,
                                   child: ListView.separated(
                                     separatorBuilder: (BuildContext b, int i) =>
-                                    const Divider(),
+                                        const Divider(),
                                     padding: EdgeInsets.all(8),
-                                    itemCount: NIUlist.length,
+                                    itemCount: snapshot.data[2].length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Container(
                                           height: 40,
                                           width: MediaQuery.of(context)
-                                              .size
-                                              .width *
+                                                  .size
+                                                  .width *
                                               0.459,
                                           child: Row(children: [
                                             Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    NIUlist[index].memoTitle,
+                                                    "NIUlist[index].memoTitle",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 11,
                                                         fontWeight:
-                                                        FontWeight.bold),
+                                                            FontWeight.bold),
                                                   ),
-                                                  Text(NIUlist[index]
-                                                      .memoContexts)
+                                                  Text(
+                                                      "NIUlist[index].memoContexts")
                                                 ]),
                                           ]));
                                     },
@@ -384,37 +417,37 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                     MediaQuery.of(context).size.width * 0.001,
                                   ),
                                   width:
-                                  MediaQuery.of(context).size.width * 0.46,
-                                  height: MediaQuery.of(context).size.height *
-                                      0.42,
+                                      MediaQuery.of(context).size.width * 0.46,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.42,
                                   child: ListView.separated(
                                     separatorBuilder: (BuildContext b, int i) =>
-                                    const Divider(),
+                                        const Divider(),
                                     padding: EdgeInsets.all(8),
-                                    itemCount: NINUlist.length,
+                                    itemCount: snapshot.data[3].length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Container(
                                           height: 40,
                                           width: MediaQuery.of(context)
-                                              .size
-                                              .width *
+                                                  .size
+                                                  .width *
                                               0.459,
                                           child: Row(children: [
                                             Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    NINUlist[index].memoTitle,
+                                                    "  NINUlist[index].memoTitle",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 11,
                                                         fontWeight:
-                                                        FontWeight.bold),
+                                                            FontWeight.bold),
                                                   ),
-                                                  Text(NINUlist[index]
-                                                      .memoContexts)
+                                                  Text(
+                                                      "NINUlist[index].memoContexts")
                                                 ]),
                                           ]));
                                     },
