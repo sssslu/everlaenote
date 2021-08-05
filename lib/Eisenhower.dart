@@ -33,15 +33,12 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   goToSettingPage() {
     print("setting page 로 이동");
+    setState(() {});
   }
 
   Future<List<List<CheckboxMemo>>> getAllCheckboxMemo() async {
-    print("getAllCheckboxMemo 실행");
     List<CheckboxMemo> wholeList = [];
-    List<CheckboxMemo> IUlist = [
-      new CheckboxMemo(123123, "SampleMemo",
-          "this is a sample of an evelae checkbox note", 1, 1)
-    ];
+    List<CheckboxMemo> IUlist = [];
     List<CheckboxMemo> INUlist = [];
     List<CheckboxMemo> NIUlist = [];
     List<CheckboxMemo> NINUlist = [];
@@ -70,14 +67,23 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     return wholeListList;
   }
 
-  int k = 22;
+  void deleteCheckboxMemo(int id) async {
+    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
+    await cmd.deleteCheckboxMemoFromDB(id);
+    print("id number " + id.toString() + "deleted.");
+    setState(() {});
+  }
+
+  void checkCheckboxMemo(int id) async {}
+
+  int k = 18;
 
   ///length of ...
   ///k 와 글자크기는 연관성을 가져야 하며, 화면너비에 종속되어야한다.
   ///
   @override
-  initState() {
-    print('initState 실행');
+  void initState() {
+    // TODO: implement initState
     super.initState();
   }
 
@@ -159,56 +165,110 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                       MediaQuery.of(context).size.height * 0.42,
                                   child: ListView.separated(
                                     separatorBuilder: (BuildContext b, int i) =>
-                                        const Divider(),
-                                    padding: EdgeInsets.all(5),
+                                        const Divider(
+                                      color: Colors.green,
+                                    ),
+                                    padding: EdgeInsets.all(4),
                                     itemCount: snapshot.data[0].length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      return Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.05,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.459,
-                                          child: Row(children: [
-                                            Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    snapshot.data[0][index]
-                                                        .memoTitle,
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(
-                                                    snapshot
+                                      return Dismissible(
+                                        key: UniqueKey(),
+                                        child: InkWell(
+                                          child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.05,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.459,
+                                              child: Row(children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0, 0, 4, 0),
+                                                  child: Icon(snapshot
+                                                              .data[0][index]
+                                                              .isChecked ==
+                                                          0
+                                                      ? CupertinoIcons.app
+                                                      : CupertinoIcons
+                                                          .checkmark_square_fill),
+                                                ),
+                                                Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        snapshot.data[0][index]
+                                                            .memoTitle,
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(
+                                                        snapshot
+                                                                    .data[0]
+                                                                        [index]
+                                                                    .memoContext
+                                                                    .length >
+                                                                k
+                                                            ? snapshot
+                                                                    .data[0]
+                                                                        [index]
+                                                                    .memoContext
+                                                                    .substring(
+                                                                        0, k) +
+                                                                ".."
+                                                            : snapshot
                                                                 .data[0][index]
-                                                                .memoContext
-                                                                .length >
-                                                            k
-                                                        ? snapshot
-                                                                .data[0][index]
-                                                                .memoContext
-                                                                .substring(
-                                                                    0, k) +
-                                                            ".."
-                                                        : snapshot
-                                                            .data[0][index]
-                                                            .memoContext,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  )
-                                                ]),
-                                          ]));
+                                                                .memoContext,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                        ),
+                                                      )
+                                                    ]),
+                                              ])),
+                                          onTap: () {
+                                            print("체크!");
+                                          },
+                                          onLongPress: () {
+                                            print(
+                                                snapshot.data[0][index].title +
+                                                    '의 수정모드로 전환');
+                                          },
+                                        ),
+                                        onDismissed: (direction) {
+                                          deleteCheckboxMemo(
+                                              snapshot.data[0][index].id);
+                                          List<CheckboxMemo> tmp =
+                                              snapshot.data[0];
+                                          tmp.removeAt(index);
+                                          snapshot.data[0] = tmp;
+
+                                          ///not to cause dismissible widget error
+                                        },
+                                        background: Container(
+                                            child: Center(
+                                                child: Text(
+                                              "CLEAR!",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                            color: Colors.red),
+                                      );
                                     },
                                   ),
                                   decoration: BoxDecoration(
