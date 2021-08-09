@@ -27,7 +27,7 @@ class CheckboxMemoDAO {
   }
   Future<bool> insertCheckboxMemo() async{
     final db = await database;
-    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("mudada", "wryyyyyyyyyyyyyyyyyyyyy",1,0)');//dummy
+    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("mudada", "",1,0)');//dummy
     return true;
   }
 

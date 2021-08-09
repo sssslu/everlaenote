@@ -5,10 +5,9 @@ import 'package:sqflite/sqflite.dart';
 import 'model/checkboxMemo.dart';
 
 CheckboxMemoDAO cmd = new CheckboxMemoDAO();
-bool isCheckboxInabled = true;
+bool isCheckboxInabled = false;
 
-/// 일단 트루이긴 한데 사용자 설정에서 가져와야함
-///
+/// 일단 false이긴 한데 사용자 설정에서 가져오게 바꿔야함.
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
@@ -73,11 +72,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     cmd.deleteCheckboxMemoFromDB(id);
     print("id number " + id.toString() + "deleted.");
   }
-  void deleteEverything(int whatmatrix) async{
+
+  void deleteEverything(int whatmatrix) async {
     CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     await cmd.deleteEveryCheckboxMemoInSpecificList(whatmatrix);
-    setState(() {
-    });
+    setState(() {});
   }
 
   void checkCheckboxMemo(int id, int c) async {
@@ -137,7 +136,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                       children: [
                         Column(
                           children: [
-                            Container(
+                           InkWell(child: Container(
                                 margin: EdgeInsets.fromLTRB(
                                   MediaQuery.of(context).size.width * 0.005,
                                   MediaQuery.of(context).size.width * 0.005,
@@ -148,18 +147,22 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                 height: MediaQuery.of(context).size.height * 0.03,
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green, width: 2), color: Colors.white),
                                 child: Center(
-                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children : [
-                                      Container(width: MediaQuery.of(context).size.width * 0.05,),
-                                      Text(
+                                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width * 0.05,
+                                  ),
+                                  Text(
                                     "긴급 & 중요",
                                     style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
                                   ),
-                                    InkWell(
-                                      child: Icon(Icons.delete,size: MediaQuery.of(context).size.width * 0.05,color: Colors.green,),
-                                      onLongPress:() {deleteEverything(1);},
-                                    )])
-                                )),
+                                  Icon(
+                                    Icons.delete,
+                                    size: MediaQuery.of(context).size.width * 0.05,
+                                    color: Colors.green,
+                                  ),
+                                ]))),onLongPress: () {
+                             deleteEverything(1);
+                           },),
                             Container(
                               margin: EdgeInsets.fromLTRB(
                                 MediaQuery.of(context).size.width * 0.005,
@@ -172,8 +175,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                               child: ListView.builder(
                                 padding: EdgeInsets.all(4),
                                 itemCount: snapshot.data[0].length,
-                                itemBuilder: (BuildContext context, int index)
-                                {
+                                itemBuilder: (BuildContext context, int index) {
                                   final item = snapshot.data[0][index].hashCode.toString();
                                   return Dismissible(
                                     key: Key(item),
@@ -181,7 +183,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                       child: Container(
                                           height: MediaQuery.of(context).size.height * 0.05,
                                           width: MediaQuery.of(context).size.width * 0.459,
-                                          child: Row(children: [
+                                          child: Center(
+                                              child: Row(children: [
                                             isCheckboxInabled == true
                                                 ? Container(
                                                     width: MediaQuery.of(context).size.width * 0.05,
@@ -189,22 +192,27 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     child: Icon(snapshot.data[0][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
                                                   )
                                                 : Container(width: 4),
-                                            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                              Text(
-                                                snapshot.data[0][index].memoTitle,
-                                                style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                snapshot.data[0][index].memoContext.length > k
-                                                    ? snapshot.data[0][index].memoContext.substring(0, k) + ".."
-                                                    : snapshot.data[0][index].memoContext,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12,
-                                                ),
-                                              )
-                                            ]),
-                                          ])),
+                                            snapshot.data[0][index].memoContext != ""
+                                                ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                    Text(
+                                                      snapshot.data[0][index].memoTitle,
+                                                      style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                      snapshot.data[0][index].memoContext.length > k
+                                                          ? snapshot.data[0][index].memoContext.substring(0, k) + ".."
+                                                          : snapshot.data[0][index].memoContext,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12,
+                                                      ),
+                                                    )
+                                                  ])
+                                                : Text(
+                                                    snapshot.data[0][index].memoTitle,
+                                                    style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                  ),
+                                          ]))),
                                       onTap: () {
                                         print("체크 or 체크해제");
                                         checkCheckboxMemo(snapshot.data[0][index].id, snapshot.data[0][index].isChecked == 1 ? 0 : 1);
@@ -215,7 +223,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                     ),
                                     onDismissed: (direction) {
                                       deleteCheckboxMemo(snapshot.data[0][index].id);
-                                      snapshot.data[0].removeAt(index);///to prevent dismissible error : removed item still on the tree
+                                      snapshot.data[0].removeAt(index);
+
+                                      ///to prevent dismissible error : removed item still on the tree
                                     },
                                     background: Container(
                                         child: Center(
@@ -410,8 +420,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-          });
+          setState(() {});
           goToNoteSimpleAddPage();
         },
         tooltip: 'add note',
