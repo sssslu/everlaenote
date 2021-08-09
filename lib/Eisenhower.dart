@@ -73,6 +73,12 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     cmd.deleteCheckboxMemoFromDB(id);
     print("id number " + id.toString() + "deleted.");
   }
+  void deleteEverything(int whatmatrix) async{
+    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
+    await cmd.deleteEveryCheckboxMemoInSpecificList(whatmatrix);
+    setState(() {
+    });
+  }
 
   void checkCheckboxMemo(int id, int c) async {
     CheckboxMemoDAO cmd = new CheckboxMemoDAO();
@@ -142,10 +148,17 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                 height: MediaQuery.of(context).size.height * 0.03,
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green, width: 2), color: Colors.white),
                                 child: Center(
-                                  child: Text(
+                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children : [
+                                      Container(width: MediaQuery.of(context).size.width * 0.05,),
+                                      Text(
                                     "긴급 & 중요",
                                     style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
                                   ),
+                                    InkWell(
+                                      child: Icon(Icons.delete,size: MediaQuery.of(context).size.width * 0.05,color: Colors.green,),
+                                      onLongPress:() {deleteEverything(1);},
+                                    )])
                                 )),
                             Container(
                               margin: EdgeInsets.fromLTRB(

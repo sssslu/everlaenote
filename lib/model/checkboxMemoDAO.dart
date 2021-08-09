@@ -42,6 +42,10 @@ class CheckboxMemoDAO {
     print(cbmList.toString());
     return cbmList;
   }
+  Future<void> deleteEveryCheckboxMemoInSpecificList(int whatmatrix) async{
+    final db = await database;
+    await db.rawDelete('DELETE FROM checkboxmemo WHERE whatmatrix=$whatmatrix');
+  }
   Future<void> deleteCheckboxMemoFromDB(int id) async{
     final db = await database;
     await db.rawDelete('DELETE FROM checkboxmemo WHERE id = $id');
