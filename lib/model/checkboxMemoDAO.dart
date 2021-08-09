@@ -27,7 +27,7 @@ class CheckboxMemoDAO {
   }
   Future<bool> insertCheckboxMemo() async{
     final db = await database;
-    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("aaaaa", "annnnnnnnnnnnnnnnggggggggggg",1,0)');//dummy
+    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("mudada", "wryyyyyyyyyyyyyyyyyyyyy",1,0)');//dummy
     return true;
   }
 
@@ -45,5 +45,9 @@ class CheckboxMemoDAO {
   Future<void> deleteCheckboxMemoFromDB(int id) async{
     final db = await database;
     await db.rawDelete('DELETE FROM checkboxmemo WHERE id = $id');
+  }
+  Future<void> checkStatusChange(int id, int c) async{
+    final db = await database;
+    await db.rawUpdate('UPDATE checkboxmemo SET ischecked=$c WHERE id=$id');
   }
 }
