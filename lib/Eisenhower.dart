@@ -7,6 +7,7 @@ import 'package:screen/screen.dart';
 
 CheckboxMemoDAO cmd = new CheckboxMemoDAO();
 bool isCheckboxInabled = false;
+final TextEditingController _titleController = TextEditingController();
 
 /// 일단 false이긴 한데 사용자 설정에서 가져오게 바꿔야함.
 
@@ -19,6 +20,7 @@ class EisenhowerPage extends StatefulWidget {
 }
 
 class _EisenhowerPageState extends State<EisenhowerPage> {
+
   showSidebar() {
     print("showing sidebar");
   }
@@ -29,6 +31,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     isCheckboxInabled = !isCheckboxInabled;
     setState(() {});
   }
+
 
   Future<List<List<CheckboxMemo>>> getAllCheckboxMemo() async {
     print("get all @@@@@@");
@@ -61,6 +64,73 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     return wholeListList;
   }
 
+  void viewNote(CheckboxMemo c) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("${c.memoTitle}"),
+          content: new Text("${c.memoContext}"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Edit"),
+              onPressed: () {
+                Navigator.pop(context);
+                editNote(c);
+              },
+            ),
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void editNote(CheckboxMemo c) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+
+        return AlertDialog(
+
+          title: new TextFormField(controller: _titleController,
+              decoration: InputDecoration(
+                helperText: "제목",
+                  labelText: "제목",
+                  border: OutlineInputBorder(),
+                  hintText: '${c.memoTitle}'),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '이메일 입력';
+                } else
+                  return null;
+              }),
+          content: new Text("${c.memoContext}"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Edit"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   goToNoteSimpleAddPage() async {
     print("Note 작성 페이지로 이동");
 
@@ -87,7 +157,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     setState(() {});
   }
 
-  int k = 18;
+  int k = 20;
 
   ///length of ...
   ///k 와 글자크기는 연관성을 가져야 하며, 화면너비에 종속되어야한다.
@@ -218,11 +288,12 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                   ),
                                           ]))),
                                       onTap: () {
-                                        print("체크 or 체크해제");
-                                        checkCheckboxMemo(snapshot.data[0][index].id, snapshot.data[0][index].isChecked == 1 ? 0 : 1);
+                                        isCheckboxInabled == true
+                                            ? checkCheckboxMemo(snapshot.data[0][index].id, snapshot.data[0][index].isChecked == 1 ? 0 : 1)
+                                            : print("check function not working");
                                       },
                                       onLongPress: () {
-                                        print(snapshot.data[0][index].memoTitle + '를 수정모드로 전환');
+                                        viewNote(snapshot.data[0][index]);
                                       },
                                     ),
                                     actionPane: SlidableDrawerActionPane(),
@@ -233,7 +304,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         caption: 'Edit',
                                         color: Colors.black45,
                                         icon: Icons.edit,
-                                        onTap: () => print("@@@"),
+                                        onTap: () => editNote(snapshot.data[0][index]),
                                       ),
                                       IconSlideAction(
                                           caption: 'Delete',
