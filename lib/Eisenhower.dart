@@ -1,8 +1,9 @@
 import 'package:everlaenote/model/checkboxMemoDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'model/checkboxMemo.dart';
+import 'package:screen/screen.dart';
 
 CheckboxMemoDAO cmd = new CheckboxMemoDAO();
 bool isCheckboxInabled = false;
@@ -95,6 +96,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Screen.keepOn(true);
   }
 
   @override
@@ -136,33 +138,36 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                       children: [
                         Column(
                           children: [
-                           InkWell(child: Container(
-                                margin: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0,
-                                ),
-                                width: MediaQuery.of(context).size.width * 0.46,
-                                height: MediaQuery.of(context).size.height * 0.03,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green, width: 2), color: Colors.white),
-                                child: Center(
-                                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width * 0.05,
+                            InkWell(
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0,
                                   ),
-                                  Text(
-                                    "긴급 & 중요",
-                                    style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
-                                  ),
-                                  Icon(
-                                    Icons.delete,
-                                    size: MediaQuery.of(context).size.width * 0.05,
-                                    color: Colors.green,
-                                  ),
-                                ]))),onLongPress: () {
-                             deleteEverything(1);
-                           },),
+                                  width: MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height * 0.03,
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green, width: 2), color: Colors.white),
+                                  child: Center(
+                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.05,
+                                    ),
+                                    Text(
+                                      "긴급 & 중요",
+                                      style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      size: MediaQuery.of(context).size.width * 0.05,
+                                      color: Colors.green,
+                                    ),
+                                  ]))),
+                              onLongPress: () {
+                                deleteEverything(1);
+                              },
+                            ),
                             Container(
                               margin: EdgeInsets.fromLTRB(
                                 MediaQuery.of(context).size.width * 0.005,
@@ -177,8 +182,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                 itemCount: snapshot.data[0].length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final item = snapshot.data[0][index].hashCode.toString();
-                                  return Dismissible(
-                                    key: Key(item),
+                                  return Slidable(
                                     child: InkWell(
                                       child: Container(
                                           height: MediaQuery.of(context).size.height * 0.05,
@@ -221,19 +225,25 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                         print(snapshot.data[0][index].memoTitle + '를 수정모드로 전환');
                                       },
                                     ),
-                                    onDismissed: (direction) {
-                                      deleteCheckboxMemo(snapshot.data[0][index].id);
-                                      snapshot.data[0].removeAt(index);
-
-                                      ///to prevent dismissible error : removed item still on the tree
-                                    },
-                                    background: Container(
-                                        child: Center(
-                                            child: Text(
-                                          "CLEAR!",
-                                          style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
-                                        )),
-                                        color: Colors.red),
+                                    actionPane: SlidableDrawerActionPane(),
+                                    actionExtentRatio: 0.25,
+                                    direction: Axis.horizontal,
+                                    secondaryActions: <Widget>[
+                                      IconSlideAction(
+                                        caption: 'Edit',
+                                        color: Colors.black45,
+                                        icon: Icons.edit,
+                                        onTap: () => print("@@@"),
+                                      ),
+                                      IconSlideAction(
+                                          caption: 'Delete',
+                                          color: Colors.red,
+                                          icon: Icons.delete,
+                                          onTap: () {
+                                            deleteCheckboxMemo(snapshot.data[0][index].id);
+                                            setState(() {});
+                                          }),
+                                    ],
                                   );
                                 },
                               ),
