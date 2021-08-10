@@ -287,22 +287,36 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         ),
                         Column(
                           children: [
-                            Container(
-                                margin: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0,
-                                ),
-                                width: MediaQuery.of(context).size.width * 0.46,
-                                height: MediaQuery.of(context).size.height * 0.03,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.blue, width: 2), color: Colors.white),
-                                child: Center(
-                                  child: Text(
-                                    "안긴급 & 중요",
-                                    style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                            InkWell(
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0,
                                   ),
-                                )),
+                                  width: MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height * 0.03,
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.blue, width: 2), color: Colors.white),
+                                  child: Center(
+                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                        Container(
+                                          width: MediaQuery.of(context).size.width * 0.05,
+                                        ),
+                                        Text(
+                                          "긴급 & 안중요",
+                                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                                        ),
+                                        Icon(
+                                          Icons.delete,
+                                          size: MediaQuery.of(context).size.width * 0.05,
+                                          color: Colors.blue,
+                                        ),
+                                      ]))),
+                              onLongPress: () {
+                                deleteEverything(2);
+                              },
+                            ),
                             Container(
                               margin: EdgeInsets.fromLTRB(
                                 MediaQuery.of(context).size.width * 0.005,
@@ -312,23 +326,75 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                               ),
                               width: MediaQuery.of(context).size.width * 0.46,
                               height: MediaQuery.of(context).size.height * 0.42,
-                              child: ListView.separated(
-                                separatorBuilder: (BuildContext b, int i) => const Divider(),
-                                padding: EdgeInsets.all(8),
+                              child: ListView.builder(
+                                padding: EdgeInsets.all(4),
                                 itemCount: snapshot.data[1].length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                      height: 40,
-                                      width: MediaQuery.of(context).size.width * 0.459,
-                                      child: Row(children: [
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                          Text(
-                                            "INUlist[index].memoTitle",
-                                            style: TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("@")
-                                        ]),
-                                      ]));
+                                  final item = snapshot.data[1][index].hashCode.toString();
+                                  return Slidable(
+                                    child: InkWell(
+                                      child: Container(
+                                          height: MediaQuery.of(context).size.height * 0.05,
+                                          width: MediaQuery.of(context).size.width * 0.459,
+                                          child: Center(
+                                              child: Row(children: [
+                                                isCheckboxInabled == true
+                                                    ? Container(
+                                                  width: MediaQuery.of(context).size.width * 0.05,
+                                                  margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                                  child: Icon(snapshot.data[1][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
+                                                )
+                                                    : Container(width: 4),
+                                                snapshot.data[1][index].memoContext != ""
+                                                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                  Text(
+                                                    snapshot.data[1][index].memoTitle,
+                                                    style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data[1][index].memoContext.length > k
+                                                        ? snapshot.data[1][index].memoContext.substring(0, k) + ".."
+                                                        : snapshot.data[1][index].memoContext,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                    ),
+                                                  )
+                                                ])
+                                                    : Text(
+                                                  snapshot.data[1][index].memoTitle,
+                                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                ),
+                                              ]))),
+                                      onTap: () {
+                                        isCheckboxInabled == true
+                                            ? checkCheckboxMemo(snapshot.data[1][index].id, snapshot.data[1][index].isChecked == 1 ? 0 : 1)
+                                            : print("check function not working");
+                                      },
+                                      onLongPress: () {
+                                        viewNote(snapshot.data[1][index]);
+                                      },
+                                    ),
+                                    actionPane: SlidableDrawerActionPane(),
+                                    actionExtentRatio: 0.25,
+                                    direction: Axis.horizontal,
+                                    secondaryActions: <Widget>[
+                                      IconSlideAction(
+                                        caption: 'Edit',
+                                        color: Colors.black45,
+                                        icon: Icons.edit,
+                                        onTap: () => editNote(snapshot.data[1][index]),
+                                      ),
+                                      IconSlideAction(
+                                          caption: 'Delete',
+                                          color: Colors.red,
+                                          icon: Icons.delete,
+                                          onTap: () {
+                                            deleteCheckboxMemo(snapshot.data[1][index].id);
+                                            setState(() {});
+                                          }),
+                                    ],
+                                  );
                                 },
                               ),
                               decoration: BoxDecoration(
@@ -346,22 +412,36 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                       children: [
                         Column(
                           children: [
-                            Container(
-                                margin: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0,
-                                ),
-                                width: MediaQuery.of(context).size.width * 0.46,
-                                height: MediaQuery.of(context).size.height * 0.03,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.yellow, width: 2), color: Colors.white),
-                                child: Center(
-                                  child: Text(
-                                    "긴급 & 안중요",
-                                    style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                            InkWell(
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0,
                                   ),
-                                )),
+                                  width: MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height * 0.03,
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.yellow, width: 2), color: Colors.white),
+                                  child: Center(
+                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                        Container(
+                                          width: MediaQuery.of(context).size.width * 0.05,
+                                        ),
+                                        Text(
+                                          "안긴급 & 중요",
+                                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                                        ),
+                                        Icon(
+                                          Icons.delete,
+                                          size: MediaQuery.of(context).size.width * 0.05,
+                                          color: Colors.yellow,
+                                        ),
+                                      ]))),
+                              onLongPress: () {
+                                deleteEverything(3);
+                              },
+                            ),
                             Container(
                               margin: EdgeInsets.fromLTRB(
                                 MediaQuery.of(context).size.width * 0.005,
@@ -371,23 +451,75 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                               ),
                               width: MediaQuery.of(context).size.width * 0.46,
                               height: MediaQuery.of(context).size.height * 0.42,
-                              child: ListView.separated(
-                                separatorBuilder: (BuildContext b, int i) => const Divider(),
-                                padding: EdgeInsets.all(8),
+                              child: ListView.builder(
+                                padding: EdgeInsets.all(4),
                                 itemCount: snapshot.data[2].length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                      height: 40,
-                                      width: MediaQuery.of(context).size.width * 0.459,
-                                      child: Row(children: [
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                          Text(
-                                            "NIUlist[index].memoTitle",
-                                            style: TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("NIUlist[index].memoContexts")
-                                        ]),
-                                      ]));
+                                  final item = snapshot.data[2][index].hashCode.toString();
+                                  return Slidable(
+                                    child: InkWell(
+                                      child: Container(
+                                          height: MediaQuery.of(context).size.height * 0.05,
+                                          width: MediaQuery.of(context).size.width * 0.459,
+                                          child: Center(
+                                              child: Row(children: [
+                                                isCheckboxInabled == true
+                                                    ? Container(
+                                                  width: MediaQuery.of(context).size.width * 0.05,
+                                                  margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                                  child: Icon(snapshot.data[2][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
+                                                )
+                                                    : Container(width: 4),
+                                                snapshot.data[2][index].memoContext != ""
+                                                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                  Text(
+                                                    snapshot.data[2][index].memoTitle,
+                                                    style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data[2][index].memoContext.length > k
+                                                        ? snapshot.data[2][index].memoContext.substring(0, k) + ".."
+                                                        : snapshot.data[2][index].memoContext,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                    ),
+                                                  )
+                                                ])
+                                                    : Text(
+                                                  snapshot.data[2][index].memoTitle,
+                                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                ),
+                                              ]))),
+                                      onTap: () {
+                                        isCheckboxInabled == true
+                                            ? checkCheckboxMemo(snapshot.data[2][index].id, snapshot.data[2][index].isChecked == 1 ? 0 : 1)
+                                            : print("check function not working");
+                                      },
+                                      onLongPress: () {
+                                        viewNote(snapshot.data[2][index]);
+                                      },
+                                    ),
+                                    actionPane: SlidableDrawerActionPane(),
+                                    actionExtentRatio: 0.25,
+                                    direction: Axis.horizontal,
+                                    secondaryActions: <Widget>[
+                                      IconSlideAction(
+                                        caption: 'Edit',
+                                        color: Colors.black45,
+                                        icon: Icons.edit,
+                                        onTap: () => editNote(snapshot.data[2][index]),
+                                      ),
+                                      IconSlideAction(
+                                          caption: 'Delete',
+                                          color: Colors.red,
+                                          icon: Icons.delete,
+                                          onTap: () {
+                                            deleteCheckboxMemo(snapshot.data[2][index].id);
+                                            setState(() {});
+                                          }),
+                                    ],
+                                  );
                                 },
                               ),
                               decoration: BoxDecoration(
@@ -400,22 +532,36 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         ),
                         Column(
                           children: [
-                            Container(
-                                margin: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0.005,
-                                  MediaQuery.of(context).size.width * 0,
-                                ),
-                                width: MediaQuery.of(context).size.width * 0.46,
-                                height: MediaQuery.of(context).size.height * 0.03,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.redAccent, width: 2), color: Colors.white),
-                                child: Center(
-                                  child: Text(
-                                    "안긴급 & 안중요",
-                                    style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                            InkWell(
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0.005,
+                                    MediaQuery.of(context).size.width * 0,
                                   ),
-                                )),
+                                  width: MediaQuery.of(context).size.width * 0.46,
+                                  height: MediaQuery.of(context).size.height * 0.03,
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.red, width: 2), color: Colors.white),
+                                  child: Center(
+                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                        Container(
+                                          width: MediaQuery.of(context).size.width * 0.05,
+                                        ),
+                                        Text(
+                                          "안긴급 & 안중요",
+                                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                                        ),
+                                        Icon(
+                                          Icons.delete,
+                                          size: MediaQuery.of(context).size.width * 0.05,
+                                          color: Colors.red,
+                                        ),
+                                      ]))),
+                              onLongPress: () {
+                                deleteEverything(4);
+                              },
+                            ),
                             Container(
                               margin: EdgeInsets.fromLTRB(
                                 MediaQuery.of(context).size.width * 0.005,
@@ -425,29 +571,81 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                               ),
                               width: MediaQuery.of(context).size.width * 0.46,
                               height: MediaQuery.of(context).size.height * 0.42,
-                              child: ListView.separated(
-                                separatorBuilder: (BuildContext b, int i) => const Divider(),
-                                padding: EdgeInsets.all(8),
+                              child: ListView.builder(
+                                padding: EdgeInsets.all(4),
                                 itemCount: snapshot.data[3].length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                      height: 40,
-                                      width: MediaQuery.of(context).size.width * 0.459,
-                                      child: Row(children: [
-                                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                          Text(
-                                            "  NINUlist[index].memoTitle",
-                                            style: TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("NINUlist[index].memoContexts")
-                                        ]),
-                                      ]));
+                                  final item = snapshot.data[3][index].hashCode.toString();
+                                  return Slidable(
+                                    child: InkWell(
+                                      child: Container(
+                                          height: MediaQuery.of(context).size.height * 0.05,
+                                          width: MediaQuery.of(context).size.width * 0.459,
+                                          child: Center(
+                                              child: Row(children: [
+                                                isCheckboxInabled == true
+                                                    ? Container(
+                                                  width: MediaQuery.of(context).size.width * 0.05,
+                                                  margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                                  child: Icon(snapshot.data[3][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
+                                                )
+                                                    : Container(width: 4),
+                                                snapshot.data[3][index].memoContext != ""
+                                                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                  Text(
+                                                    snapshot.data[3][index].memoTitle,
+                                                    style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data[3][index].memoContext.length > k
+                                                        ? snapshot.data[3][index].memoContext.substring(0, k) + ".."
+                                                        : snapshot.data[3][index].memoContext,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                    ),
+                                                  )
+                                                ])
+                                                    : Text(
+                                                  snapshot.data[3][index].memoTitle,
+                                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                ),
+                                              ]))),
+                                      onTap: () {
+                                        isCheckboxInabled == true
+                                            ? checkCheckboxMemo(snapshot.data[3][index].id, snapshot.data[3][index].isChecked == 1 ? 0 : 1)
+                                            : print("check function not working");
+                                      },
+                                      onLongPress: () {
+                                        viewNote(snapshot.data[3][index]);
+                                      },
+                                    ),
+                                    actionPane: SlidableDrawerActionPane(),
+                                    actionExtentRatio: 0.25,
+                                    direction: Axis.horizontal,
+                                    secondaryActions: <Widget>[
+                                      IconSlideAction(
+                                        caption: 'Edit',
+                                        color: Colors.black45,
+                                        icon: Icons.edit,
+                                        onTap: () => editNote(snapshot.data[3][index]),
+                                      ),
+                                      IconSlideAction(
+                                          caption: 'Delete',
+                                          color: Colors.red,
+                                          icon: Icons.delete,
+                                          onTap: () {
+                                            deleteCheckboxMemo(snapshot.data[3][index].id);
+                                            setState(() {});
+                                          }),
+                                    ],
+                                  );
                                 },
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.redAccent, width: 2),
+                                border: Border.all(color: Colors.red, width: 2),
                               ),
                             ),
                           ],
@@ -478,8 +676,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'Speed Dial',
       heroTag: 'speed-dial-hero-tag',
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
+      backgroundColor: Colors.black,
+      foregroundColor: Colors.white,
       elevation: 8.0,
       shape: CircleBorder(),
       // orientation: SpeedDialOrientation.Up,
@@ -492,7 +690,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           label: '안긴급&안중요',
           labelStyle: TextStyle(fontSize: 18.0),
           labelBackgroundColor: Colors.white,
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(4))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemoPage(4))),
           onLongPress: () => print('4 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
@@ -501,7 +699,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           label: '긴급&안중요',
           labelStyle: TextStyle(fontSize: 18.0),
           labelBackgroundColor: Colors.white,
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(3))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemoPage(3))),
           onLongPress: () => print('3 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
@@ -510,7 +708,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           label: '안긴급&중요',
           labelStyle: TextStyle(fontSize: 18.0),
           labelBackgroundColor: Colors.white,
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(2))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemoPage(2))),
           onLongPress: () => print('2 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
@@ -519,14 +717,15 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           label: '긴급&중요',
           labelStyle: TextStyle(fontSize: 18.0),
           labelBackgroundColor: Colors.white,
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(1))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemoPage(1))),
           onLongPress: () => print('1 CHILD LONG PRESS'),
         ),
       ],
     );
   }
 
-  addCheckboxMemo(int whatmatrix) {
+  addCheckboxMemoPage(int whatmatrix) {
+    addCheckboxMemo(whatmatrix);//dummy
     return Scaffold(
       appBar: EmptyAppBar(),
       body: Center(
@@ -550,5 +749,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         ),
       ),
     );
+  }
+
+  Future<void> addCheckboxMemo(int whatmatrix) async{
+    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
+    await cmd.insertCheckboxMemo(whatmatrix);
+    setState(() {});
   }
 }
