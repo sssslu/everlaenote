@@ -1,13 +1,16 @@
+import 'package:everlaenote/main.dart';
 import 'package:everlaenote/model/checkboxMemoDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'model/checkboxMemo.dart';
 import 'package:screen/screen.dart';
 
 CheckboxMemoDAO cmd = new CheckboxMemoDAO();
 bool isCheckboxInabled = false;
 final TextEditingController _titleController = TextEditingController();
+final HeroController _controller = HeroController();
 
 /// 일단 false이긴 한데 사용자 설정에서 가져오게 바꿔야함.
 
@@ -20,7 +23,6 @@ class EisenhowerPage extends StatefulWidget {
 }
 
 class _EisenhowerPageState extends State<EisenhowerPage> {
-
   showSidebar() {
     print("showing sidebar");
   }
@@ -31,7 +33,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     isCheckboxInabled = !isCheckboxInabled;
     setState(() {});
   }
-
 
   Future<List<List<CheckboxMemo>>> getAllCheckboxMemo() async {
     print("get all @@@@@@");
@@ -93,49 +94,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   void editNote(CheckboxMemo c) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-
-        return AlertDialog(
-
-          title: new TextFormField(controller: _titleController,
-              decoration: InputDecoration(
-                helperText: "제목",
-                  labelText: "제목",
-                  border: OutlineInputBorder(),
-                  hintText: '${c.memoTitle}'),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '이메일 입력';
-                } else
-                  return null;
-              }),
-          content: new Text("${c.memoContext}"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Edit"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            new FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  goToNoteSimpleAddPage() async {
-    print("Note 작성 페이지로 이동");
-
-    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
-    cmd.insertCheckboxMemo();
+    print("${c.memoTitle} 수정 모드");
   }
 
   void deleteCheckboxMemo(int id) async {
@@ -499,13 +458,96 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               })
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {});
-          goToNoteSimpleAddPage();
-        },
-        tooltip: 'add note',
-        child: Icon(Icons.add),
+      floatingActionButton: buildSpeedDial(),
+    );
+  }
+
+  SpeedDial buildSpeedDial() {
+    return SpeedDial(
+      marginEnd: 18,
+      marginBottom: 20,
+      icon: Icons.add,
+      activeIcon: Icons.remove,
+      buttonSize: 56.0,
+      visible: true,
+      closeManually: false,
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.25,
+      onOpen: () => print('OPENING DIAL'),
+      onClose: () => print('DIAL CLOSED'),
+      tooltip: 'Speed Dial',
+      heroTag: 'speed-dial-hero-tag',
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      elevation: 8.0,
+      shape: CircleBorder(),
+      // orientation: SpeedDialOrientation.Up,
+      // childMarginBottom: 2,
+      // childMarginTop: 2,
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.crop_square),
+          backgroundColor: Colors.red,
+          label: '안긴급&안중요',
+          labelStyle: TextStyle(fontSize: 18.0),
+          labelBackgroundColor: Colors.white,
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(4))),
+          onLongPress: () => print('4 CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.crop_square),
+          backgroundColor: Colors.yellow,
+          label: '긴급&안중요',
+          labelStyle: TextStyle(fontSize: 18.0),
+          labelBackgroundColor: Colors.white,
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(3))),
+          onLongPress: () => print('3 CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.crop_square),
+          backgroundColor: Colors.blue,
+          label: '안긴급&중요',
+          labelStyle: TextStyle(fontSize: 18.0),
+          labelBackgroundColor: Colors.white,
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(2))),
+          onLongPress: () => print('2 CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.crop_square),
+          backgroundColor: Colors.green,
+          label: '긴급&중요',
+          labelStyle: TextStyle(fontSize: 18.0),
+          labelBackgroundColor: Colors.white,
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => addCheckboxMemo(1))),
+          onLongPress: () => print('1 CHILD LONG PRESS'),
+        ),
+      ],
+    );
+  }
+
+  addCheckboxMemo(int whatmatrix) {
+    return Scaffold(
+      appBar: EmptyAppBar(),
+      body: Center(
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+              color: whatmatrix == 1
+                  ? Colors.green
+                  : whatmatrix == 2
+                      ? Colors.blue
+                      : whatmatrix == 3
+                          ? Colors.yellow
+                          : Colors.red),
+          child: Center(
+            child: Text(
+              "노트 생성 페이지입니다. $whatmatrix 번 매트릭스의 체크박스 메모를 생성합니다",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ),
     );
   }

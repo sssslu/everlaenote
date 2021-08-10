@@ -25,32 +25,35 @@ class CheckboxMemoDAO {
       },
     );
   }
-  Future<bool> insertCheckboxMemo() async{
+
+  Future<bool> insertCheckboxMemo() async {
     final db = await database;
-    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("mudada", "wryyyyyyyyy",1,0)');//dummy
+    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("oraora", "roadrollerdaaaaaa",1,0)'); //dummy
     return true;
   }
 
-  ///method converting MAP of checkboxmemo to checkboxmemo
   Future<List<CheckboxMemo>> getEveryCheckboxMemoFromDB() async {
     final db = await database;
-    List<Map<String,dynamic>> mapList = await db.query("checkboxmemo");
-    List<CheckboxMemo> cbmList =[];
-    for(Map<String,dynamic>map in mapList){
+    List<Map<String, dynamic>> mapList = await db.query("checkboxmemo");
+    List<CheckboxMemo> cbmList = [];
+    for (Map<String, dynamic> map in mapList) {
       cbmList.add(CheckboxMemo.fromMap(map));
     }
     print(cbmList.toString());
     return cbmList;
   }
-  Future<void> deleteEveryCheckboxMemoInSpecificList(int whatmatrix) async{
+
+  Future<void> deleteEveryCheckboxMemoInSpecificList(int whatmatrix) async {
     final db = await database;
     await db.rawDelete('DELETE FROM checkboxmemo WHERE whatmatrix=$whatmatrix');
   }
-  Future<void> deleteCheckboxMemoFromDB(int id) async{
+
+  Future<void> deleteCheckboxMemoFromDB(int id) async {
     final db = await database;
     await db.rawDelete('DELETE FROM checkboxmemo WHERE id = $id');
   }
-  Future<void> checkStatusChange(int id, int c) async{
+
+  Future<void> checkStatusChange(int id, int c) async {
     final db = await database;
     await db.rawUpdate('UPDATE checkboxmemo SET ischecked=$c WHERE id=$id');
   }
