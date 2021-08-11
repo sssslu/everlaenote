@@ -2,6 +2,8 @@ import 'checkboxMemo.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+/// 체크박스메모(아이젠아워 페이지) 관련 DB 조작 클래스 입니다.
+/// author slu
 class CheckboxMemoDAO {
   static Database _database;
 
@@ -17,11 +19,10 @@ class CheckboxMemoDAO {
       path,
       version: 1,
       onCreate: (db, version) async {
-        print("테이블 생성 시작");
         await db.execute(
           "CREATE TABLE checkboxmemo(id INTEGER PRIMARY KEY AUTOINCREMENT, memotitle TEXT NOT NULL, memocontext TEXT NOT NULL, whatmatrix INTEGER NOT NULL, ischecked INTEGER NOT NULL)",
         );
-        print("테이블 생성됨");
+        print("@@@ 신규 테이블 생성되었음 - 체크박스메모 DAO @@@");
       },
     );
   }

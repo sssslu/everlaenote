@@ -8,14 +8,14 @@ import 'model/checkboxMemo.dart';
 import 'package:screen/screen.dart';
 
 CheckboxMemoDAO cmd = new CheckboxMemoDAO();
+
+/// 일단 false이긴 한데 사용자 설정에서 가져오게 바꿔야함.
 bool isCheckboxInabled = false;
+
 final TextEditingController _titleController = TextEditingController();
 final TextEditingController _contextController = TextEditingController();
 final HeroController _controller = HeroController();
 final _formKey = GlobalKey<FormState>();
-
-
-/// 일단 false이긴 한데 사용자 설정에서 가져오게 바꿔야함.
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
@@ -30,9 +30,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     print("showing sidebar");
   }
 
-  goToSettingPage() {
-    print("setting page 로 이동");
-    print("체크박스 보이기 상태 변경 실행");
+  checkAbailableChange() {
+    print("체크박스 보이기 상태 변경 실행"); //DB에서 설정 가져오도록 바꾸어야함. 쉐어드프리퍼런스 사용 예정
     isCheckboxInabled = !isCheckboxInabled;
     setState(() {});
   }
@@ -98,10 +97,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   dynamic editNote(CheckboxMemo c) {
     print("${c.memoTitle} 수정 모드");
-    String ctitle="";
-    String ccontext="";
-    _titleController.text=c.memoTitle;
-    _contextController.text=c.memoContext;
+    String ctitle = "";
+    String ccontext = "";
+    _titleController.text = c.memoTitle;
+    _contextController.text = c.memoContext;
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -147,14 +146,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         child: RaisedButton(
                           child: Text("저장"),
                           onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              _formKey.currentState.save();
-                              CheckboxMemoDAO cmd = new CheckboxMemoDAO();
-                              cmd.updateCheckboxMemoInDB(c.id, _titleController.text, _contextController.text);
-                              setState(() {
-                              });
-                              Navigator.pop(context);
-                            }
+                            cmd.updateCheckboxMemoInDB(c.id, _titleController.text, _contextController.text);
+                            setState(() {});
+                            Navigator.pop(context);
                           },
                         ),
                       )
@@ -168,29 +162,22 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   void deleteCheckboxMemo(int id) async {
-    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     cmd.deleteCheckboxMemoFromDB(id);
     print("id number " + id.toString() + "deleted.");
   }
 
   void deleteEverything(int whatmatrix) async {
-    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     await cmd.deleteEveryCheckboxMemoInSpecificList(whatmatrix);
     setState(() {});
   }
 
   void checkCheckboxMemo(int id, int c) async {
-    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     await cmd.checkStatusChange(id, c);
     print("check " + c.toString());
     setState(() {});
   }
 
-  int k = 20;
-
-  ///length of ...
-  ///k 와 글자크기는 연관성을 가져야 하며, 화면너비에 종속되어야한다.
-  ///
+  int k = 15; //화면 너비에 따라 바꾸도록 수정해야함
   @override
   void initState() {
     // TODO: implement initState
@@ -218,7 +205,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                 ),
                 InkWell(
-                  onTap: goToSettingPage,
+                  onTap: checkAbailableChange,
                   child: Icon(
                     Icons.check_circle_outline,
                     color: Colors.green,
@@ -298,12 +285,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                             snapshot.data[0][index].memoContext != ""
                                                 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                                     Text(
-                                                      snapshot.data[0][index].memoTitle,
+                                                      snapshot.data[0][index].memoTitle.length > k
+                                                          ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                          : snapshot.data[0][index].memoTitle,
                                                       style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                     ),
                                                     Text(
-                                                      snapshot.data[0][index].memoContext.length > k
-                                                          ? snapshot.data[0][index].memoContext.substring(0, k) + ".."
+                                                      snapshot.data[0][index].memoContext.length > int.parse("${k * 1.4}".split(".")[0])
+                                                          ? snapshot.data[0][index].memoContext.substring(0, int.parse("${k * 1.4}".split(".")[0])) + ".."
                                                           : snapshot.data[0][index].memoContext,
                                                       style: TextStyle(
                                                         color: Colors.black,
@@ -312,7 +301,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     )
                                                   ])
                                                 : Text(
-                                                    snapshot.data[0][index].memoTitle,
+                                                    snapshot.data[0][index].memoTitle.length > k
+                                                        ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                        : snapshot.data[0][index].memoTitle,
                                                     style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                   ),
                                           ]))),
@@ -419,13 +410,15 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                             snapshot.data[1][index].memoContext != ""
                                                 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                                     Text(
-                                                      snapshot.data[1][index].memoTitle,
+                                                      snapshot.data[0][index].memoTitle.length > k
+                                                          ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                          : snapshot.data[0][index].memoTitle,
                                                       style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                     ),
                                                     Text(
-                                                      snapshot.data[1][index].memoContext.length > k
-                                                          ? snapshot.data[1][index].memoContext.substring(0, k) + ".."
-                                                          : snapshot.data[1][index].memoContext,
+                                                      snapshot.data[0][index].memoContext.length > int.parse("${k * 1.4}".split(".")[0])
+                                                          ? snapshot.data[0][index].memoContext.substring(0, int.parse("${k * 1.4}".split(".")[0])) + ".."
+                                                          : snapshot.data[0][index].memoContext,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 12,
@@ -433,7 +426,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     )
                                                   ])
                                                 : Text(
-                                                    snapshot.data[1][index].memoTitle,
+                                                    snapshot.data[0][index].memoTitle.length > k
+                                                        ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                        : snapshot.data[0][index].memoTitle,
                                                     style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                   ),
                                           ]))),
@@ -544,13 +539,15 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                             snapshot.data[2][index].memoContext != ""
                                                 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                                     Text(
-                                                      snapshot.data[2][index].memoTitle,
+                                                      snapshot.data[0][index].memoTitle.length > k
+                                                          ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                          : snapshot.data[0][index].memoTitle,
                                                       style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                     ),
                                                     Text(
-                                                      snapshot.data[2][index].memoContext.length > k
-                                                          ? snapshot.data[2][index].memoContext.substring(0, k) + ".."
-                                                          : snapshot.data[2][index].memoContext,
+                                                      snapshot.data[0][index].memoContext.length > int.parse("${k * 1.4}".split(".")[0])
+                                                          ? snapshot.data[0][index].memoContext.substring(0, int.parse("${k * 1.4}".split(".")[0])) + ".."
+                                                          : snapshot.data[0][index].memoContext,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 12,
@@ -558,7 +555,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     )
                                                   ])
                                                 : Text(
-                                                    snapshot.data[2][index].memoTitle,
+                                                    snapshot.data[0][index].memoTitle.length > k
+                                                        ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                        : snapshot.data[0][index].memoTitle,
                                                     style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                   ),
                                           ]))),
@@ -664,13 +663,15 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                             snapshot.data[3][index].memoContext != ""
                                                 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                                     Text(
-                                                      snapshot.data[3][index].memoTitle,
+                                                      snapshot.data[0][index].memoTitle.length > k
+                                                          ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                          : snapshot.data[0][index].memoTitle,
                                                       style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                     ),
                                                     Text(
-                                                      snapshot.data[3][index].memoContext.length > k
-                                                          ? snapshot.data[3][index].memoContext.substring(0, k) + ".."
-                                                          : snapshot.data[3][index].memoContext,
+                                                      snapshot.data[0][index].memoContext.length > int.parse("${k * 1.4}".split(".")[0])
+                                                          ? snapshot.data[0][index].memoContext.substring(0, int.parse("${k * 1.4}".split(".")[0])) + ".."
+                                                          : snapshot.data[0][index].memoContext,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 12,
@@ -678,7 +679,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                                     )
                                                   ])
                                                 : Text(
-                                                    snapshot.data[3][index].memoTitle,
+                                                    snapshot.data[0][index].memoTitle.length > k
+                                                        ? snapshot.data[0][index].memoTitle.substring(0, k) + ".."
+                                                        : snapshot.data[0][index].memoTitle,
                                                     style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                   ),
                                           ]))),
@@ -823,7 +826,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   Future<void> addCheckboxMemo(int whatmatrix) async {
-    CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     await cmd.insertCheckboxMemo(whatmatrix);
     setState(() {});
   }
