@@ -57,4 +57,10 @@ class CheckboxMemoDAO {
     final db = await database;
     await db.rawUpdate('UPDATE checkboxmemo SET ischecked=$c WHERE id=$id');
   }
+
+  Future<void> updateCheckboxMemoInDB(int id, String title, String context) async {
+    final db = await database;
+    await db.rawUpdate('UPDATE checkboxmemo SET memotitle="$title", memocontext="$context" WHERE id=$id');
+    print('update done');
+  }
 }

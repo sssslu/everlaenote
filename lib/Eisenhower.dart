@@ -10,7 +10,10 @@ import 'package:screen/screen.dart';
 CheckboxMemoDAO cmd = new CheckboxMemoDAO();
 bool isCheckboxInabled = false;
 final TextEditingController _titleController = TextEditingController();
+final TextEditingController _contextController = TextEditingController();
 final HeroController _controller = HeroController();
+final _formKey = GlobalKey<FormState>();
+
 
 /// 일단 false이긴 한데 사용자 설정에서 가져오게 바꿔야함.
 
@@ -93,8 +96,75 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  void editNote(CheckboxMemo c) {
+  dynamic editNote(CheckboxMemo c) {
     print("${c.memoTitle} 수정 모드");
+    String ctitle="";
+    String ccontext="";
+    _titleController.text=c.memoTitle;
+    _contextController.text=c.memoContext;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _titleController,
+                          decoration: InputDecoration(
+                            labelText: '제목',
+                            border: OutlineInputBorder(),
+                            filled: true,
+                          ),
+                          onSaved: (val) {
+                            ctitle = _titleController.text;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _contextController,
+                          decoration: InputDecoration(
+                            labelText: '내용',
+                            border: OutlineInputBorder(),
+                            filled: true,
+                          ),
+                          onSaved: (val) {
+                            ccontext = _contextController.text;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: RaisedButton(
+                          child: Text("저장"),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              CheckboxMemoDAO cmd = new CheckboxMemoDAO();
+                              cmd.updateCheckboxMemoInDB(c.id, _titleController.text, _contextController.text);
+                              setState(() {
+                              });
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   void deleteCheckboxMemo(int id) async {
@@ -260,11 +330,12 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                     direction: Axis.horizontal,
                                     secondaryActions: <Widget>[
                                       IconSlideAction(
-                                        caption: 'Edit',
-                                        color: Colors.black45,
-                                        icon: Icons.edit,
-                                        onTap: () => editNote(snapshot.data[0][index]),
-                                      ),
+                                          caption: 'Edit',
+                                          color: Colors.black45,
+                                          icon: Icons.edit,
+                                          onTap: () {
+                                            editNote(snapshot.data[0][index]);
+                                          }),
                                       IconSlideAction(
                                           caption: 'Delete',
                                           color: Colors.red,
@@ -300,19 +371,19 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.blue, width: 2), color: Colors.white),
                                   child: Center(
                                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.05,
-                                        ),
-                                        Text(
-                                          "긴급 & 안중요",
-                                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
-                                        ),
-                                        Icon(
-                                          Icons.delete,
-                                          size: MediaQuery.of(context).size.width * 0.05,
-                                          color: Colors.blue,
-                                        ),
-                                      ]))),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.05,
+                                    ),
+                                    Text(
+                                      "긴급 & 안중요",
+                                      style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      size: MediaQuery.of(context).size.width * 0.05,
+                                      color: Colors.blue,
+                                    ),
+                                  ]))),
                               onLongPress: () {
                                 deleteEverything(2);
                               },
@@ -338,34 +409,34 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           width: MediaQuery.of(context).size.width * 0.459,
                                           child: Center(
                                               child: Row(children: [
-                                                isCheckboxInabled == true
-                                                    ? Container(
-                                                  width: MediaQuery.of(context).size.width * 0.05,
-                                                  margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
-                                                  child: Icon(snapshot.data[1][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
-                                                )
-                                                    : Container(width: 4),
-                                                snapshot.data[1][index].memoContext != ""
-                                                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                  Text(
+                                            isCheckboxInabled == true
+                                                ? Container(
+                                                    width: MediaQuery.of(context).size.width * 0.05,
+                                                    margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                                    child: Icon(snapshot.data[1][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
+                                                  )
+                                                : Container(width: 4),
+                                            snapshot.data[1][index].memoContext != ""
+                                                ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                    Text(
+                                                      snapshot.data[1][index].memoTitle,
+                                                      style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                      snapshot.data[1][index].memoContext.length > k
+                                                          ? snapshot.data[1][index].memoContext.substring(0, k) + ".."
+                                                          : snapshot.data[1][index].memoContext,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12,
+                                                      ),
+                                                    )
+                                                  ])
+                                                : Text(
                                                     snapshot.data[1][index].memoTitle,
                                                     style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                   ),
-                                                  Text(
-                                                    snapshot.data[1][index].memoContext.length > k
-                                                        ? snapshot.data[1][index].memoContext.substring(0, k) + ".."
-                                                        : snapshot.data[1][index].memoContext,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  )
-                                                ])
-                                                    : Text(
-                                                  snapshot.data[1][index].memoTitle,
-                                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                                                ),
-                                              ]))),
+                                          ]))),
                                       onTap: () {
                                         isCheckboxInabled == true
                                             ? checkCheckboxMemo(snapshot.data[1][index].id, snapshot.data[1][index].isChecked == 1 ? 0 : 1)
@@ -425,19 +496,19 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.yellow, width: 2), color: Colors.white),
                                   child: Center(
                                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.05,
-                                        ),
-                                        Text(
-                                          "안긴급 & 중요",
-                                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
-                                        ),
-                                        Icon(
-                                          Icons.delete,
-                                          size: MediaQuery.of(context).size.width * 0.05,
-                                          color: Colors.yellow,
-                                        ),
-                                      ]))),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.05,
+                                    ),
+                                    Text(
+                                      "안긴급 & 중요",
+                                      style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      size: MediaQuery.of(context).size.width * 0.05,
+                                      color: Colors.yellow,
+                                    ),
+                                  ]))),
                               onLongPress: () {
                                 deleteEverything(3);
                               },
@@ -463,34 +534,34 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           width: MediaQuery.of(context).size.width * 0.459,
                                           child: Center(
                                               child: Row(children: [
-                                                isCheckboxInabled == true
-                                                    ? Container(
-                                                  width: MediaQuery.of(context).size.width * 0.05,
-                                                  margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
-                                                  child: Icon(snapshot.data[2][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
-                                                )
-                                                    : Container(width: 4),
-                                                snapshot.data[2][index].memoContext != ""
-                                                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                  Text(
+                                            isCheckboxInabled == true
+                                                ? Container(
+                                                    width: MediaQuery.of(context).size.width * 0.05,
+                                                    margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                                    child: Icon(snapshot.data[2][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
+                                                  )
+                                                : Container(width: 4),
+                                            snapshot.data[2][index].memoContext != ""
+                                                ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                    Text(
+                                                      snapshot.data[2][index].memoTitle,
+                                                      style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                      snapshot.data[2][index].memoContext.length > k
+                                                          ? snapshot.data[2][index].memoContext.substring(0, k) + ".."
+                                                          : snapshot.data[2][index].memoContext,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12,
+                                                      ),
+                                                    )
+                                                  ])
+                                                : Text(
                                                     snapshot.data[2][index].memoTitle,
                                                     style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                   ),
-                                                  Text(
-                                                    snapshot.data[2][index].memoContext.length > k
-                                                        ? snapshot.data[2][index].memoContext.substring(0, k) + ".."
-                                                        : snapshot.data[2][index].memoContext,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  )
-                                                ])
-                                                    : Text(
-                                                  snapshot.data[2][index].memoTitle,
-                                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                                                ),
-                                              ]))),
+                                          ]))),
                                       onTap: () {
                                         isCheckboxInabled == true
                                             ? checkCheckboxMemo(snapshot.data[2][index].id, snapshot.data[2][index].isChecked == 1 ? 0 : 1)
@@ -545,19 +616,19 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.red, width: 2), color: Colors.white),
                                   child: Center(
                                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                        Container(
-                                          width: MediaQuery.of(context).size.width * 0.05,
-                                        ),
-                                        Text(
-                                          "안긴급 & 안중요",
-                                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
-                                        ),
-                                        Icon(
-                                          Icons.delete,
-                                          size: MediaQuery.of(context).size.width * 0.05,
-                                          color: Colors.red,
-                                        ),
-                                      ]))),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width * 0.05,
+                                    ),
+                                    Text(
+                                      "안긴급 & 안중요",
+                                      style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
+                                    Icon(
+                                      Icons.delete,
+                                      size: MediaQuery.of(context).size.width * 0.05,
+                                      color: Colors.red,
+                                    ),
+                                  ]))),
                               onLongPress: () {
                                 deleteEverything(4);
                               },
@@ -583,34 +654,34 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                                           width: MediaQuery.of(context).size.width * 0.459,
                                           child: Center(
                                               child: Row(children: [
-                                                isCheckboxInabled == true
-                                                    ? Container(
-                                                  width: MediaQuery.of(context).size.width * 0.05,
-                                                  margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
-                                                  child: Icon(snapshot.data[3][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
-                                                )
-                                                    : Container(width: 4),
-                                                snapshot.data[3][index].memoContext != ""
-                                                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                  Text(
+                                            isCheckboxInabled == true
+                                                ? Container(
+                                                    width: MediaQuery.of(context).size.width * 0.05,
+                                                    margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                                    child: Icon(snapshot.data[3][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
+                                                  )
+                                                : Container(width: 4),
+                                            snapshot.data[3][index].memoContext != ""
+                                                ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                    Text(
+                                                      snapshot.data[3][index].memoTitle,
+                                                      style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                      snapshot.data[3][index].memoContext.length > k
+                                                          ? snapshot.data[3][index].memoContext.substring(0, k) + ".."
+                                                          : snapshot.data[3][index].memoContext,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12,
+                                                      ),
+                                                    )
+                                                  ])
+                                                : Text(
                                                     snapshot.data[3][index].memoTitle,
                                                     style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
                                                   ),
-                                                  Text(
-                                                    snapshot.data[3][index].memoContext.length > k
-                                                        ? snapshot.data[3][index].memoContext.substring(0, k) + ".."
-                                                        : snapshot.data[3][index].memoContext,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  )
-                                                ])
-                                                    : Text(
-                                                  snapshot.data[3][index].memoTitle,
-                                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                                                ),
-                                              ]))),
+                                          ]))),
                                       onTap: () {
                                         isCheckboxInabled == true
                                             ? checkCheckboxMemo(snapshot.data[3][index].id, snapshot.data[3][index].isChecked == 1 ? 0 : 1)
@@ -725,7 +796,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   addCheckboxMemoPage(int whatmatrix) {
-    addCheckboxMemo(whatmatrix);//dummy
+    addCheckboxMemo(whatmatrix); //dummy
     return Scaffold(
       appBar: EmptyAppBar(),
       body: Center(
@@ -751,7 +822,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  Future<void> addCheckboxMemo(int whatmatrix) async{
+  Future<void> addCheckboxMemo(int whatmatrix) async {
     CheckboxMemoDAO cmd = new CheckboxMemoDAO();
     await cmd.insertCheckboxMemo(whatmatrix);
     setState(() {});
