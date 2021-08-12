@@ -22,14 +22,14 @@ class CheckboxMemoDAO {
         await db.execute(
           "CREATE TABLE checkboxmemo(id INTEGER PRIMARY KEY AUTOINCREMENT, memotitle TEXT NOT NULL, memocontext TEXT NOT NULL, whatmatrix INTEGER NOT NULL, ischecked INTEGER NOT NULL)",
         );
-        print("@@@ 신규 테이블 생성되었음 - 체크박스메모 DAO @@@");
+        print("@@@ 신규 테이블 생성되었음 - 체크박스메모 @@@");
       },
     );
   }
 
   Future<bool> insertCheckboxMemo(String memotitle,String memocontext ,int whatmatrix) async {
     final db = await database;
-    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("$memotitle", "$memocontext",$whatmatrix,0)'); //dummy
+    await db.rawInsert('insert into checkboxmemo(memotitle, memocontext, whatmatrix, ischecked) values("$memotitle", "$memocontext",$whatmatrix,0)');
     return true;
   }
 
