@@ -1,11 +1,11 @@
-class CheckboxMemo {
+class EisenMemo {
   int id;
   String memoTitle;
   String memoContext;
   int whatMatrix;
   int isChecked;
 
-  CheckboxMemo(int id, String memoTitle, String memoContexts, int whatMatrix,
+  EisenMemo(int id, String memoTitle, String memoContexts, int whatMatrix,
       int isChecked) {
     this.id = id;
     this.memoTitle = memoTitle;
@@ -13,7 +13,7 @@ class CheckboxMemo {
     this.whatMatrix = whatMatrix;
     this.isChecked = isChecked;
   }
-  CheckboxMemo.fromMap(Map<String, dynamic> map) {
+  EisenMemo.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
     this.memoTitle = map['memotitle'];
     this.memoContext = map['memocontext'];
