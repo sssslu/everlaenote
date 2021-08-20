@@ -18,9 +18,6 @@ class EisenhowerPage extends StatefulWidget {
 
 class _EisenhowerPageState extends State<EisenhowerPage> {
   CheckboxMemoDAO cmd = new CheckboxMemoDAO();
-
-  /// 일단 false이긴 한데 사용자 설정에서 가져오게 바꿔야함.
-  bool isCheckboxEnabled;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contextController = TextEditingController();
   final HeroController _controller = HeroController();
@@ -31,18 +28,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     print("showing sidebar");
   }
 
-  Future<bool> checkgetter() async{
+/*  Future<bool> checkgetter() async {
     _pref = await SharedPreferences.getInstance();
-      isCheckboxEnabled=(_pref.getBool('checkboxenabled')??false);
+    isCheckboxEnabled = (_pref.getBool('checkboxenabled') ?? false);
     return isCheckboxEnabled;
-  }
-
-  checkChange() async{
-    print("체크박스 보이기 상태 변경 실행"); //DB에서 설정 가져오도록 바꾸어야함. 쉐어드프리퍼런스 사용 예정
-
-    setState(() {isCheckboxEnabled = !isCheckboxEnabled;
-    _pref.setBool('checkboxenabled', isCheckboxEnabled);});
-  }
+  }*/ //shared preferences 사용시 참고 구문
 
   Future<List<List<CheckboxMemo>>> getAllCheckboxMemo() async {
     print("get all @@@@@@");
@@ -106,20 +96,23 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   dynamic editNote(CheckboxMemo c) {
     _titleController.text = c.memoTitle;
     _contextController.text = c.memoContext;
-    return  showDialog(
+    return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Center(child : Text("메모 수정",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),),
+            title: Center(
+              child: Text(
+                "메모 수정",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
             content: Stack(
-              overflow: Overflow.visible,
               children: <Widget>[
                 Form(
                   key: _formKey,
                   child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color : colorMatcher(c.whatMatrix), width: 3)),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(c.whatMatrix), width: 3)),
                     width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.3,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -138,6 +131,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            //Normal textInputField will be displayed
+                            maxLines: 5,
+                            // when user presses enter it will adapt to it
                             controller: _contextController,
                             decoration: InputDecoration(
                               fillColor: Colors.white,
@@ -149,13 +147,16 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            child: Text("저장",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                            child: Text(
+                              "저장",
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
                             color: colorMatcher(c.whatMatrix),
                             onPressed: () async {
                               if (_titleController.text == "") {
                                 _titleController.text = "내용 없음";
                               }
-                              await cmd.updateCheckboxMemoInDB(c.id,_titleController.text, _contextController.text);
+                              await cmd.insertCheckboxMemo(_titleController.text, _contextController.text, c.whatMatrix);
                               Navigator.pop(context);
                               setState(() {});
                             },
@@ -179,16 +180,19 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Center(child : Text("메모 추가",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),),
+            title: Center(
+              child: Text(
+                "메모 추가",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
             content: Stack(
-              overflow: Overflow.visible,
               children: <Widget>[
                 Form(
                   key: _formKey,
                   child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color : colorMatcher(whatmatrix), width: 3)),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(whatmatrix), width: 3)),
                     width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.3,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -207,6 +211,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            //Normal textInputField will be displayed
+                            maxLines: 5,
+                            // when user presses enter it will adapt to it
                             controller: _contextController,
                             decoration: InputDecoration(
                               fillColor: Colors.white,
@@ -218,7 +227,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            child: Text("저장",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                            child: Text(
+                              "저장",
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
                             color: colorMatcher(whatmatrix),
                             onPressed: () async {
                               if (_titleController.text == "") {
@@ -280,8 +292,71 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
-  Column MMaker1(dynamic snapshot, String titleText, int whatMMatrix, Color ccolor) {
-    int k = 9; //화면 너비에 따라 바꾸도록 수정해야함, 체크박스메모도 고려
+  InkWell MMMaker(dynamic snapshot, int whatMMatrix, int index) {
+    return InkWell(
+      child: Container(
+          height: MediaQuery.of(context).size.height * 0.05,
+          width: MediaQuery.of(context).size.width * 0.459,
+          child: Center(
+              child: Row(children: [
+            Container(width: 4),
+            snapshot.data[whatMMatrix - 1][index].memoContext != ""
+                ? snapshot.data[whatMMatrix - 1][index].isChecked == 1
+                    ? Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Text(
+                          snapshot.data[whatMMatrix - 1][index].memoTitle,
+                          style: TextStyle(color: Colors.black54, fontSize: 15, fontWeight: FontWeight.bold, decoration: TextDecoration.lineThrough),
+                          overflow: TextOverflow.ellipsis,
+                        ))
+                    : (Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            snapshot.data[whatMMatrix - 1][index].memoTitle,
+                            style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: MediaQuery.of(context).size.height * 0.02,
+                            child: Text(
+                              snapshot.data[whatMMatrix - 1][index].memoContext,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ))
+                      ]))
+                : snapshot.data[whatMMatrix - 1][index].isChecked == 1
+                    ? Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Text(
+                          snapshot.data[whatMMatrix - 1][index].memoTitle,
+                          style: TextStyle(color: Colors.black54, fontSize: 15, fontWeight: FontWeight.bold, decoration: TextDecoration.lineThrough),
+                          overflow: TextOverflow.ellipsis,
+                        ))
+                    : Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Text(
+                          snapshot.data[whatMMatrix - 1][index].memoTitle,
+                          style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ))
+          ]))),
+      onTap: () {
+        print("체크상태변경됨@@@@@@@@@@@");
+        checkCheckboxMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1);
+      },
+      onLongPress: () {
+        viewNote(snapshot.data[whatMMatrix - 1][index]);
+      },
+    );
+  }
+
+  Column mMaker1(dynamic snapshot, String titleText, int whatMMatrix, Color ccolor) {
     return Column(
       children: [
         InkWell(
@@ -330,53 +405,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               final item = snapshot.data[whatMMatrix - 1][index].hashCode.toString();
               return Slidable(
                 key: Key(item),
-                child: InkWell(
-                  child: Container(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                      width: MediaQuery.of(context).size.width * 0.459,
-                      child: Center(
-                          child: Row(children: [
-                        isCheckboxEnabled == true
-                            ? Container(
-                                width: MediaQuery.of(context).size.width * 0.05,
-                                margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
-                                child: Icon(snapshot.data[whatMMatrix - 1][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
-                              )
-                            : Container(width: 4),
-                        snapshot.data[whatMMatrix - 1][index].memoContext != ""
-                            ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                Text(
-                                  snapshot.data[whatMMatrix - 1][index].memoTitle.length > k
-                                      ? snapshot.data[whatMMatrix - 1][index].memoTitle.substring(0, k) + ".."
-                                      : snapshot.data[whatMMatrix - 1][index].memoTitle,
-                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  snapshot.data[whatMMatrix - 1][index].memoContext.length > int.parse("${k * 1.4}".split(".")[0])
-                                      ? snapshot.data[whatMMatrix - 1][index].memoContext.substring(0, int.parse("${k * 1.4}".split(".")[0])) + ".."
-                                      : snapshot.data[whatMMatrix - 1][index].memoContext,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                  ),
-                                )
-                              ])
-                            : Text(
-                                snapshot.data[whatMMatrix - 1][index].memoTitle.length > k
-                                    ? snapshot.data[whatMMatrix - 1][index].memoTitle.substring(0, k) + ".."
-                                    : snapshot.data[whatMMatrix - 1][index].memoTitle,
-                                style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                      ]))),
-                  onTap: () {
-                    isCheckboxEnabled == true
-                        ? checkCheckboxMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1)
-                        : print("check function not working");
-                  },
-                  onLongPress: () {
-                    viewNote(snapshot.data[whatMMatrix - 1][index]);
-                  },
-                ),
+                child: MMMaker(snapshot, whatMMatrix, index),
                 actionPane: SlidableDrawerActionPane(),
                 actionExtentRatio: 0.2,
                 direction: Axis.horizontal,
@@ -396,8 +425,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  Column MMaker2(dynamic snapshot, String titleText, int whatMMatrix, Color ccolor) {
-    int k = 9; //화면 너비에 따라 바꾸도록 수정해야함, 체크박스메모도 고려
+  Column mMaker2(dynamic snapshot, String titleText, int whatMMatrix, Color ccolor) {
     return Column(
       children: [
         InkWell(
@@ -446,53 +474,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               final item = snapshot.data[whatMMatrix - 1][index].hashCode.toString();
               return Slidable(
                 key: Key(item),
-                child: InkWell(
-                  child: Container(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                      width: MediaQuery.of(context).size.width * 0.459,
-                      child: Center(
-                          child: Row(children: [
-                        isCheckboxEnabled == true
-                            ? Container(
-                                width: MediaQuery.of(context).size.width * 0.05,
-                                margin: EdgeInsets.fromLTRB(0, 0, 4, 0),
-                                child: Icon(snapshot.data[whatMMatrix - 1][index].isChecked == 0 ? CupertinoIcons.app : CupertinoIcons.checkmark_square_fill),
-                              )
-                            : Container(width: 4),
-                        snapshot.data[whatMMatrix - 1][index].memoContext != ""
-                            ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                Text(
-                                  snapshot.data[whatMMatrix - 1][index].memoTitle.length > k
-                                      ? snapshot.data[whatMMatrix - 1][index].memoTitle.substring(0, k) + ".."
-                                      : snapshot.data[whatMMatrix - 1][index].memoTitle,
-                                  style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  snapshot.data[whatMMatrix - 1][index].memoContext.length > int.parse("${k * 1.4}".split(".")[0])
-                                      ? snapshot.data[whatMMatrix - 1][index].memoContext.substring(0, int.parse("${k * 1.4}".split(".")[0])) + ".."
-                                      : snapshot.data[whatMMatrix - 1][index].memoContext,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                  ),
-                                )
-                              ])
-                            : Text(
-                                snapshot.data[whatMMatrix - 1][index].memoTitle.length > k
-                                    ? snapshot.data[whatMMatrix - 1][index].memoTitle.substring(0, k) + ".."
-                                    : snapshot.data[whatMMatrix - 1][index].memoTitle,
-                                style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                      ]))),
-                  onTap: () {
-                    isCheckboxEnabled == true
-                        ? checkCheckboxMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1)
-                        : print("check function not working");
-                  },
-                  onLongPress: () {
-                    viewNote(snapshot.data[whatMMatrix - 1][index]);
-                  },
-                ),
+                child: MMMaker(snapshot, whatMMatrix, index),
                 actionPane: SlidableDrawerActionPane(),
                 actionExtentRatio: 0.2,
                 direction: Axis.horizontal,
@@ -514,10 +496,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Screen.keepOn(true);
-    checkgetter();
   }
 
   @override
@@ -541,9 +521,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                 ),
                 InkWell(
-                  onTap: checkChange,
                   child: Icon(
-                    Icons.check_circle_outline,
+                    Icons.category_rounded,
                     color: Colors.green,
                   ),
                 ),
@@ -558,15 +537,15 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        MMaker1(snapshot, "긴급 & 중요", 1, colorMatcher(1)), //슬라이더블 방향 차이 때문에 부득이하게 다른 함수를 탐
-                        MMaker2(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
+                        mMaker1(snapshot, "긴급 & 중요", 1, colorMatcher(1)), //슬라이더블 방향 차이 때문에 부득이하게 다른 함수를 탐
+                        mMaker2(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        MMaker1(snapshot, "안긴급 & 중요", 3, colorMatcher(3)),
-                        MMaker2(snapshot, "안긴급 & 안중요", 4, colorMatcher(4)),
+                        mMaker1(snapshot, "안긴급 & 중요", 3, colorMatcher(3)),
+                        mMaker2(snapshot, "안긴급 & 안중요", 4, colorMatcher(4)),
                       ],
                     ),
                   ]);
