@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:everlaenote/model/eisenMemoDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     isCheckboxEnabled = (_pref.getBool('checkboxenabled') ?? false);
     return isCheckboxEnabled;
   }*/ //shared preferences 사용시 참고 구문
+
   Future<List<List<EisenMemo>>> getAllEisenMemo() async {
     print("get all @@@@@@");
     List<EisenMemo> wholeList = [];
@@ -63,7 +66,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     print("showing sidebar");
   }
 
-  void viewNote(EisenMemo c) {
+  void viewEisenNote(EisenMemo c) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -76,7 +79,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               child: new Text("Edit"),
               onPressed: () {
                 Navigator.pop(context);
-                editMemo(c);
+                editEisenMemo(c);
               },
             ),
             new TextButton(
@@ -91,7 +94,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  dynamic editMemo(EisenMemo c) {
+  dynamic editEisenMemo(EisenMemo c) {
     _titleController.text = c.memoTitle;
     _contextController.text = c.memoContext;
     return showDialog(
@@ -153,7 +156,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                               if (_titleController.text == "") {
                                 _titleController.text = "내용 없음";
                               }
-                              await cmd.insertEisenMemo(_titleController.text, _contextController.text, c.whatMatrix);
+                              await cmd.updateEisenMemoInDB(c.id,_titleController.text, _contextController.text);
                               Navigator.pop(context);
                               setState(() {});
                             },
@@ -169,7 +172,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
-  dynamic createMemo(int whatmatrix) {
+  dynamic createEisenMemo(int whatmatrix) {
     print("$whatmatrix 번 매트릭스 메모 생성 시작");
     _titleController.text = "";
     _contextController.text = "";
@@ -277,25 +280,80 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         children: <Widget>[
           Container(
               height: MediaQuery.of(context).size.height * 0.03,
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                InkWell(
-                  onTap: showSidebar,
-                  child: Icon(
-                    Icons.menu,
-                    color: colorMatcher(0),
+              child: Center(
+                child: InkWell(
+                  onLongPress: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              content: Container (height: MediaQuery.of(context).size.height*0.35,
+                                  child : Column(children: [
+                            Text(
+                              "도움주신분",
+                              style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            Text(
+                              "최혜은",
+                              style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                            ),
+                                Text(
+                                  "김민성",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),Text(
+                                      "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),Text(
+                                      "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),Text(
+                                      "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "똘이",
+                                  style: TextStyle(color: colorMaker(), fontWeight: FontWeight.bold),
+                                ),
+
+
+
+                          ])));
+                        });
+                  },
+                  child: Text(
+                    "Everlaenote",
+                    style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
                   ),
                 ),
-                Text(
-                  "everlae note",
-                  style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
-                ),
-                InkWell(
-                  child: Icon(
-                    Icons.category_rounded,
-                    color: colorMatcher(0),
-                  ),
-                ),
-              ])),
+              )),
           FutureBuilder(
               future: getAllEisenMemo(),
               builder: (context, snapshot) {
@@ -477,7 +535,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: Text(
                           snapshot.data[whatMMatrix - 1][index].memoTitle,
-                          style: TextStyle(color: Colors.black54, fontSize: 15, fontWeight: FontWeight.bold, decoration: TextDecoration.lineThrough),
+                          style: TextStyle(color: Colors.black54, fontSize: 15, fontWeight: FontWeight.bold, decoration: TextDecoration.lineThrough, decorationThickness: 6,),
                           overflow: TextOverflow.ellipsis,
                         ))
                     : (Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -506,7 +564,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: Text(
                           snapshot.data[whatMMatrix - 1][index].memoTitle,
-                          style: TextStyle(color: Colors.black54, fontSize: 15, fontWeight: FontWeight.bold, decoration: TextDecoration.lineThrough),
+                          style: TextStyle(color: Colors.black54, fontSize: 15, fontWeight: FontWeight.bold, decoration: TextDecoration.lineThrough, decorationThickness: 6,),
                           overflow: TextOverflow.ellipsis,
                         ))
                     : Container(
@@ -522,14 +580,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         checkEisenMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1);
       },
       onLongPress: () {
-        viewNote(snapshot.data[whatMMatrix - 1][index]);
+        viewEisenNote(snapshot.data[whatMMatrix - 1][index]);
       },
     );
   }
 
   IconSlideAction slideMakerDelete(dynamic snapshot, int index, int whatmatrix) {
     return IconSlideAction(
-        caption: 'dump',
+        caption: '삭제',
         color: Colors.red,
         icon: Icons.delete,
         onTap: () {
@@ -566,36 +624,36 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           child: Icon(Icons.crop_square),
           backgroundColor: colorMatcher(4),
           label: '안긴급&안중요',
-          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
+          labelStyle: TextStyle(fontSize: 15.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => createMemo(4),
+          onTap: () => createEisenMemo(4),
           onLongPress: () => print('4 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
           child: Icon(Icons.crop_square),
           backgroundColor: colorMatcher(3),
-          label: '긴급&안중요',
-          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
+          label: '안긴급&중요',
+          labelStyle: TextStyle(fontSize: 15.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => createMemo(3),
+          onTap: () => createEisenMemo(3),
           onLongPress: () => print('3 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
           child: Icon(Icons.crop_square),
           backgroundColor: colorMatcher(2),
-          label: '안긴급&중요',
-          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
+          label: '긴급&안중요',
+          labelStyle: TextStyle(fontSize: 15.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => createMemo(2),
+          onTap: () => createEisenMemo(2),
           onLongPress: () => print('2 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
           child: Icon(Icons.crop_square),
           backgroundColor: colorMatcher(1),
           label: '긴급&중요',
-          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
+          labelStyle: TextStyle(fontSize: 15.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => createMemo(1),
+          onTap: () => createEisenMemo(1),
           onLongPress: () => print('1 CHILD LONG PRESS'),
         ),
       ],
@@ -616,5 +674,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         return Colors.green;
     }
     return Colors.white;
+  }
+
+  Color colorMaker() {
+    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
   }
 }

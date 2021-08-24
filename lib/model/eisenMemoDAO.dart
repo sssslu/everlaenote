@@ -22,7 +22,7 @@ class EisenMemoDAO {
         await db.execute(
           "CREATE TABLE eisenmemo(id INTEGER PRIMARY KEY AUTOINCREMENT, memotitle TEXT NOT NULL, memocontext TEXT NOT NULL, whatmatrix INTEGER NOT NULL, ischecked INTEGER NOT NULL)",
         );
-        print("@@@ 신규 테이블 생성되었음 - 체크박스메모 @@@");
+        print("@@@ 신규 테이블 생성되었음 - 아이젠메모 @@@");
       },
     );
   }
