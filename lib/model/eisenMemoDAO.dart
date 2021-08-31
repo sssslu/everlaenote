@@ -62,6 +62,11 @@ class EisenMemoDAO {
   Future<void> updateEisenMemoInDB(int id, String title, String context) async {
     final db = await database;
     await db.rawUpdate('UPDATE eisenmemo SET memotitle="$title", memocontext="$context" WHERE id=$id');
-    print('update done');
+  }
+
+  Future<void> changeEisenMemoMatrix(int id, int whatmarix) async {
+    final db = await database;
+    await db.rawUpdate('UPDATE eisenmemo SET whatmatrix="$whatmarix" WHERE id=$id');
+    print('matrix change done');
   }
 }
