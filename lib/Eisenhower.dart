@@ -105,13 +105,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.3,
         height: MediaQuery.of(context).size.width * 0.3,
-        color: colorMatcher(whatMatrix),
+
         margin: EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * 0.005,
           MediaQuery.of(context).size.width * 0.005,
           MediaQuery.of(context).size.width * 0.005,
           MediaQuery.of(context).size.width * 0.005,
         ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),color: colorMatcher(whatMatrix),
       ),
       onTap: () async {
         await cmd.changeEisenMemoMatrix(id, whatMatrix);
