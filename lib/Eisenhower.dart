@@ -100,19 +100,22 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       },
     );
   }
-  dynamic moveSupporter(int whatMatrix, int id){
+
+  dynamic moveSupporter(int whatMatrix, int id) {
     return InkWell(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.3,
         height: MediaQuery.of(context).size.width * 0.3,
-
         margin: EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * 0.005,
           MediaQuery.of(context).size.width * 0.005,
           MediaQuery.of(context).size.width * 0.005,
           MediaQuery.of(context).size.width * 0.005,
         ),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),),color: colorMatcher(whatMatrix),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        color: colorMatcher(whatMatrix),
       ),
       onTap: () async {
         await cmd.changeEisenMemoMatrix(id, whatMatrix);
@@ -393,6 +396,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                     style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
                   ),
                 ),
+
+                ///이스터에그~~~~~~~
               )),
           FutureBuilder(
               future: getAllEisenMemo(),
@@ -537,19 +542,17 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                             ))
                       ]))
                 : snapshot.data[whatMMatrix - 1][index].isChecked == 1
-                    ? Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text(
-                          snapshot.data[whatMMatrix - 1][index].memoTitle,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.lineThrough,
-                            decorationThickness: 6,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ))
+                    ?Text(
+                              snapshot.data[whatMMatrix - 1][index].memoTitle,
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.lineThrough,
+                                decorationThickness: 6,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ))
                     : Container(
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: Text(
