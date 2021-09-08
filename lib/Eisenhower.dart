@@ -24,12 +24,22 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   final _formKey = GlobalKey<FormState>();
   SharedPreferences _pref;
 
-/*  SharedPreferences _pref;
- Future<bool> checkgetter() async {
+  /// 퍼블릭 변수 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  bool isCheckboxEnabled = true;
+
+  Future<bool> checkGetter() async {
+    print('체크게터 실행!');
     _pref = await SharedPreferences.getInstance();
-    isCheckboxEnabled = (_pref.getBool('checkboxenabled') ?? false);
+    isCheckboxEnabled = (_pref.getBool('checkboxEnabled') ?? true);
     return isCheckboxEnabled;
-  }*/ //shared preferences 사용시 참고 구문
+  }
+
+  checkChange() async {
+    setState(() {
+      isCheckboxEnabled = !isCheckboxEnabled;
+      _pref.setBool('checkboxenabled', isCheckboxEnabled);
+    });
+  }
 
   Future<List<List<EisenMemo>>> getAllEisenMemo() async {
     print("get all @@@@@@");
@@ -335,6 +345,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   @override
   void initState() {
     super.initState();
+    checkGetter();
     Screen.keepOn(true);
   }
 
@@ -428,6 +439,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
+  ///mMaker 는 아이젠하워 매트릭스 4개중 1개의 겉 껍질과 슬라이더블 소켓을 만들어주는 역할을 한다.
   Column mMaker(dynamic snapshot, String titleText, int whatMMatrix, Color ccolor) {
     return Column(
       children: [
@@ -497,73 +509,30 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
+  ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰을 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
   InkWell mmMaker(dynamic snapshot, int whatMMatrix, int index) {
     return InkWell(
-      child: Container(
-          height: 38,
-          width: MediaQuery.of(context).size.width * 0.459,
-          child: Center(
-              child: Row(children: [
-            Container(width: 4),
-            snapshot.data[whatMMatrix - 1][index].memoContext != ""
-                ? snapshot.data[whatMMatrix - 1][index].isChecked == 1
-                    ? Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text(
-                          snapshot.data[whatMMatrix - 1][index].memoTitle,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.lineThrough,
-                            decorationThickness: 6,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ))
-                    : (Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: Text(
-                            snapshot.data[whatMMatrix - 1][index].memoTitle,
-                            style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.height * 0.02,
-                            child: Text(
-                              snapshot.data[whatMMatrix - 1][index].memoContext,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ))
-                      ]))
-                : snapshot.data[whatMMatrix - 1][index].isChecked == 1
-                    ?Text(
-                              snapshot.data[whatMMatrix - 1][index].memoTitle,
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.lineThrough,
-                                decorationThickness: 6,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ))
-                    : Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text(
-                          snapshot.data[whatMMatrix - 1][index].memoTitle,
-                          style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                        ))
-          ]))),
+      child: Row( children: [
+        //체크 기능이 켜져있다면 / 체크가 돼있거나 안돼있다면 / 체크박스 모양 2종류중 선택 /체크 기능이 안켜져있다면 아예 공백 (너비 4짜리)
+        isCheckboxEnabled ? Container(child : snapshot.data[whatMMatrix - 1][index].isChecked == 0?Icon(CupertinoIcons.app):Icon(CupertinoIcons.checkmark_square_fill)) : Container(width: 4,),
+        //체크 기능이 켜져있다면 / 체크가 돼있거나 안돼있다면 / 되어있다면 글자흐리게 및 제목만 / 안되어있다면 제목과 내용(하지만 내용이 ""일땐 그냥 제목) /  체크 기능이 꺼져있다면 그냥 제목과 내용(하지만 내용이 ""일땐 그냥 제목) / -> 복잡하니 함수 제작 : mmmMaker
+        Container(width: MediaQuery.of(context).size.width*0.4-20, child: Text(
+          snapshot.data[whatMMatrix - 1][index].memoTitle,
+          style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
+        ),)
+      ]),
+
+      ///해당 잉크웰을 터치했을 시 동작이다(밀었을때는 이 윗단계 함수인 슬라이더블이 처리한다.)
       onTap: () {
-        print("체크상태변경됨@@@@@@@@@@@");
-        checkEisenMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1);
+        if (isCheckboxEnabled) {
+          print("@ 체크상태변경됨 @");
+          checkEisenMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1);
+        } else if (!isCheckboxEnabled) {
+          print("@ 체크기능 꺼져있음 @");
+        } else {
+          print('@ 체크박스 관련 에러@');
+        }
       },
       onLongPress: () {
         if (snapshot.data[whatMMatrix - 1][index].isChecked == 0) viewEisenNote(snapshot.data[whatMMatrix - 1][index]);
@@ -581,6 +550,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           setState(() {});
         });
   }
+
 
   SpeedDial buildSpeedDial() {
     return SpeedDial(
