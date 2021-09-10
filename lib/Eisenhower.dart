@@ -509,22 +509,12 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰을 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
+  ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰 한 개를 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
   InkWell mmMaker(dynamic snapshot, int whatMMatrix, int index) {
     return InkWell(
-      child: Row( children: [
-        //체크 기능이 켜져있다면 / 체크가 돼있거나 안돼있다면 / 체크박스 모양 2종류중 선택 /체크 기능이 안켜져있다면 아예 공백 (너비 4짜리)
-        isCheckboxEnabled ? Container(child : snapshot.data[whatMMatrix - 1][index].isChecked == 0?Icon(CupertinoIcons.app):Icon(CupertinoIcons.checkmark_square_fill)) : Container(width: 4,),
-        //체크 기능이 켜져있다면 / 체크가 돼있거나 안돼있다면 / 되어있다면 글자흐리게 및 제목만 / 안되어있다면 제목과 내용(하지만 내용이 ""일땐 그냥 제목) /  체크 기능이 꺼져있다면 그냥 제목과 내용(하지만 내용이 ""일땐 그냥 제목) / -> 복잡하니 함수 제작 : mmmMaker
-        Container(width: MediaQuery.of(context).size.width*0.4-20, child: Text(
-          snapshot.data[whatMMatrix - 1][index].memoTitle,
-          style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-          overflow: TextOverflow.ellipsis,
-        ),)
-      ]),
-
-      ///해당 잉크웰을 터치했을 시 동작이다(밀었을때는 이 윗단계 함수인 슬라이더블이 처리한다.)
+      child: containerMaker(snapshot.data[whatMMatrix - 1][index], isCheckboxEnabled),
       onTap: () {
+        //해당 잉크웰을 터치했을 시 동작이다(밀었을때는 이 윗단계 함수인 슬라이더블이 처리한다.)
         if (isCheckboxEnabled) {
           print("@ 체크상태변경됨 @");
           checkEisenMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1);
@@ -540,6 +530,44 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
+  ///containerMaker 는, 아이젠메모 객체 한개를 받아서 실제 메모쪼가리가 담긴 적절한 콘테이너를 리턴해준다.
+  Container containerMaker(EisenMemo E, bool checkMode) {
+    return Container(height: MediaQuery.of(context).size.height * 0.05,
+      child: Row(
+        children: [
+          checkMode
+              ? Container(
+                  width: 20,
+                  child: E.isChecked == 0 ? Icon(CupertinoIcons.app) : Icon(CupertinoIcons.checkmark_square_fill),
+                )
+              : Container(
+                  width: 4,
+                ),
+          E.memoContext == ""
+              ? Container(
+                  width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
+                  child: Text('1',style: TextStyle(color: isCheckboxEnabled? E.isChecked==1? Colors.black54 : Colors.black : Colors.black ),),
+                )
+              : (isCheckboxEnabled&&E.isChecked==1)?(Container(
+            child: Text('1',style: TextStyle(color:Colors.black54)),
+            width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
+          )):(Column(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: Text('1'),
+                      width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
+                    ),
+                    Container(
+                      child: Text('2'),
+                      width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
+                    )
+                  ],
+                ))
+        ],
+      ),
+    );
+  }
+
   IconSlideAction slideMakerDelete(dynamic snapshot, int index, int whatmatrix) {
     return IconSlideAction(
         caption: '삭제',
@@ -550,7 +578,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           setState(() {});
         });
   }
-
 
   SpeedDial buildSpeedDial() {
     return SpeedDial(
