@@ -546,19 +546,19 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           E.memoContext == ""
               ? Container(
                   width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
-                  child: Text('1',style: TextStyle(color: isCheckboxEnabled? E.isChecked==1? Colors.black54 : Colors.black : Colors.black ),),
+                  child: Text(E.memoTitle,style: TextStyle(color: isCheckboxEnabled? E.isChecked==1? Colors.black54 : Colors.black : Colors.black , fontSize: 15, fontWeight: FontWeight.bold),),
                 )
               : (isCheckboxEnabled&&E.isChecked==1)?(Container(
-            child: Text('1',style: TextStyle(color:Colors.black54)),
+            child: Text(E.memoTitle,style: TextStyle(color:Colors.black54, fontSize: 15, fontWeight: FontWeight.bold)),
             width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
           )):(Column(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      child: Text('1'),
+                      child: Text(E.memoTitle,style : TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                       width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
                     ),
                     Container(
-                      child: Text('2'),
+                      child: Text(E.memoContext, style : TextStyle(fontSize: 13)),
                       width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
                     )
                   ],
