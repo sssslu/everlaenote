@@ -1,12 +1,14 @@
 1. 체크된 박스, 굵고 흐린 제목
-컨테이너(mainAxisAlignment: MainAxisAlignment.spaceEvenly,)
+컨테이너 속에
+센터 속에
+로우(mainAxisAlignment: MainAxisAlignment.start,)
+속에
+컨테이너 1, 컨테이너 2
 
-속에 row(  mainAxisAlignment: MainAxisAlignment.start,)
+1에는 상수 너비(아이콘용 너비) 와 쪼가리 높이, 아이콘(체크된박스) 들어있음
 
-속에 
-1번컨테이너(mainAxisAlignment: MainAxisAlignment.spaceEvenly, 아이콘에게 할당해줄 크기) - 속에는 체크된아이콘
+2는 텍스트컨테이너너비, 쪼가리높이, alignment: Alignment.centerLeft, 차일드는 제목 텍스트(굵은, 엘립시스)
 
-2번컨테이너(mainAxisAlignment: MainAxisAlignment.start, 제목 텍스트에게 할당해줄 크기) - 속에는 체크된 제목
 
 2. 빈 박스, 굵은 제목
 1번과 완전히 같은 구조, 아이콘과 글데코레이션만 다름.

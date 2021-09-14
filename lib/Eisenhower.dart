@@ -534,31 +534,39 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   Container containerMaker(EisenMemo E, bool checkMode) {
     //초기화
     double checkContainerWidth = 25;
-    double textContainerWidth = MediaQuery.of(context).size.width*0.42-25;
-    double containerHeight = MediaQuery.of(context).size.height*0.05;
+    double textContainerWidth = MediaQuery.of(context).size.width * 0.42 - 25;
+    double containerHeight = MediaQuery.of(context).size.height * 0.05;
     //분기 로직
-    int a=1;
+    int a = 1;
     //구현부
-    switch(a){
+    switch (a) {
       case 1:
         return Container(
           child: Center(
-            child:Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(width: checkContainerWidth, height: containerHeight,
-                  child: Icon(CupertinoIcons.checkmark_square_fill),
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: checkContainerWidth,
+                height: containerHeight,
+                child: Icon(CupertinoIcons.checkmark_square_fill),
+              ),
+              Container(
+                width: textContainerWidth,
+                height: containerHeight,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  E.memoTitle,
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Container(width: textContainerWidth,height: containerHeight, alignment: Alignment.centerLeft,
-                child: Text(E.memoTitle, style: TextStyle(fontWeight: FontWeight.w700),overflow: TextOverflow.ellipsis,),
-                )
-              ],
-            )
-          ),
+              )
+            ],
+          )),
         );
         break;
 
-      default :
+      default:
         return Container();
     }
   }
