@@ -1,0 +1,13 @@
+1. 체크된 박스, 굵고 흐린 제목
+컨테이너(mainAxisAlignment: MainAxisAlignment.spaceEvenly,)
+
+속에 row(  mainAxisAlignment: MainAxisAlignment.start,)
+
+속에 
+1번컨테이너(mainAxisAlignment: MainAxisAlignment.spaceEvenly, 아이콘에게 할당해줄 크기) - 속에는 체크된아이콘
+
+2번컨테이너(mainAxisAlignment: MainAxisAlignment.start, 제목 텍스트에게 할당해줄 크기) - 속에는 체크된 제목
+
+2. 빈 박스, 굵은 제목
+1번과 완전히 같은 구조, 아이콘과 글데코레이션만 다름.
+

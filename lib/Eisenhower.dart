@@ -521,7 +521,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         } else if (!isCheckboxEnabled) {
           print("@ 체크기능 꺼져있음 @");
         } else {
-          print('@ 체크박스 관련 에러@');
+          print('@ 체크기능 관련 에러@');
         }
       },
       onLongPress: () {
@@ -532,40 +532,35 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   ///containerMaker 는, 아이젠메모 객체 한개를 받아서 실제 메모쪼가리가 담긴 적절한 콘테이너를 리턴해준다.
   Container containerMaker(EisenMemo E, bool checkMode) {
-    return Container(height: MediaQuery.of(context).size.height * 0.05,
-      child: Row(
-        children: [
-          checkMode
-              ? Container(
-                  width: 20,
-                  child: E.isChecked == 0 ? Icon(CupertinoIcons.app) : Icon(CupertinoIcons.checkmark_square_fill),
-                )
-              : Container(
-                  width: 4,
+    //초기화
+    double checkContainerWidth = 25;
+    double textContainerWidth = MediaQuery.of(context).size.width*0.42-25;
+    double containerHeight = MediaQuery.of(context).size.height*0.05;
+    //분기 로직
+    int a=1;
+    //구현부
+    switch(a){
+      case 1:
+        return Container(
+          child: Center(
+            child:Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(width: checkContainerWidth, height: containerHeight,
+                  child: Icon(CupertinoIcons.checkmark_square_fill),
                 ),
-          E.memoContext == ""
-              ? Container(
-                  width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
-                  child: Text(E.memoTitle,style: TextStyle(color: isCheckboxEnabled? E.isChecked==1? Colors.black54 : Colors.black : Colors.black , fontSize: 15, fontWeight: FontWeight.bold),),
+                Container(width: textContainerWidth,height: containerHeight, alignment: Alignment.centerLeft,
+                child: Text(E.memoTitle, style: TextStyle(fontWeight: FontWeight.w700),overflow: TextOverflow.ellipsis,),
                 )
-              : (isCheckboxEnabled&&E.isChecked==1)?(Container(
-            child: Text(E.memoTitle,style: TextStyle(color:Colors.black54, fontSize: 15, fontWeight: FontWeight.bold)),
-            width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
-          )):(Column(mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: Text(E.memoTitle,style : TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                      width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
-                    ),
-                    Container(
-                      child: Text(E.memoContext, style : TextStyle(fontSize: 13)),
-                      width: checkMode ? MediaQuery.of(context).size.width * 0.4 - 21 : MediaQuery.of(context).size.width * 0.4 - 5,
-                    )
-                  ],
-                ))
-        ],
-      ),
-    );
+              ],
+            )
+          ),
+        );
+        break;
+
+      default :
+        return Container();
+    }
   }
 
   IconSlideAction slideMakerDelete(dynamic snapshot, int index, int whatmatrix) {
