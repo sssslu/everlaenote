@@ -83,7 +83,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("${c.memoTitle}"),
-          content: new Text("${c.memoContext}"),
+          content: new SingleChildScrollView( child :  Text("${c.memoContext}"),),
           actions: <Widget>[
             new TextButton(
               child: new Text("옮기기"),
@@ -142,8 +142,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
+          color: colorMatcher(whatMatrix),
         ),
-        color: colorMatcher(whatMatrix),
       ),
       onTap: () async {
         await cmd.changeEisenMemoMatrix(id, whatMatrix);
@@ -205,7 +205,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               children: <Widget>[
                 Form(
                   key: _formKey,
-                  child: Container(
+
+                  child: SingleChildScrollView(child :Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(c.whatMatrix), width: 3)),
                     width: MediaQuery
                         .of(context)
@@ -262,6 +263,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                       ],
                     ),
                   ),
+                  ),
                 ),
               ],
             ),
@@ -289,11 +291,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   key: _formKey,
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(whatmatrix), width: 3)),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.8,
-                    child: Column(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: SingleChildScrollView(child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Padding(
@@ -378,69 +378,57 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
-            children: <Widget>[
-              Container(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.03,
-                  child: Center(
-
-
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                        InkWell(
-                          child: Icon(Icons.book, color: colorMatcher(0),),
-                        ),
-                        InkWell(
-                            child: Text(
-                              "Everlaenote",
-                              style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            onLongPress: () async {
-                              eggMaker();
-                              for (int i=0; i < 10; i++) {
-                                Future.delayed(Duration(milliseconds: 300*i), () {
-                                  Navigator.pop(context);
-                                  eggMaker();
-                                }
-                                );
-                              }
-                            },
-                        ),
-                        InkWell(
-                          child: Icon(Icons.settings, color: colorMatcher(0),),
-                        ),
-                      ])
-
-                    ///이스터에그~~~~~~~
-                  )),
-              FutureBuilder(
-                  future: getAllEisenMemo(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData == false) {
-                      return CircularProgressIndicator();
-                    } else
-                      return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            mMaker(snapshot, "긴급 & 중요", 1, colorMatcher(1)), //슬라이더블 방향 차이 때문에 부득이하게 다른 함수를 탐
-                            mMaker(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            mMaker(snapshot, "안긴급 & 중요", 3, colorMatcher(3)),
-                            mMaker(snapshot, "안긴급 & 안중요", 4, colorMatcher(4)),
-                          ],
-                        ),
-                      ]);
-                  })
-            ],
-          )),
-      /*floatingActionButton: buildSpeedDial(),*/
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              height: 30,
+                child : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(child: Icon(Icons.amp_stories), onTap: (){print("노트북메뉴로 이동");gotoNoteBookListPage();},),
+                  InkWell(
+                  onLongPress: () async {
+                    eggMaker();
+                    for(int i =1;i<10;i++){
+                    Future.delayed(Duration(milliseconds: 300*i), () {
+                      Navigator.pop(context);
+                      eggMaker();
+                    });}
+                  },
+                  child: Text(
+                    "Everlaenote",
+                    style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
+                  ),
+                ),
+                  InkWell(child: Icon(Icons.settings), onTap: (){})]
+                )
+              ),
+          FutureBuilder(
+              future: getAllEisenMemo(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData == false) {
+                  return CircularProgressIndicator();
+                } else
+                  return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        mMaker(snapshot, "긴급 & 중요", 1, colorMatcher(1)), //슬라이더블 방향 차이 때문에 부득이하게 다른 함수를 탐
+                        mMaker(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        mMaker(snapshot, "안긴급 & 중요", 3, colorMatcher(3)),
+                        mMaker(snapshot, "안긴급 & 안중요", 4, colorMatcher(4)),
+                      ],
+                    ),
+                  ]);
+              })
+        ],
+      )),
+      //floatingActionButton: buildSpeedDial(),
     );
   }
 
@@ -561,19 +549,46 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   Container containerMaker(EisenMemo E, bool checkMode) {
     //초기화
     double checkContainerWidth = 25;
-    double textContainerWidth = MediaQuery
-        .of(context)
-        .size
-        .width * 0.42 - 25;
-    double containerHeight = MediaQuery
-        .of(context)
-        .size
-        .height * 0.05;
+    double textContainerWidth = MediaQuery.of(context).size.width * 0.42 - checkContainerWidth;
+    double containerHeight = MediaQuery.of(context).size.height * 0.05;
+    double titleSize = 16;
+    double contextSize = 12;
     //분기 로직
-    int a = 1;
-    //구현부
+    int a =0;
+    if(isCheckboxEnabled&&E.isChecked==1)
+      a=1;
+    else if(isCheckboxEnabled&&E.isChecked==0&&E.memoContext=="")
+      a=2;
+    else if(isCheckboxEnabled&&E.isChecked==0&&E.memoContext!="")
+      a=3;
     switch (a) {
       case 1:
+        return Container(
+          child: Center(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: checkContainerWidth,
+                height: containerHeight,
+                child: Icon(CupertinoIcons.checkmark_square_fill),
+                alignment: Alignment.center,
+              ),
+              Container(
+                width: textContainerWidth,
+                height: containerHeight,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  E.memoTitle,
+                  style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black54, fontSize: titleSize),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+            ],
+          )),
+        );
+        break;
+      case 2:
         return Container(
           child: Center(
               child: Row(
@@ -582,7 +597,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   Container(
                     width: checkContainerWidth,
                     height: containerHeight,
-                    child: Icon(CupertinoIcons.checkmark_square_fill),
+                    child: Icon(CupertinoIcons.app),
+                    alignment: Alignment.center,
                   ),
                   Container(
                     width: textContainerWidth,
@@ -590,7 +606,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       E.memoTitle,
-                      style: TextStyle(fontWeight: FontWeight.w700),
+                      style: TextStyle(fontWeight: FontWeight.w700,fontSize: titleSize),
                       overflow: TextOverflow.ellipsis,
                     ),
                   )
@@ -598,16 +614,55 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               )),
         );
         break;
+      case 3:
+        return Container(
+          child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: checkContainerWidth,
+                    height: containerHeight,
+                    child: Icon(CupertinoIcons.app),
+                    alignment: Alignment.center,
+                  ),
+                  Column(
+                    children: [
+                      Container(width: textContainerWidth,
+                        height: containerHeight*0.6,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          E.memoTitle,
+                          style: TextStyle(fontWeight: FontWeight.w700,fontSize: titleSize),
+                          overflow: TextOverflow.ellipsis,
+                        ),),
+                      Container(
+                        width: textContainerWidth,
+                        height: containerHeight*0.4,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          E.memoContext,
+                          style: TextStyle(fontWeight: FontWeight.w500,fontSize: contextSize),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+
+                  )
+                ],
+              )),
+        );
 
       default:
-        return Container();
+        return Container(child : Text("ERROR"));
     }
   }
 
   IconSlideAction slideMakerDelete(dynamic snapshot, int index, int whatmatrix) {
     return IconSlideAction(
+        caption: '삭제',
         color: Colors.red,
-        icon: Icons.delete,
+        icon: CupertinoIcons.delete_solid,
         onTap: () {
           deleteEisenMemo(snapshot.data[whatmatrix][index].id);
           setState(() {});
@@ -616,11 +671,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   SpeedDial buildSpeedDial() {
     return SpeedDial(
-      marginEnd: 18,
-      marginBottom: 20,
-      icon: Icons.trip_origin,
+      marginEnd: 5,
+      marginBottom: MediaQuery.of(context).size.height*0.93,
+      icon: Icons.settings,
       activeIcon: Icons.remove,
-      buttonSize: 56.0,
+      buttonSize: MediaQuery.of(context).size.height*0.05,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
@@ -654,6 +709,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           labelBackgroundColor: Colors.black,
           onTap: () => gotoNoteBookListPage(),
         ),
+        SpeedDialChild(
+          child: Icon(Icons.note_add_outlined),
+          backgroundColor: colorMatcher(0),
+          label: '빠른노트 추가',
+          labelStyle: TextStyle(fontSize: 15, color: Colors.white),
+          labelBackgroundColor: Colors.black,
+          onTap: () => gotoQuickNoteAddPage(),
+        ),
       ],
     );
   }
@@ -665,14 +728,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         builder: (BuildContext context) {
           return AlertDialog(
               content: Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.35,
+                  height: MediaQuery.of(context).size.height * 0.35,
                   child: Column(children: [
                     Text(
-                      "ASSIST\n",
-                      style: TextStyle(fontSize: 30, color: Colors.pink, fontWeight: FontWeight.bold),
+                      "도움주신분",
+                      style: TextStyle(fontSize: 20, color: randomColorMaker(), fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "최혜은",
@@ -700,6 +760,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   gotoNoteBookListPage() {}
 
+  gotoQuickNoteAddPage() {}
+
   gotoEisenhowerPage() {}
 
   Color colorMatcher(int whatmatrix) {
@@ -713,11 +775,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       case 4:
         return Colors.blueGrey;
       case 0:
-        return Colors.green;
-      case 5:
         return Colors.black;
+      case 5:
+        return Colors.white;
     }
-    return Colors.white;
+    return Colors.green;
   }
 
   Color randomColorMaker() {
