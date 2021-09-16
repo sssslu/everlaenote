@@ -114,13 +114,31 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   dynamic moveSupporter(int whatMatrix, int id) {
     return InkWell(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.3,
-        height: MediaQuery.of(context).size.width * 0.3,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 0.3,
+        height: MediaQuery
+            .of(context)
+            .size
+            .width * 0.3,
         margin: EdgeInsets.fromLTRB(
-          MediaQuery.of(context).size.width * 0.005,
-          MediaQuery.of(context).size.width * 0.005,
-          MediaQuery.of(context).size.width * 0.005,
-          MediaQuery.of(context).size.width * 0.005,
+          MediaQuery
+              .of(context)
+              .size
+              .width * 0.005,
+          MediaQuery
+              .of(context)
+              .size
+              .width * 0.005,
+          MediaQuery
+              .of(context)
+              .size
+              .width * 0.005,
+          MediaQuery
+              .of(context)
+              .size
+              .width * 0.005,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
@@ -189,7 +207,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   key: _formKey,
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(c.whatMatrix), width: 3)),
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.8,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -268,7 +289,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   key: _formKey,
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(whatmatrix), width: 3)),
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.8,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -354,87 +378,68 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
-        children: <Widget>[
-          Container(
-              height: MediaQuery.of(context).size.height * 0.03,
-              child: Center(
-                child: InkWell(
-                  onLongPress: () async {
-                    eggMaker();
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 1000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 1500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 2000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 2500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 3000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 3500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 4000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 4500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 5000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                  },
-                  child: Text(
-                    "Everlaenote",
-                    style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
-                  ),
-                ),
+            children: <Widget>[
+              Container(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.03,
+                  child: Center(
 
-                ///이스터에그~~~~~~~
-              )),
-          FutureBuilder(
-              future: getAllEisenMemo(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData == false) {
-                  return CircularProgressIndicator();
-                } else
-                  return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        mMaker(snapshot, "긴급 & 중요", 1, colorMatcher(1)), //슬라이더블 방향 차이 때문에 부득이하게 다른 함수를 탐
-                        mMaker(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        mMaker(snapshot, "안긴급 & 중요", 3, colorMatcher(3)),
-                        mMaker(snapshot, "안긴급 & 안중요", 4, colorMatcher(4)),
-                      ],
-                    ),
-                  ]);
-              })
-        ],
-      )),
+
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        InkWell(
+                          child: Icon(Icons.book, color: colorMatcher(0),),
+                        ),
+                        InkWell(
+                            child: Text(
+                              "Everlaenote",
+                              style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                            onLongPress: () async {
+                              eggMaker();
+                              for (int i=0; i < 10; i++) {
+                                Future.delayed(Duration(milliseconds: 300*i), () {
+                                  Navigator.pop(context);
+                                  eggMaker();
+                                }
+                                );
+                              }
+                            },
+                        ),
+                        InkWell(
+                          child: Icon(Icons.settings, color: colorMatcher(0),),
+                        ),
+                      ])
+
+                    ///이스터에그~~~~~~~
+                  )),
+              FutureBuilder(
+                  future: getAllEisenMemo(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData == false) {
+                      return CircularProgressIndicator();
+                    } else
+                      return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            mMaker(snapshot, "긴급 & 중요", 1, colorMatcher(1)), //슬라이더블 방향 차이 때문에 부득이하게 다른 함수를 탐
+                            mMaker(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            mMaker(snapshot, "안긴급 & 중요", 3, colorMatcher(3)),
+                            mMaker(snapshot, "안긴급 & 안중요", 4, colorMatcher(4)),
+                          ],
+                        ),
+                      ]);
+                  })
+            ],
+          )),
       /*floatingActionButton: buildSpeedDial(),*/
     );
   }
@@ -446,42 +451,64 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         InkWell(
           child: Container(
               margin: EdgeInsets.fromLTRB(
-                MediaQuery.of(context).size.width * 0.005,
-                MediaQuery.of(context).size.width * 0.005,
-                MediaQuery.of(context).size.width * 0.005,
+                MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.005,
+                MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.005,
+                MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.005,
                 0,
               ),
-              width: MediaQuery.of(context).size.width * 0.46,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.46,
               height: 25,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: ccolor, width: 2), color: Colors.white),
               child: Center(
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                Text(
-                  titleText,
-                  style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
-                ),
-                Icon(
-                  Icons.add_box_rounded,
-                  size: MediaQuery.of(context).size.width * 0.042,
-                  color: ccolor,
-                ),
-              ]))),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Text(
+                      titleText,
+                      style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold,),
+                    ),
+                  ]))),
           onTap: () {
             createEisenMemo(whatMMatrix);
           },
         ),
         Container(
           margin: EdgeInsets.fromLTRB(
-            MediaQuery.of(context).size.width * 0.005,
-            MediaQuery.of(context).size.width * 0.005,
-            MediaQuery.of(context).size.width * 0.005,
-            MediaQuery.of(context).size.width * 0.001,
+            MediaQuery
+                .of(context)
+                .size
+                .width * 0.005,
+            MediaQuery
+                .of(context)
+                .size
+                .width * 0.005,
+            MediaQuery
+                .of(context)
+                .size
+                .width * 0.005,
+            MediaQuery
+                .of(context)
+                .size
+                .width * 0.001,
           ),
-          width: MediaQuery.of(context).size.width * 0.46,
-          height: MediaQuery.of(context).size.height * 0.42,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 0.46,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.42,
           child: ListView.builder(
             padding: EdgeInsets.all(4),
             itemCount: snapshot.data[whatMMatrix - 1].length,
@@ -534,8 +561,14 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   Container containerMaker(EisenMemo E, bool checkMode) {
     //초기화
     double checkContainerWidth = 25;
-    double textContainerWidth = MediaQuery.of(context).size.width * 0.42 - 25;
-    double containerHeight = MediaQuery.of(context).size.height * 0.05;
+    double textContainerWidth = MediaQuery
+        .of(context)
+        .size
+        .width * 0.42 - 25;
+    double containerHeight = MediaQuery
+        .of(context)
+        .size
+        .height * 0.05;
     //분기 로직
     int a = 1;
     //구현부
@@ -544,25 +577,25 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         return Container(
           child: Center(
               child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: checkContainerWidth,
-                height: containerHeight,
-                child: Icon(CupertinoIcons.checkmark_square_fill),
-              ),
-              Container(
-                width: textContainerWidth,
-                height: containerHeight,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  E.memoTitle,
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )
-            ],
-          )),
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: checkContainerWidth,
+                    height: containerHeight,
+                    child: Icon(CupertinoIcons.checkmark_square_fill),
+                  ),
+                  Container(
+                    width: textContainerWidth,
+                    height: containerHeight,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      E.memoTitle,
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              )),
         );
         break;
 
@@ -573,7 +606,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   IconSlideAction slideMakerDelete(dynamic snapshot, int index, int whatmatrix) {
     return IconSlideAction(
-        caption: '삭제',
         color: Colors.red,
         icon: Icons.delete,
         onTap: () {
@@ -622,29 +654,25 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           labelBackgroundColor: Colors.black,
           onTap: () => gotoNoteBookListPage(),
         ),
-        SpeedDialChild(
-          child: Icon(Icons.note_add_outlined),
-          backgroundColor: colorMatcher(0),
-          label: '빠른노트 추가',
-          labelStyle: TextStyle(fontSize: 15, color: Colors.white),
-          labelBackgroundColor: Colors.black,
-          onTap: () => gotoQuickNoteAddPage(),
-        ),
       ],
     );
   }
 
   dynamic eggMaker() {
     return showDialog(
+      barrierColor: Colors.black54,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
               content: Container(
-                  height: MediaQuery.of(context).size.height * 0.35,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.35,
                   child: Column(children: [
                     Text(
-                      "도움주신분",
-                      style: TextStyle(fontSize: 20, color: randomColorMaker(), fontWeight: FontWeight.bold),
+                      "ASSIST\n",
+                      style: TextStyle(fontSize: 30, color: Colors.pink, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "최혜은",
@@ -659,6 +687,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                       style: TextStyle(fontSize: 15, color: randomColorMaker(), fontWeight: FontWeight.bold),
                     ),
                     Text(
+                      "김일균",
+                      style: TextStyle(fontSize: 15, color: randomColorMaker(), fontWeight: FontWeight.bold),
+                    ),
+                    Text(
                       "똘이",
                       style: TextStyle(fontSize: 15, color: randomColorMaker(), fontWeight: FontWeight.bold),
                     ),
@@ -667,8 +699,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   gotoNoteBookListPage() {}
-
-  gotoQuickNoteAddPage() {}
 
   gotoEisenhowerPage() {}
 
@@ -684,6 +714,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         return Colors.blueGrey;
       case 0:
         return Colors.green;
+      case 5:
+        return Colors.black;
     }
     return Colors.white;
   }
