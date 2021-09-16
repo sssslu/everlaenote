@@ -83,7 +83,9 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("${c.memoTitle}"),
-          content: new SingleChildScrollView( child :  Text("${c.memoContext}"),),
+          content: new SingleChildScrollView(
+            child: Text("${c.memoContext}"),
+          ),
           actions: <Widget>[
             new TextButton(
               child: new Text("옮기기"),
@@ -114,31 +116,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   dynamic moveSupporter(int whatMatrix, int id) {
     return InkWell(
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.3,
-        height: MediaQuery
-            .of(context)
-            .size
-            .width * 0.3,
+        width: MediaQuery.of(context).size.width * 0.3,
+        height: MediaQuery.of(context).size.width * 0.3,
         margin: EdgeInsets.fromLTRB(
-          MediaQuery
-              .of(context)
-              .size
-              .width * 0.005,
-          MediaQuery
-              .of(context)
-              .size
-              .width * 0.005,
-          MediaQuery
-              .of(context)
-              .size
-              .width * 0.005,
-          MediaQuery
-              .of(context)
-              .size
-              .width * 0.005,
+          MediaQuery.of(context).size.width * 0.005,
+          MediaQuery.of(context).size.width * 0.005,
+          MediaQuery.of(context).size.width * 0.005,
+          MediaQuery.of(context).size.width * 0.005,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
@@ -205,64 +189,61 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               children: <Widget>[
                 Form(
                   key: _formKey,
-
-                  child: SingleChildScrollView(child :Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(c.whatMatrix), width: 3)),
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.8,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _titleController,
-                            decoration: InputDecoration(
-                              labelText: '제목',
-                              border: UnderlineInputBorder(),
-                              fillColor: Colors.white,
-                              filled: true,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(c.whatMatrix), width: 3)),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _titleController,
+                              decoration: InputDecoration(
+                                labelText: '제목',
+                                border: UnderlineInputBorder(),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            minLines: 1,
-                            //Normal textInputField will be displayed
-                            maxLines: 5,
-                            // when user presses enter it will adapt to it
-                            controller: _contextController,
-                            decoration: InputDecoration(
-                              fillColor: Colors.white,
-                              labelText: '내용',
-                              filled: true,
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              //Normal textInputField will be displayed
+                              maxLines: 5,
+                              // when user presses enter it will adapt to it
+                              controller: _contextController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                labelText: '내용',
+                                filled: true,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            child: Text(
-                              "저장",
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              child: Text(
+                                "저장",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () async {
+                                if (_titleController.text == "") {
+                                  _titleController.text = "내용 없음";
+                                }
+                                await cmd.updateEisenMemoInDB(c.id, _titleController.text, _contextController.text);
+                                Navigator.pop(context);
+                                setState(() {});
+                              },
                             ),
-                            onPressed: () async {
-                              if (_titleController.text == "") {
-                                _titleController.text = "내용 없음";
-                              }
-                              await cmd.updateEisenMemoInDB(c.id, _titleController.text, _contextController.text);
-                              Navigator.pop(context);
-                              setState(() {});
-                            },
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
                   ),
                 ),
               ],
@@ -293,55 +274,57 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(whatmatrix), width: 3)),
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: MediaQuery.of(context).size.height * 0.5,
-                    child: SingleChildScrollView(child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _titleController,
-                            decoration: InputDecoration(
-                              labelText: '제목',
-                              border: UnderlineInputBorder(),
-                              fillColor: Colors.white,
-                              filled: true,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _titleController,
+                              decoration: InputDecoration(
+                                labelText: '제목',
+                                border: UnderlineInputBorder(),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            minLines: 1,
-                            //Normal textInputField will be displayed
-                            maxLines: 5,
-                            // when user presses enter it will adapt to it
-                            controller: _contextController,
-                            decoration: InputDecoration(
-                              fillColor: Colors.white,
-                              labelText: '내용',
-                              filled: true,
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              //Normal textInputField will be displayed
+                              maxLines: 5,
+                              // when user presses enter it will adapt to it
+                              controller: _contextController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                labelText: '내용',
+                                filled: true,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            child: Text(
-                              "저장",
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              child: Text(
+                                "저장",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () async {
+                                if (_titleController.text == "") {
+                                  _titleController.text = "내용 없음";
+                                }
+                                await cmd.insertEisenMemo(_titleController.text, _contextController.text, whatmatrix);
+                                Navigator.pop(context);
+                                setState(() {});
+                              },
                             ),
-                            onPressed: () async {
-                              if (_titleController.text == "") {
-                                _titleController.text = "내용 없음";
-                              }
-                              await cmd.insertEisenMemo(_titleController.text, _contextController.text, whatmatrix);
-                              Navigator.pop(context);
-                              setState(() {});
-                            },
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -380,29 +363,37 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               height: 30,
-                child : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(child: Icon(Icons.amp_stories), onTap: (){print("노트북메뉴로 이동");gotoNoteBookListPage();},),
-                  InkWell(
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                InkWell(
+                  child: Icon(Icons.amp_stories),
+                  onTap: () {
+                    print("노트북메뉴로 이동");
+                    gotoNoteBookListPage();
+                  },
+                ),
+                InkWell(
                   onLongPress: () async {
                     eggMaker();
-                    for(int i =1;i<10;i++){
-                    Future.delayed(Duration(milliseconds: 300*i), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });}
+                    for (int i = 1; i < 10; i++) {
+                      Future.delayed(Duration(milliseconds: 300 * i), () {
+                        Navigator.pop(context);
+                        eggMaker();
+                      });
+                    }
                   },
                   child: Text(
                     "Everlaenote",
                     style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
                   ),
                 ),
-                  InkWell(child: Icon(Icons.settings), onTap: (){})]
-                )
-              ),
+                InkWell(
+                    child: Icon(Icons.settings),
+                    onTap: () {
+                      print("세팅 메뉴로 이동");
+                    })
+              ])),
           FutureBuilder(
               future: getAllEisenMemo(),
               builder: (context, snapshot) {
@@ -413,7 +404,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        mMaker(snapshot, "긴급 & 중요", 1, colorMatcher(1)), //슬라이더블 방향 차이 때문에 부득이하게 다른 함수를 탐
+                        mMaker(snapshot, "긴급 & 중요", 1, colorMatcher(1)),
                         mMaker(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
                       ],
                     ),
@@ -439,64 +430,38 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         InkWell(
           child: Container(
               margin: EdgeInsets.fromLTRB(
-                MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.005,
-                MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.005,
-                MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.005,
+                MediaQuery.of(context).size.width * 0.005,
+                MediaQuery.of(context).size.width * 0.005,
+                MediaQuery.of(context).size.width * 0.005,
                 0,
               ),
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.46,
+              width: MediaQuery.of(context).size.width * 0.46,
               height: 25,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: ccolor, width: 2), color: Colors.white),
               child: Center(
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(
-                      titleText,
-                      style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold,),
-                    ),
-                  ]))),
+                Text(
+                  titleText,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ]))),
           onTap: () {
             createEisenMemo(whatMMatrix);
           },
         ),
         Container(
           margin: EdgeInsets.fromLTRB(
-            MediaQuery
-                .of(context)
-                .size
-                .width * 0.005,
-            MediaQuery
-                .of(context)
-                .size
-                .width * 0.005,
-            MediaQuery
-                .of(context)
-                .size
-                .width * 0.005,
-            MediaQuery
-                .of(context)
-                .size
-                .width * 0.001,
+            MediaQuery.of(context).size.width * 0.005,
+            MediaQuery.of(context).size.width * 0.005,
+            MediaQuery.of(context).size.width * 0.005,
+            MediaQuery.of(context).size.width * 0.001,
           ),
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.46,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height * 0.42,
+          width: MediaQuery.of(context).size.width * 0.46,
+          height: MediaQuery.of(context).size.height * 0.42,
           child: ListView.builder(
             padding: EdgeInsets.all(4),
             itemCount: snapshot.data[whatMMatrix - 1].length,
@@ -554,13 +519,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     double titleSize = 16;
     double contextSize = 12;
     //분기 로직
-    int a =0;
-    if(isCheckboxEnabled&&E.isChecked==1)
-      a=1;
-    else if(isCheckboxEnabled&&E.isChecked==0&&E.memoContext=="")
-      a=2;
-    else if(isCheckboxEnabled&&E.isChecked==0&&E.memoContext!="")
-      a=3;
+    int a = 0;
+    if (isCheckboxEnabled && E.isChecked == 1)
+      a = 1;
+    else if (isCheckboxEnabled && E.isChecked == 0 && E.memoContext == "")
+      a = 2;
+    else if (isCheckboxEnabled && E.isChecked == 0 && E.memoContext != "")
+      a = 3;
     switch (a) {
       case 1:
         return Container(
@@ -576,7 +541,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               ),
               Container(
                 width: textContainerWidth,
-                height: containerHeight,
+                height: titleSize,
                 alignment: Alignment.centerLeft,
                 child: Text(
                   E.memoTitle,
@@ -592,69 +557,70 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         return Container(
           child: Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: checkContainerWidth,
-                    height: containerHeight,
-                    child: Icon(CupertinoIcons.app),
-                    alignment: Alignment.center,
-                  ),
-                  Container(
-                    width: textContainerWidth,
-                    height: containerHeight,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      E.memoTitle,
-                      style: TextStyle(fontWeight: FontWeight.w700,fontSize: titleSize),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )
-                ],
-              )),
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: checkContainerWidth,
+                height: containerHeight,
+                child: Icon(CupertinoIcons.app),
+                alignment: Alignment.center,
+              ),
+              Container(
+                width: textContainerWidth,
+                height: titleSize,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  E.memoTitle,
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: titleSize),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+            ],
+          )),
         );
         break;
       case 3:
         return Container(
           child: Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: checkContainerWidth,
+                height: containerHeight,
+                child: Icon(CupertinoIcons.app),
+                alignment: Alignment.center,
+              ),
+              Column(
                 children: [
                   Container(
-                    width: checkContainerWidth,
-                    height: containerHeight,
-                    child: Icon(CupertinoIcons.app),
-                    alignment: Alignment.center,
+                    width: textContainerWidth,
+                    height: titleSize,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      E.memoTitle,
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: titleSize),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Container(width: textContainerWidth,
-                        height: containerHeight*0.6,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          E.memoTitle,
-                          style: TextStyle(fontWeight: FontWeight.w700,fontSize: titleSize),
-                          overflow: TextOverflow.ellipsis,
-                        ),),
-                      Container(
-                        width: textContainerWidth,
-                        height: containerHeight*0.4,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          E.memoContext,
-                          style: TextStyle(fontWeight: FontWeight.w500,fontSize: contextSize),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-
-                  )
+                  Container(
+                    width: textContainerWidth,
+                    height: contextSize,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      E.memoContext,
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: contextSize),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
-              )),
+              )
+            ],
+          )),
         );
 
       default:
-        return Container(child : Text("ERROR"));
+        return Container(child: Text("ERROR"));
     }
   }
 
@@ -672,10 +638,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   SpeedDial buildSpeedDial() {
     return SpeedDial(
       marginEnd: 5,
-      marginBottom: MediaQuery.of(context).size.height*0.93,
+      marginBottom: MediaQuery.of(context).size.height * 0.93,
       icon: Icons.settings,
       activeIcon: Icons.remove,
-      buttonSize: MediaQuery.of(context).size.height*0.05,
+      buttonSize: MediaQuery.of(context).size.height * 0.05,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
@@ -723,7 +689,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   dynamic eggMaker() {
     return showDialog(
-      barrierColor: Colors.black54,
+        barrierColor: Colors.black54,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
