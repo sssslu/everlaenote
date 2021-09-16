@@ -83,7 +83,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("${c.memoTitle}"),
-          content: new Text("${c.memoContext}"),
+          content: new SingleChildScrollView( child :  Text("${c.memoContext}"),),
           actions: <Widget>[
             new TextButton(
               child: new Text("옮기기"),
@@ -124,8 +124,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
+          color: colorMatcher(whatMatrix),
         ),
-        color: colorMatcher(whatMatrix),
       ),
       onTap: () async {
         await cmd.changeEisenMemoMatrix(id, whatMatrix);
@@ -187,7 +187,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               children: <Widget>[
                 Form(
                   key: _formKey,
-                  child: Container(
+
+                  child: SingleChildScrollView(child :Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(c.whatMatrix), width: 3)),
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: Column(
@@ -241,6 +242,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                       ],
                     ),
                   ),
+                  ),
                 ),
               ],
             ),
@@ -269,7 +271,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(whatmatrix), width: 3)),
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: Column(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: SingleChildScrollView(child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Padding(
@@ -318,7 +321,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                           ),
                         )
                       ],
-                    ),
+                    ),)
                   ),
                 ),
               ],
@@ -356,60 +359,29 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           child: Column(
         children: <Widget>[
           Container(
-              height: MediaQuery.of(context).size.height * 0.03,
-              child: Center(
-                child: InkWell(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              height: 30,
+                child : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(child: Icon(Icons.amp_stories), onTap: (){print("노트북메뉴로 이동");gotoNoteBookListPage();},),
+                  InkWell(
                   onLongPress: () async {
                     eggMaker();
-                    Future.delayed(const Duration(milliseconds: 500), () {
+                    for(int i =1;i<10;i++){
+                    Future.delayed(Duration(milliseconds: 300*i), () {
                       Navigator.pop(context);
                       eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 1000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 1500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 2000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 2500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 3000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 3500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 4000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 4500), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
-                    Future.delayed(const Duration(milliseconds: 5000), () {
-                      Navigator.pop(context);
-                      eggMaker();
-                    });
+                    });}
                   },
                   child: Text(
                     "Everlaenote",
                     style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
                   ),
                 ),
-
-                ///이스터에그~~~~~~~
-              )),
+                  InkWell(child: Icon(Icons.settings), onTap: (){})]
+                )
+              ),
           FutureBuilder(
               future: getAllEisenMemo(),
               builder: (context, snapshot) {
@@ -435,7 +407,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               })
         ],
       )),
-      /*floatingActionButton: buildSpeedDial(),*/
+      //floatingActionButton: buildSpeedDial(),
     );
   }
 
@@ -534,11 +506,18 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   Container containerMaker(EisenMemo E, bool checkMode) {
     //초기화
     double checkContainerWidth = 25;
-    double textContainerWidth = MediaQuery.of(context).size.width * 0.42 - 25;
+    double textContainerWidth = MediaQuery.of(context).size.width * 0.42 - checkContainerWidth;
     double containerHeight = MediaQuery.of(context).size.height * 0.05;
+    double titleSize = 16;
+    double contextSize = 12;
     //분기 로직
-    int a = 1;
-    //구현부
+    int a =0;
+    if(isCheckboxEnabled&&E.isChecked==1)
+      a=1;
+    else if(isCheckboxEnabled&&E.isChecked==0&&E.memoContext=="")
+      a=2;
+    else if(isCheckboxEnabled&&E.isChecked==0&&E.memoContext!="")
+      a=3;
     switch (a) {
       case 1:
         return Container(
@@ -550,6 +529,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                 width: checkContainerWidth,
                 height: containerHeight,
                 child: Icon(CupertinoIcons.checkmark_square_fill),
+                alignment: Alignment.center,
               ),
               Container(
                 width: textContainerWidth,
@@ -557,7 +537,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   E.memoTitle,
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                  style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black54, fontSize: titleSize),
                   overflow: TextOverflow.ellipsis,
                 ),
               )
@@ -565,17 +545,80 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           )),
         );
         break;
+      case 2:
+        return Container(
+          child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: checkContainerWidth,
+                    height: containerHeight,
+                    child: Icon(CupertinoIcons.app),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                    width: textContainerWidth,
+                    height: containerHeight,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      E.memoTitle,
+                      style: TextStyle(fontWeight: FontWeight.w700,fontSize: titleSize),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              )),
+        );
+        break;
+      case 3:
+        return Container(
+          child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: checkContainerWidth,
+                    height: containerHeight,
+                    child: Icon(CupertinoIcons.app),
+                    alignment: Alignment.center,
+                  ),
+                  Column(
+                    children: [
+                      Container(width: textContainerWidth,
+                        height: containerHeight*0.6,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          E.memoTitle,
+                          style: TextStyle(fontWeight: FontWeight.w700,fontSize: titleSize),
+                          overflow: TextOverflow.ellipsis,
+                        ),),
+                      Container(
+                        width: textContainerWidth,
+                        height: containerHeight*0.4,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          E.memoContext,
+                          style: TextStyle(fontWeight: FontWeight.w500,fontSize: contextSize),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+
+                  )
+                ],
+              )),
+        );
 
       default:
-        return Container();
+        return Container(child : Text("ERROR"));
     }
   }
 
   IconSlideAction slideMakerDelete(dynamic snapshot, int index, int whatmatrix) {
     return IconSlideAction(
-        caption: '삭제',
         color: Colors.red,
-        icon: Icons.delete,
+        icon: CupertinoIcons.delete_solid,
         onTap: () {
           deleteEisenMemo(snapshot.data[whatmatrix][index].id);
           setState(() {});
@@ -584,11 +627,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   SpeedDial buildSpeedDial() {
     return SpeedDial(
-      marginEnd: 18,
-      marginBottom: 20,
-      icon: Icons.trip_origin,
+      marginEnd: 5,
+      marginBottom: MediaQuery.of(context).size.height*0.93,
+      icon: Icons.settings,
       activeIcon: Icons.remove,
-      buttonSize: 56.0,
+      buttonSize: MediaQuery.of(context).size.height*0.05,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
@@ -622,25 +665,18 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
           labelBackgroundColor: Colors.black,
           onTap: () => gotoNoteBookListPage(),
         ),
-        SpeedDialChild(
-          child: Icon(Icons.note_add_outlined),
-          backgroundColor: colorMatcher(0),
-          label: '빠른노트 추가',
-          labelStyle: TextStyle(fontSize: 15, color: Colors.white),
-          labelBackgroundColor: Colors.black,
-          onTap: () => gotoQuickNoteAddPage(),
-        ),
       ],
     );
   }
 
   dynamic eggMaker() {
     return showDialog(
+      barrierColor: Colors.black54,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
               content: Container(
-                  height: MediaQuery.of(context).size.height * 0.35,
+                  height: 30 + 20.0*5,
                   child: Column(children: [
                     Text(
                       "도움주신분",
@@ -668,8 +704,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   gotoNoteBookListPage() {}
 
-  gotoQuickNoteAddPage() {}
-
   gotoEisenhowerPage() {}
 
   Color colorMatcher(int whatmatrix) {
@@ -683,9 +717,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       case 4:
         return Colors.blueGrey;
       case 0:
-        return Colors.green;
+        return Colors.black;
+      case 5:
+        return Colors.white;
     }
-    return Colors.white;
+    return Colors.green;
   }
 
   Color randomColorMaker() {
