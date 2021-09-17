@@ -461,7 +461,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
             MediaQuery.of(context).size.width * 0.001,
           ),
           width: MediaQuery.of(context).size.width * 0.46,
-          height: MediaQuery.of(context).size.height * 0.42,
+          height: MediaQuery.of(context).size.height * 0.42-20,
           child: ListView.builder(
             padding: EdgeInsets.all(4),
             itemCount: snapshot.data[whatMMatrix - 1].length,
@@ -628,7 +628,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   IconSlideAction slideMakerDelete(dynamic snapshot, int index, int whatmatrix) {
     return IconSlideAction(
-        caption: '삭제',
         color: Colors.red,
         icon: CupertinoIcons.delete_solid,
         onTap: () {
