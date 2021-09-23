@@ -367,7 +367,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               height: 30,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
-                  child: Icon(Icons.amp_stories),
+                  child: Icon(Icons.amp_stories,color: colorMatcher(0),),
                   onTap: () {
                     print("노트북메뉴로 이동");
                     gotoNoteBookListPage();
@@ -389,7 +389,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   ),
                 ),
                 InkWell(
-                    child: Icon(Icons.settings),
+                    child: Icon(Icons.settings,color: colorMatcher(0),),
                     onTap: () {
                       print("세팅 메뉴로 이동");
                     })
@@ -731,18 +731,18 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   gotoEisenhowerPage() {}
 
-  Color colorMatcher(int whatmatrix) {
-    switch (whatmatrix) {
+  Color colorMatcher(int w) {
+    switch (w) {
       case 1:
-        return Colors.deepPurple;
+        return Colors.blue;
       case 2:
-        return Colors.teal;
+        return Colors.green;
       case 3:
-        return Colors.amber;
+        return Colors.redAccent;
       case 4:
-        return Colors.blueGrey;
+        return Colors.amber;
       case 0:
-        return Colors.black;
+        return Colors.grey;
       case 5:
         return Colors.white;
     }
