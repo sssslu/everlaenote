@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:everlaenote/SettingPage.dart';
 import 'package:everlaenote/model/eisenMemoDAO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'model/eisenMemo.dart';
 import 'package:screen/screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'SettingPage.dart';
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
@@ -32,13 +34,6 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     _pref = await SharedPreferences.getInstance();
     isCheckboxEnabled = (_pref.getBool('checkboxEnabled') ?? true);
     return isCheckboxEnabled;
-  }
-
-  checkChange() async {
-    setState(() {
-      isCheckboxEnabled = !isCheckboxEnabled;
-      _pref.setBool('checkboxenabled', isCheckboxEnabled);
-    });
   }
 
   Future<List<List<EisenMemo>>> getAllEisenMemo() async {
@@ -391,6 +386,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                 InkWell(
                     child: Icon(Icons.settings,color: colorMatcher(0),),
                     onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SettingPage()),
+                      );
                       print("세팅 메뉴로 이동");
                     })
               ])),
@@ -419,7 +418,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               })
         ],
       )),
-      //floatingActionButton: buildSpeedDial(),
+      floatingActionButton: buildSpeedDial(),
     );
   }
 
@@ -492,7 +491,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰 한 개를 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
   InkWell mmMaker(dynamic snapshot, int whatMMatrix, int index) {
     return InkWell(
-      child: containerMaker(snapshot.data[whatMMatrix - 1][index], isCheckboxEnabled),
+      child: containerMaker(snapshot.data[whatMMatrix - 1][index], checkGetter()),
       onTap: () {
         //해당 잉크웰을 터치했을 시 동작이다(밀었을때는 이 윗단계 함수인 슬라이더블이 처리한다.)
         if (isCheckboxEnabled) {
@@ -501,7 +500,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         } else if (!isCheckboxEnabled) {
           print("@ 체크기능 꺼져있음 @");
         } else {
-          print('@ 체크기능 관련 에러@');
+          print('@ 체크기능 관련 에러 @');
         }
       },
       onLongPress: () {
@@ -638,11 +637,11 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
 
   SpeedDial buildSpeedDial() {
     return SpeedDial(
-      marginEnd: 5,
-      marginBottom: MediaQuery.of(context).size.height * 0.93,
-      icon: Icons.settings,
+      marginEnd: 18,
+      marginBottom: 20,
+      icon: Icons.add,
       activeIcon: Icons.remove,
-      buttonSize: MediaQuery.of(context).size.height * 0.05,
+      buttonSize: 56.0,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
@@ -661,28 +660,40 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       // childMarginTop: 2,
       children: [
         SpeedDialChild(
-          child: Icon(Icons.widgets_outlined),
-          backgroundColor: colorMatcher(0),
-          label: '애벌레 메인',
-          labelStyle: TextStyle(fontSize: 15, color: Colors.white),
+          child: Icon(Icons.crop_square),
+          backgroundColor: colorMatcher(4),
+          label: '안긴급&안중요',
+          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => gotoEisenhowerPage(),
+          onTap: () => createEisenMemo(4),
+          onLongPress: () => print('4 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
-          child: Icon(Icons.book_outlined),
-          backgroundColor: colorMatcher(0),
-          label: '노트북 목록',
-          labelStyle: TextStyle(fontSize: 15, color: Colors.white),
+          child: Icon(Icons.crop_square),
+          backgroundColor: colorMatcher(3),
+          label: '긴급&안중요',
+          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => gotoNoteBookListPage(),
+          onTap: () => createEisenMemo(3),
+          onLongPress: () => print('3 CHILD LONG PRESS'),
         ),
         SpeedDialChild(
-          child: Icon(Icons.note_add_outlined),
-          backgroundColor: colorMatcher(0),
-          label: '빠른노트 추가',
-          labelStyle: TextStyle(fontSize: 15, color: Colors.white),
+          child: Icon(Icons.crop_square),
+          backgroundColor: colorMatcher(2),
+          label: '안긴급&중요',
+          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => gotoQuickNoteAddPage(),
+          onTap: () => createEisenMemo(2),
+          onLongPress: () => print('2 CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.crop_square),
+          backgroundColor: colorMatcher(1),
+          label: '긴급&중요',
+          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
+          labelBackgroundColor: Colors.black,
+          onTap: () => createEisenMemo(1),
+          onLongPress: () => print('1 CHILD LONG PRESS'),
         ),
       ],
     );
@@ -725,7 +736,8 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
-  gotoNoteBookListPage() {}
+  gotoNoteBookListPage() {
+  }
 
   gotoQuickNoteAddPage() {}
 
@@ -742,7 +754,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
       case 4:
         return Colors.amber;
       case 0:
-        return Colors.grey;
+        return Colors.black87;
       case 5:
         return Colors.white;
     }
