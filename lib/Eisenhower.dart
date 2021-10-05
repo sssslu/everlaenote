@@ -8,33 +8,23 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'model/eisenMemo.dart';
 import 'package:screen/screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'SettingPage.dart';
+import 'globals.dart'as g;
+import 'globalsDAO.dart' as globalsDAO;
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _EisenhowerPageState createState() => _EisenhowerPageState();
+  EisenhowerPageState createState() => EisenhowerPageState();
 }
 
-class _EisenhowerPageState extends State<EisenhowerPage> {
+class EisenhowerPageState extends State<EisenhowerPage> {
   EisenMemoDAO cmd = new EisenMemoDAO();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  SharedPreferences _pref;
-
-  /// 퍼블릭 변수 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  bool isCheckboxEnabled = true;
-
-  Future<bool> checkGetter() async {
-    print('체크게터 실행!');
-    _pref = await SharedPreferences.getInstance();
-    isCheckboxEnabled = (_pref.getBool('checkboxEnabled') ?? true);
-    return isCheckboxEnabled;
-  }
 
   Future<List<List<EisenMemo>>> getAllEisenMemo() async {
     print("get all @@@@@@");
@@ -345,9 +335,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    checkGetter();
+    globalsDAO.checkGetter();
+    print("글로벌스 체크모드 상태는 " + g.checkmode.toString());
     Screen.keepOn(true);
   }
 
@@ -362,7 +353,10 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
               height: 30,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
-                  child: Icon(Icons.amp_stories,color: colorMatcher(0),),
+                  child: Icon(
+                    Icons.amp_stories,
+                    color: colorMatcher(0),
+                  ),
                   onTap: () {
                     print("노트북메뉴로 이동");
                     gotoNoteBookListPage();
@@ -384,12 +378,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
                   ),
                 ),
                 InkWell(
-                    child: Icon(Icons.settings,color: colorMatcher(0),),
+                    child: Icon(
+                      Icons.settings,
+                      color: colorMatcher(0),
+                    ),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SettingPage()),
-                      );
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SettingPage()),(route) => false);
+
                       print("세팅 메뉴로 이동");
                     })
               ])),
@@ -460,7 +455,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
             MediaQuery.of(context).size.width * 0.001,
           ),
           width: MediaQuery.of(context).size.width * 0.46,
-          height: MediaQuery.of(context).size.height * 0.42-20,
+          height: MediaQuery.of(context).size.height * 0.42 - 20,
           child: ListView.builder(
             padding: EdgeInsets.all(4),
             itemCount: snapshot.data[whatMMatrix - 1].length,
@@ -491,13 +486,13 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
   ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰 한 개를 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
   InkWell mmMaker(dynamic snapshot, int whatMMatrix, int index) {
     return InkWell(
-      child: containerMaker(snapshot.data[whatMMatrix - 1][index], checkGetter()),
+      child: containerMaker(snapshot.data[whatMMatrix - 1][index], g.checkmode),
       onTap: () {
         //해당 잉크웰을 터치했을 시 동작이다(밀었을때는 이 윗단계 함수인 슬라이더블이 처리한다.)
-        if (isCheckboxEnabled) {
+        if (g.checkmode) {
           print("@ 체크상태변경됨 @");
           checkEisenMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1);
-        } else if (!isCheckboxEnabled) {
+        } else if (!g.checkmode) {
           print("@ 체크기능 꺼져있음 @");
         } else {
           print('@ 체크기능 관련 에러 @');
@@ -509,22 +504,29 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  ///containerMaker 는, 아이젠메모 객체 한개를 받아서 실제 메모쪼가리가 담긴 적절한 콘테이너를 리턴해준다.
+  ///containerMaker 는, 아이젠메모 객체 한개를 받아서 실제 메모쪼가리가 담긴 적절한 콘테이너를 리턴해준다. 로직은 그림 1 참고.
   Container containerMaker(EisenMemo E, bool checkMode) {
     //초기화
     double checkContainerWidth = 25;
+    double originalTextWidth = MediaQuery.of(context).size.width * 0.42;
     double textContainerWidth = MediaQuery.of(context).size.width * 0.42 - checkContainerWidth;
     double containerHeight = MediaQuery.of(context).size.height * 0.05;
     double titleSize = 16;
     double contextSize = 12;
     //분기 로직
     int a = 0;
-    if (isCheckboxEnabled && E.isChecked == 1)
+    if (g.checkmode && E.isChecked == 1)
       a = 1;
-    else if (isCheckboxEnabled && E.isChecked == 0 && E.memoContext == "")
+    else if (g.checkmode && E.isChecked == 0 && E.memoContext == "")
       a = 2;
-    else if (isCheckboxEnabled && E.isChecked == 0 && E.memoContext != "")
+    else if (g.checkmode && E.isChecked == 0 && E.memoContext != "")
       a = 3;
+    else if (!g.checkmode && E.memoContext == "")
+      a = 4;
+    else if (!g.checkmode && E.memoContext != "")
+      a = 5;
+    else
+      a=6;
     switch (a) {
       case 1:
         return Container(
@@ -617,10 +619,69 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
             ],
           )),
         );
-        ///TODO
-    ///4번 5번 로직 만들어야함
+      case 4:
+        return Container(
+          child: Center(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(width: 5,),
+              Container(
+                width: originalTextWidth-5,
+                height: titleSize + contextSize,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  E.memoTitle,
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: titleSize),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+            ],
+          )),
+        );
+        break;
+      case 5:
+        return Container(
+          child: Center(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(width: 5,),
 
-      default:
+              Column(
+                children: [
+                  Container(
+                    width: originalTextWidth-5,
+                    height: titleSize + contextSize,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      E.memoTitle,
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: titleSize),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Container(
+                    width: textContainerWidth,
+                    height: contextSize,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      E.memoContext,
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: contextSize),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          )),
+        );
+
+      case 6:
+        print("@ logic error @");
+        return Container(child: Text("ERROR"));
+
+      default :
+        print("@ logic error @");
         return Container(child: Text("ERROR"));
     }
   }
@@ -736,8 +797,7 @@ class _EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
-  gotoNoteBookListPage() {
-  }
+  gotoNoteBookListPage() {}
 
   gotoQuickNoteAddPage() {}
 

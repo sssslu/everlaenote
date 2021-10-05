@@ -1,6 +1,7 @@
+import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'globalsDAO.dart' as globalsDAO;
 
 class SettingPage extends StatefulWidget {
   @override
@@ -8,29 +9,10 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  SharedPreferences _pref;
-  bool isCheckboxEnabled = true;
-
-  Future<bool> checkGetter() async {
-    print('체크게터 실행!');
-    _pref = await SharedPreferences.getInstance();
-    isCheckboxEnabled = (_pref.getBool('checkboxEnabled') ?? true);
-    return isCheckboxEnabled;
-  }
-
-  checkChange() async {
-    setState(() {
-      print("체크체인지 실행");
-      isCheckboxEnabled = !isCheckboxEnabled;
-      _pref.setBool('checkboxenabled', isCheckboxEnabled);
-    });
-    print("체크켜짐 : "+isCheckboxEnabled.toString());
-  }
 
   @override
   void initState() {
     super.initState();
-    checkGetter();
   }
 
   @override
@@ -41,22 +23,34 @@ class _SettingPageState extends State<SettingPage> {
       ),
       body: Center(
           child: Column(children: [
-            RaisedButton(
-              onPressed: () {
-                print("지원하지 않는 기능");
-              },
-              child: Text('다크모드 활성/비활성'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                checkChange();
-              },
-              child: Text('체크박스 활성/비활성'),
-            ), RaisedButton(
+        RaisedButton(
           onPressed: () {
-            Navigator.pop(context);
+            print("지원하지 않는 기능");
+            setState(() {
+            });
           },
-          child: Text('닫기'),
+          child: Text('다크모드 활성/비활성'),
+        ),
+        RaisedButton(
+          onPressed: () {
+            globalsDAO.checkChange();
+          },
+          child: Text('체크박스 활성/비활성'),
+        ),
+        RaisedButton(
+          onPressed: () {
+            globalsDAO.langChange();
+            setState(() {
+            });
+          },
+          child: Text('English/한국어'),
+        ),
+        Container(height: MediaQuery.of(context).size.height*0.1,),
+        RaisedButton(
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => EisenhowerPage()),(route) => false);
+          },
+          child: Text('확인'),
         ),
       ])),
     );
