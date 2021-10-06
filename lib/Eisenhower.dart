@@ -372,7 +372,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                   ),
                   onTap: () {
                     print("노트북메뉴로 이동");
-                    gotoNoteBookListPage();
+                    gotoNoteBookListPage(context);
                   },
                 ),
                 InkWell(
@@ -429,7 +429,6 @@ class EisenhowerPageState extends State<EisenhowerPage> {
       floatingActionButton: buildSpeedDial(),
     );
   }
-//a
   ///mMaker 는 아이젠하워 매트릭스 4개중 1개의 겉 껍질과 슬라이더블 소켓을 만들어주는 역할을 한다.
   Column mMaker(dynamic snapshot, String titleText, int whatMMatrix, Color ccolor) {
     return Column(
@@ -788,7 +787,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                   child: Column(children: [
                     Text(
                       "도움주신분",
-                      style: TextStyle(fontSize: 20, color: randomColorMaker(), fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "최혜은",
@@ -814,7 +813,27 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
-  gotoNoteBookListPage() {}
+    void gotoNoteBookListPage(BuildContext context) async {
+      String result = await showDialog(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('자유 노트북 및 다이어리 북 리스트'),
+            content: Text("아직 지원하지 않는 기능입니다. 빠른 시일 안에 제작 될 예정입니다."),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('기다릴게요'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
 
   gotoQuickNoteAddPage() {}
 
