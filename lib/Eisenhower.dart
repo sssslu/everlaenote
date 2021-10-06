@@ -555,7 +555,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
               ),
               Container(
                 width: textContainerWidth,
-                height: titleSize,
+                height: containerHeight,
                 alignment: Alignment.centerLeft,
                 child: Text(
                   E.memoTitle,
@@ -581,7 +581,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
               ),
               Container(
                 width: textContainerWidth,
-                height: titleSize,
+                height: containerHeight,
                 alignment: Alignment.centerLeft,
                 child: Text(
                   E.memoTitle,
