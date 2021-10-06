@@ -2,8 +2,7 @@ import 'eisenMemo.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-/// 체크박스메모(아이젠아워 페이지) 관련 DB 조작 클래스 입니다.
-/// author slu
+/// 체크박스메모(아이젠아워 페이지) 관련 DB 조작 클래스
 class EisenMemoDAO {
   static Database _database;
 

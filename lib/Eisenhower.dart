@@ -6,11 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'model/eisenMemo.dart';
 import 'package:screen/screen.dart';
 import 'SettingPage.dart';
-import 'globals.dart'as g;
-import 'globalsDAO.dart' as globalsDAO;
+import 'package:flutter/services.dart';
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
@@ -21,13 +21,27 @@ class EisenhowerPage extends StatefulWidget {
 }
 
 class EisenhowerPageState extends State<EisenhowerPage> {
-  EisenMemoDAO cmd = new EisenMemoDAO();
+  ///잡다한 컨트롤러와 키들
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  Future<List<List<EisenMemo>>> getAllEisenMemo() async {
-    print("get all @@@@@@");
+  ///중요한 전역변수들
+  SharedPreferences _pref;
+  bool isCheckboxEnabled;
+  EisenMemoDAO cmd = new EisenMemoDAO();
+
+  Future<bool> checkGetter() async {
+    _pref = await SharedPreferences.getInstance();
+    isCheckboxEnabled = (_pref.getBool('checkboxenabled') ?? false);
+    return isCheckboxEnabled;
+  }
+
+  Future<List<List<EisenMemo>>> getAllEisenMemoAndSharedPref() async {
+    print("@@@@@ get all sharedPref @@@@@");
+    isCheckboxEnabled = await checkGetter();
+    print("퓨처빌더 시작시 가져온 체크상태는 " + isCheckboxEnabled.toString());
+    print("@@@@@ get all EisenMemo @@@@@");
     List<EisenMemo> wholeList = [];
     List<EisenMemo> iuList = [];
     List<EisenMemo> inuList = [];
@@ -335,11 +349,10 @@ class EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    globalsDAO.checkGetter();
-    print("글로벌스 체크모드 상태는 " + g.checkmode.toString());
     Screen.keepOn(true);
+    SystemChrome.setEnabledSystemUIOverlays([]);
   }
 
   @override
@@ -350,7 +363,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         children: <Widget>[
           Container(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              height: 30,
+              height: 40,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
                   child: Icon(
@@ -374,7 +387,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                   },
                   child: Text(
                     "Everlaenote",
-                    style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold),
+                    style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                 ),
                 InkWell(
@@ -383,13 +396,13 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                       color: colorMatcher(0),
                     ),
                     onTap: () {
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SettingPage()),(route) => false);
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SettingPage()), (route) => false);
 
                       print("세팅 메뉴로 이동");
                     })
               ])),
           FutureBuilder(
-              future: getAllEisenMemo(),
+              future: getAllEisenMemoAndSharedPref(),
               builder: (context, snapshot) {
                 if (snapshot.hasData == false) {
                   return CircularProgressIndicator();
@@ -486,13 +499,13 @@ class EisenhowerPageState extends State<EisenhowerPage> {
   ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰 한 개를 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
   InkWell mmMaker(dynamic snapshot, int whatMMatrix, int index) {
     return InkWell(
-      child: containerMaker(snapshot.data[whatMMatrix - 1][index], g.checkmode),
+      child: containerMaker(snapshot.data[whatMMatrix - 1][index], isCheckboxEnabled),
       onTap: () {
         //해당 잉크웰을 터치했을 시 동작이다(밀었을때는 이 윗단계 함수인 슬라이더블이 처리한다.)
-        if (g.checkmode) {
+        if (isCheckboxEnabled) {
           print("@ 체크상태변경됨 @");
           checkEisenMemo(snapshot.data[whatMMatrix - 1][index].id, snapshot.data[whatMMatrix - 1][index].isChecked == 1 ? 0 : 1);
-        } else if (!g.checkmode) {
+        } else if (!isCheckboxEnabled) {
           print("@ 체크기능 꺼져있음 @");
         } else {
           print('@ 체크기능 관련 에러 @');
@@ -515,18 +528,18 @@ class EisenhowerPageState extends State<EisenhowerPage> {
     double contextSize = 12;
     //분기 로직
     int a = 0;
-    if (g.checkmode && E.isChecked == 1)
+    if (isCheckboxEnabled && E.isChecked == 1)
       a = 1;
-    else if (g.checkmode && E.isChecked == 0 && E.memoContext == "")
+    else if (isCheckboxEnabled && E.isChecked == 0 && E.memoContext == "")
       a = 2;
-    else if (g.checkmode && E.isChecked == 0 && E.memoContext != "")
+    else if (isCheckboxEnabled && E.isChecked == 0 && E.memoContext != "")
       a = 3;
-    else if (!g.checkmode && E.memoContext == "")
+    else if (!isCheckboxEnabled && E.memoContext == "")
       a = 4;
-    else if (!g.checkmode && E.memoContext != "")
+    else if (!isCheckboxEnabled && E.memoContext != "")
       a = 5;
     else
-      a=6;
+      a = 6;
     switch (a) {
       case 1:
         return Container(
@@ -625,9 +638,11 @@ class EisenhowerPageState extends State<EisenhowerPage> {
               child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(width: 5,),
               Container(
-                width: originalTextWidth-5,
+                width: 5,
+              ),
+              Container(
+                width: originalTextWidth - 5,
                 height: titleSize + contextSize,
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -646,13 +661,15 @@ class EisenhowerPageState extends State<EisenhowerPage> {
               child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(width: 5,),
-
+              Container(
+                width: 5,
+                height: titleSize+contextSize+6,
+              ),
               Column(
                 children: [
                   Container(
-                    width: originalTextWidth-5,
-                    height: titleSize + contextSize,
+                    width: originalTextWidth - 5,
+                    height: titleSize+2,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       E.memoTitle,
@@ -661,8 +678,8 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                     ),
                   ),
                   Container(
-                    width: textContainerWidth,
-                    height: contextSize,
+                    width: originalTextWidth - 5,
+                    height: contextSize+2,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       E.memoContext,
@@ -680,7 +697,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         print("@ logic error @");
         return Container(child: Text("ERROR"));
 
-      default :
+      default:
         print("@ logic error @");
         return Container(child: Text("ERROR"));
     }
