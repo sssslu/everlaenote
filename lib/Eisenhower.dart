@@ -718,16 +718,16 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
-  moveUp(dynamic snapshot, int index, int whatmatrix) async {
+  moveUp(dynamic snapshot, int index, int whatMatrix) async {
+    ///moveUp과 moveDown 은 그냥 위 또는 아래에 유효한 객체가 있는지 검사문을 넣지 않았다. 왜냐하면 오류가 나도 꺼지지 않기에.
     print("up");
-
-    if (index > 0) cmd.switchEisenMemoFromDB(snapshot.data[whatmatrix][index - 1].id, snapshot.data[whatmatrix][index].id);
+    cmd.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);
     setState(() {});
   }
 
-  moveDown(dynamic snapshot, int index, int whatmatrix) async {
+  moveDown(dynamic snapshot, int index, int whatMatrix) async {
     print("down");
-    if (snapshot.data[whatmatrix][index + 1] != null) cmd.switchEisenMemoFromDB(snapshot.data[whatmatrix][index + 1].id, snapshot.data[whatmatrix][index].id);
+    cmd.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);
     setState(() {});
   }
 
