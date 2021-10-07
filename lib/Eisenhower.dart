@@ -341,11 +341,6 @@ class EisenhowerPageState extends State<EisenhowerPage> {
     print("id number " + id.toString() + "deleted.");
   }
 
-/*  void deleteEverything(int whatmatrix) async {
-    await cmd.deleteEveryEisenMemoInSpecificList(whatmatrix);
-    setState(() {});
-  }*/
-
   void checkEisenMemo(int id, int isChecked) async {
     await cmd.checkStatusChange(id, isChecked);
     setState(() {});
@@ -460,7 +455,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                 ),
               ]))),
           onTap: () {
-            createEisenMemo(whatMMatrix);
+            print("아무기능 없습니다~");
           },
         ),
         Container(
@@ -485,6 +480,16 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                 direction: Axis.horizontal,
                 actions: <Widget>[
                   slideMakerDelete(snapshot, index, whatMMatrix - 1),
+                  IconSlideAction(
+                    color: colorMatcher(6),
+                    icon: Icons.keyboard_arrow_up,
+                    onTap: () => moveUp(snapshot, index, whatMMatrix - 1),
+                  ),
+                  IconSlideAction(
+                    color: colorMatcher(6),
+                    icon: Icons.keyboard_arrow_down,
+                    onTap: () => moveDown(snapshot, index, whatMMatrix - 1),
+                  )
                 ],
               );
             },
@@ -498,6 +503,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
       ],
     );
   }
+
 //a
   ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰 한 개를 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
   InkWell mmMaker(dynamic snapshot, int whatMMatrix, int index) {
@@ -520,7 +526,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  ///containerMaker 는, 아이젠메모 객체 한개를 받아서 실제 메모쪼가리가 담긴 적절한 콘테이너를 리턴해준다. 로직은 그림 1 참고.
+  ///containerMaker 는, 아이젠메모 객체 한개를 받아서 실제 메모쪼가리가 담긴 적절한 콘테이너를 리턴해준다. 분기 로직은 그림 1 참고.
   Container containerMaker(EisenMemo E, bool checkMode) {
     //초기화
     double checkContainerWidth = 25;
@@ -712,6 +718,19 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
+  moveUp(dynamic snapshot, int index, int whatmatrix) async {
+    print("up");
+
+    if (index > 0) cmd.switchEisenMemoFromDB(snapshot.data[whatmatrix][index - 1].id, snapshot.data[whatmatrix][index].id);
+    setState(() {});
+  }
+
+  moveDown(dynamic snapshot, int index, int whatmatrix) async {
+    print("down");
+    if (snapshot.data[whatmatrix][index + 1] != null) cmd.switchEisenMemoFromDB(snapshot.data[whatmatrix][index + 1].id, snapshot.data[whatmatrix][index].id);
+    setState(() {});
+  }
+
   SpeedDial buildSpeedDial() {
     return SpeedDial(
       marginEnd: 18,
@@ -823,7 +842,10 @@ class EisenhowerPageState extends State<EisenhowerPage> {
           content: Text("아직 지원하지 않는 기능입니다. 빠른 시일 안에 제작 될 예정입니다."),
           actions: <Widget>[
             InkWell(
-              child: Text('기다릴게요', style: TextStyle(fontSize: 13, color: Colors.blue),),
+              child: Text(
+                '기다릴게요',
+                style: TextStyle(fontSize: 13, color: Colors.blue),
+              ),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -852,6 +874,8 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         return Colors.black87;
       case 5:
         return Colors.white;
+      case 6:
+        return Colors.deepPurple;
     }
     return Colors.green;
   }

@@ -70,4 +70,14 @@ class EisenMemoDAO {
     await db.rawUpdate('UPDATE eisenmemo SET whatmatrix="$whatmarix" WHERE id=$id');
     print('matrix change done');
   }
+
+  Future<void> switchEisenMemoFromDB(int targetId, int myId) async {
+    final db = await database;
+    ///분기 로직은 그림2 참고
+    await db.rawUpdate('UPDATE eisenmemo SET id=-1 WHERE id=$myId');
+    await db.rawUpdate('UPDATE eisenmemo SET id=-2 WHERE id=$targetId');
+    await db.rawUpdate('UPDATE eisenmemo SET id="$myId" WHERE id=-2');
+    await db.rawUpdate('UPDATE eisenmemo SET id="$targetId" WHERE id=-1');
+    print("id-$myId와 id-$targetId 스위치 성공");
+  }
 }
