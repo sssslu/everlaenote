@@ -11,6 +11,7 @@ import 'model/eisenMemo.dart';
 import 'package:screen/screen.dart';
 import 'SettingPage.dart';
 import 'package:flutter/services.dart';
+import 'public.dart' as p;
 
 class EisenhowerPage extends StatefulWidget {
   EisenhowerPage({Key key, this.title}) : super(key: key);
@@ -33,15 +34,17 @@ class EisenhowerPageState extends State<EisenhowerPage> {
 
   Future<bool> checkGetter() async {
     _pref = await SharedPreferences.getInstance();
+    p.pref = _pref;
     isCheckboxEnabled = (_pref.getBool('checkboxenabled') ?? false);
+    p.isCheckboxEnabled = isCheckboxEnabled;
     return isCheckboxEnabled;
   }
 
   Future<List<List<EisenMemo>>> getAllEisenMemoAndSharedPref() async {
-    print("@@@@@ get all sharedPref @@@@@");
+    ///sharedPref
     isCheckboxEnabled = await checkGetter();
-    print("퓨처빌더 시작시 가져온 체크상태는 " + isCheckboxEnabled.toString());
-    print("@@@@@ get all EisenMemo @@@@@");
+
+    ///EisenMemo
     List<EisenMemo> wholeList = [];
     List<EisenMemo> iuList = [];
     List<EisenMemo> inuList = [];
@@ -429,6 +432,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
       floatingActionButton: buildSpeedDial(),
     );
   }
+
   ///mMaker 는 아이젠하워 매트릭스 4개중 1개의 겉 껍질과 슬라이더블 소켓을 만들어주는 역할을 한다.
   Column mMaker(dynamic snapshot, String titleText, int whatMMatrix, Color ccolor) {
     return Column(
@@ -511,7 +515,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         }
       },
       onLongPress: () {
-        if (snapshot.data[whatMMatrix - 1][index].isChecked == 0) viewEisenNote(snapshot.data[whatMMatrix - 1][index]);
+        viewEisenNote(snapshot.data[whatMMatrix - 1][index]);
       },
     );
   }
@@ -662,13 +666,13 @@ class EisenhowerPageState extends State<EisenhowerPage> {
             children: [
               Container(
                 width: 5,
-                height: titleSize+contextSize+6,
+                height: titleSize + contextSize + 6,
               ),
               Column(
                 children: [
                   Container(
                     width: originalTextWidth - 5,
-                    height: titleSize+2,
+                    height: titleSize + 2,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       E.memoTitle,
@@ -678,7 +682,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                   ),
                   Container(
                     width: originalTextWidth - 5,
-                    height: contextSize+2,
+                    height: contextSize + 2,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       E.memoContext,
@@ -691,10 +695,6 @@ class EisenhowerPageState extends State<EisenhowerPage> {
             ],
           )),
         );
-
-      case 6:
-        print("@ logic error @");
-        return Container(child: Text("ERROR"));
 
       default:
         print("@ logic error @");
@@ -813,27 +813,26 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         });
   }
 
-    void gotoNoteBookListPage(BuildContext context) async {
-      String result = await showDialog(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('자유 노트북 및 다이어리 북 리스트'),
-            content: Text("아직 지원하지 않는 기능입니다. 빠른 시일 안에 제작 될 예정입니다."),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('기다릴게요'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-
+  void gotoNoteBookListPage(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('자유 노트북 및 다이어리 북 리스트'),
+          content: Text("아직 지원하지 않는 기능입니다. 빠른 시일 안에 제작 될 예정입니다."),
+          actions: <Widget>[
+            InkWell(
+              child: Text('기다릴게요', style: TextStyle(fontSize: 13, color: Colors.blue),),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   gotoQuickNoteAddPage() {}
 
