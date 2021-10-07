@@ -498,7 +498,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
       ],
     );
   }
-
+//a
   ///mmMaker 는 mMaker 의 슬라이더블 소켓 안쪽에 잉크웰 한 개를 만들어주는 역할을 한다. 모든 eisenMemo 객체들이 여기 사용된다.
   InkWell mmMaker(dynamic snapshot, int whatMMatrix, int index) {
     return InkWell(
