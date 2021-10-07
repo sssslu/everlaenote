@@ -39,7 +39,9 @@ class EisenMemoDAO {
     for (Map<String, dynamic> map in mapList) {
       cbmList.add(EisenMemo.fromMap(map));
     }
-    print(cbmList.toString());
+    for(EisenMemo m in cbmList) {
+      print(m.toMap());
+    }
     return cbmList;
   }
 
