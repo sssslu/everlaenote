@@ -55,9 +55,9 @@ class EisenMemoDAO {
     await db.rawDelete('DELETE FROM eisenmemo WHERE id = $id');
   }
 
-  Future<void> checkStatusChange(int id, int ischecked) async {
+  Future<void> checkStatusChange(int id, int isChecked) async {
     final db = await database;
-    await db.rawUpdate('UPDATE eisenmemo SET ischecked=$ischecked WHERE id=$id');
+    await db.rawUpdate('UPDATE eisenmemo SET ischecked=$isChecked WHERE id=$id');
   }
 
   Future<void> updateEisenMemoInDB(int id, String title, String context) async {
@@ -65,24 +65,21 @@ class EisenMemoDAO {
     await db.rawUpdate('UPDATE eisenmemo SET memotitle="$title", memocontext="$context" WHERE id=$id');
   }
 
-  Future<void> changeEisenMemoMatrix(int id, int whatmarix) async {
+  Future<void> changeEisenMemoMatrix(int id, int whatMatrix) async {
     final db = await database;
-    await db.rawUpdate('UPDATE eisenmemo SET whatmatrix="$whatmarix" WHERE id=$id');
+    await db.rawUpdate('UPDATE eisenmemo SET whatmatrix="$whatMatrix" WHERE id=$id');
     print('matrix change done');
   }
 
   Future<void> switchEisenMemoFromDB(int targetId, int myId) async {
     final db = await database;
     ///분기 로직은 그림2 참고
+    print("id-$myId와 id-$targetId 스위치");
     await db.rawUpdate('UPDATE eisenmemo SET id=-1 WHERE id=$myId');
-    print("#1111");
     await db.rawUpdate('UPDATE eisenmemo SET id=-2 WHERE id=$targetId');
-    print("#2222");
     await db.rawUpdate('UPDATE eisenmemo SET id="$myId" WHERE id=-2');
-    print("#3333");
     await db.rawUpdate('UPDATE eisenmemo SET id="$targetId" WHERE id=-1');
-    print("#4444");
-    print("id-$myId와 id-$targetId 스위치 성공");
+
     return 1;
   }
 }

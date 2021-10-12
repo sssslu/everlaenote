@@ -678,7 +678,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                 children: [
                   Container(
                     width: originalTextWidth - 5,
-                    height: titleSize + 2,
+                    height: titleSize + 3,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       E.memoTitle,
@@ -688,7 +688,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                   ),
                   Container(
                     width: originalTextWidth - 5,
-                    height: contextSize + 2,
+                    height: contextSize + 3,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       E.memoContext,

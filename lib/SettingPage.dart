@@ -23,9 +23,8 @@ class _SettingPageState extends State<SettingPage> {
                 child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               InkWell(
                   onTap: () async {
-                    print("체크 체인지 버튼 눌림!");
                     p.isCheckboxEnabled = !p.isCheckboxEnabled;
-                    print("현재 체크 상태는 " + (p.isCheckboxEnabled).toString());
+                    print("체크 상태 변경 :" + (p.isCheckboxEnabled).toString());
                     setState(() {});
                   },
                   child: Container(
@@ -43,7 +42,9 @@ class _SettingPageState extends State<SettingPage> {
                     ]),
                   )),
               InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    alertNotFunctioning(context);
+                  },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
                     decoration: BoxDecoration(color: Colors.deepOrange.shade200),
@@ -55,7 +56,9 @@ class _SettingPageState extends State<SettingPage> {
                     ]),
                   )),
               InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    alertNotFunctioning(context);
+                  },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
                     decoration: BoxDecoration(color: Colors.yellow.shade200),
@@ -67,7 +70,9 @@ class _SettingPageState extends State<SettingPage> {
                     ]),
                   )),
               InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    alertNotFunctioning(context);
+                  },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
                     decoration: BoxDecoration(color: Colors.green.shade200),
@@ -79,7 +84,9 @@ class _SettingPageState extends State<SettingPage> {
                     ]),
                   )),
               InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    alertNotFunctioning(context);
+                  },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
                     decoration: BoxDecoration(color: Colors.blue.shade200),
@@ -90,7 +97,6 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ]),
                   )),
-
             ])),
             InkWell(
                 onTap: () {
@@ -110,6 +116,32 @@ class _SettingPageState extends State<SettingPage> {
           ],
         ));
   }
-}
 
-///여기까지 --------------@@
+  void alertNotFunctioning(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('아직 설계중인 기능',
+              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+          content: Text(
+            "아직 동작하지 않는 기능입니다. 업데이트를 기다려주세요!",
+            style: TextStyle(fontSize: 13, color: Colors.green),
+          ),
+          actions: <Widget>[
+            InkWell(
+              child: Text(
+                '기다릴게요',
+                style: TextStyle(fontSize: 13, color: Colors.blue),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
