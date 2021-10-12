@@ -75,9 +75,14 @@ class EisenMemoDAO {
     final db = await database;
     ///분기 로직은 그림2 참고
     await db.rawUpdate('UPDATE eisenmemo SET id=-1 WHERE id=$myId');
+    print("#1111");
     await db.rawUpdate('UPDATE eisenmemo SET id=-2 WHERE id=$targetId');
+    print("#2222");
     await db.rawUpdate('UPDATE eisenmemo SET id="$myId" WHERE id=-2');
+    print("#3333");
     await db.rawUpdate('UPDATE eisenmemo SET id="$targetId" WHERE id=-1');
+    print("#4444");
     print("id-$myId와 id-$targetId 스위치 성공");
+    return 1;
   }
 }
