@@ -123,8 +123,7 @@ class _SettingPageState extends State<SettingPage> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('아직 설계중인 기능',
-              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+          title: Text('아직 설계중인 기능', style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
           content: Text(
             "아직 동작하지 않는 기능입니다. 업데이트를 기다려주세요!",
             style: TextStyle(fontSize: 13, color: Colors.green),

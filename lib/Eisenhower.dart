@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'model/eisenMemo.dart';
 import 'package:screen/screen.dart';
 import 'SettingPage.dart';
+import 'NoteBookListPage.dart';
 import 'package:flutter/services.dart';
 import 'public.dart' as p;
 
@@ -369,8 +370,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                     color: colorMatcher(0),
                   ),
                   onTap: () {
-                    print("노트북메뉴로 이동");
-                    gotoNoteBookListPage(context);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
                   },
                 ),
                 InkWell(
