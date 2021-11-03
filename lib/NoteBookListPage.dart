@@ -55,7 +55,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
   }
 
   getAllNoteBookList() {
-    List<String> a;
+    List<String> a = ["az"];
     a.add("adsfasd");
     a.add("qieirqwej");
     print(a.toString());
