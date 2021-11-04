@@ -13,6 +13,7 @@ class EisenMemo {
     this.whatMatrix = whatMatrix;
     this.isChecked = isChecked;
   }
+
   EisenMemo.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
     this.memoTitle = map['memotitle'];
