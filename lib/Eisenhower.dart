@@ -31,7 +31,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
   ///중요한 전역변수들
   SharedPreferences _pref;
   bool isCheckboxEnabled;
-  EisenMemoDAO cmd = new EisenMemoDAO();
+  EisenMemoDAO emDAO = new EisenMemoDAO();
 
   Future<bool> checkGetter() async {
     _pref = await SharedPreferences.getInstance();
@@ -52,7 +52,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
     List<EisenMemo> niuList = [];
     List<EisenMemo> ninuList = [];
     List<List<EisenMemo>> wholeListList = [];
-    wholeList = await cmd.getEveryEisenMemoFromDB();
+    wholeList = await emDAO.getEveryEisenMemoFromDB();
     for (EisenMemo i in wholeList) {
       if (i.whatMatrix == 1) {
         iuList.add(i);
@@ -133,7 +133,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         ),
       ),
       onTap: () async {
-        await cmd.changeEisenMemoMatrix(id, whatMatrix);
+        await emDAO.changeEisenMemoMatrix(id, whatMatrix);
         Navigator.pop(context);
         setState(() {});
       },
@@ -238,7 +238,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                                 if (_titleController.text == "") {
                                   _titleController.text = "내용 없음";
                                 }
-                                await cmd.updateEisenMemoInDB(c.id, _titleController.text, _contextController.text);
+                                await emDAO.updateEisenMemoInDB(c.id, _titleController.text, _contextController.text);
                                 Navigator.pop(context);
                                 setState(() {});
                               },
@@ -320,7 +320,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                                 if (_titleController.text == "") {
                                   _titleController.text = "내용 없음";
                                 }
-                                await cmd.insertEisenMemo(_titleController.text, _contextController.text, whatmatrix);
+                                await emDAO.insertEisenMemo(_titleController.text, _contextController.text, whatmatrix);
                                 Navigator.pop(context);
                                 setState(() {});
                               },
@@ -338,12 +338,12 @@ class EisenhowerPageState extends State<EisenhowerPage> {
   }
 
   void deleteEisenMemo(int id) async {
-    await cmd.deleteEisenMemoFromDB(id);
+    await emDAO.deleteEisenMemoFromDB(id);
     print("id number " + id.toString() + "deleted.");
   }
 
   void checkEisenMemo(int id, int isChecked) async {
-    await cmd.checkStatusChange(id, isChecked);
+    await emDAO.checkStatusChange(id, isChecked);
     setState(() {});
   }
 
@@ -721,13 +721,13 @@ class EisenhowerPageState extends State<EisenhowerPage> {
   moveUp(dynamic snapshot, int index, int whatMatrix) async {
     ///moveUp과 moveDown 은 그냥 위 또는 아래에 유효한 객체가 있는지 검사문을 넣지 않았다. 왜냐하면 오류가 나도 꺼지지 않기에.
     print("up");
-    await cmd.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);
+    await emDAO.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);
     setState(() {});
   }
 
   moveDown(dynamic snapshot, int index, int whatMatrix) async {
     print("down");
-    await cmd.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);
+    await emDAO.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);
     setState(() {});
   }
 

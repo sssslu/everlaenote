@@ -1,46 +1,59 @@
-import 'eisenMemo.dart';
+import 'noteObjects.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-/// 체크박스메모(아이젠아워 페이지) 관련 DB 조작 클래스
-class EisenMemoDAO {
-  static Database _database;
+/// 노 관련 DB 조작 클래스
+class NoteObjectsDAO {
+  static Database _database1;
+  static Database _database2;
 
-  Future<Database> get database async {
-    if (_database != null) {
-      print("디비 널아님, 디비 그냥 리턴함");
-      return _database;
-    }
-    _database = await initDB();
-    return _database;
+  Future<Database> get database1 async {
+    if (_database1 != null) return _database1;
+    _database1 = await initDB1();
+    return _database1;
+  }
+  Future<Database> get database2 async {
+    if (_database2 != null) return _database2;
+    _database2 = await initDB2();
+    return _database2;
   }
 
-  initDB() async {
-    print("이닛디비 시작");
-    String path = join(await getDatabasesPath(), 'eisenmemo.db');
+  initDB1() async {
+    String path = join(await getDatabasesPath(), 'notebooks.db');
     return await openDatabase(
       path,
       version: 1,
       onCreate: (db, version) async {
-        print("디비 온크리에이트");
         await db.execute(
-          "CREATE TABLE eisenmemo(id INTEGER PRIMARY KEY AUTOINCREMENT, memotitle TEXT NOT NULL, memocontext TEXT NOT NULL, whatmatrix INTEGER NOT NULL, ischecked INTEGER NOT NULL)",
+          "CREATE TABLE notebooks(id INTEGER PRIMARY KEY AUTOINCREMENT, uid INTEGER AUTOINCREMENT,  notebooktitle TEXT NOT NULL, notebookbrief TEXT NOT NULL, notebookcolor INTEGER NOT NULL)",
         );
-        print("@@@ 신규 테이블 생성되었음 - 아이젠메모 @@@");
+        print("@@@ 신규 테이블 생성되었음 - 노트북 @@@");
+      },
+    );
+  }
+  initDB2() async {
+    String path = join(await getDatabasesPath(), 'notes.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute(
+          "CREATE TABLE notebooklist(id INTEGER PRIMARY KEY AUTOINCREMENT, notetitle TEXT NOT NULL, notetype INTEGER NOT NULL, noteowneruid INTEGER NOT NULL, notecontext TEXT NOT NULL)",
+        );
+        print("@@@ 신규 테이블 생성되었음 - 노트 @@@");
       },
     );
   }
 
-  Future<bool> insertEisenMemo(String memotitle,String memocontext ,int whatmatrix) async {
-    print("인서트 아이젠메모 시작. database 호출함.");
-    final db = await database;
-    await db.rawInsert('insert into eisenmemo(memotitle, memocontext, whatmatrix, ischecked) values("$memotitle", "$memocontext",$whatmatrix,0)');
+  Future<bool> insertNoteBook(String notebooktitle,String notebookbrief ,int notebookcolor) async {
+    final db = await database1;
+    await db.rawInsert('insert into notebooks(notebooktitle, notebookbrief, notebookcolor) values("$notebooktitle", "$notebookbrief",$notebookcolor)');
     return true;
   }
 
-  Future<List<EisenMemo>> getEveryEisenMemoFromDB() async {
-    final db = await database;
-    List<Map<String, dynamic>> mapList = await db.query("eisenmemo");
+  Future<List<NoteBook>> getAllNoteBooksFromDB() async {
+    final db = await database1;
+    /*List<Map<String, dynamic>> mapList = await db.query("eisenmemo");
     List<EisenMemo> cbmList = [];
     for (Map<String, dynamic> map in mapList) {
       cbmList.add(EisenMemo.fromMap(map));
@@ -48,7 +61,7 @@ class EisenMemoDAO {
     for(EisenMemo m in cbmList) {
       print(m.toMap());
     }
-    return cbmList;
+    return cbmList;*/
   }
 
   Future<void> deleteEveryEisenMemoInSpecificList(int whatmatrix) async {

@@ -162,13 +162,13 @@ class _NoteBookListPage extends State<NoteBookListPage> {
   moveUp(dynamic snapshot, int index) async {
     ///moveUp과 moveDown 은 그냥 위 또는 아래에 유효한 객체가 있는지 검사문을 넣지 않았다. 왜냐하면 오류가 나도 꺼지지 않기에.
     print("up");
-    /*await cmd.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);*/
+    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);*/
     setState(() {});
   }
 
   moveDown(dynamic snapshot, int index) async {
     print("down");
-    /*await cmd.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);*/
+    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);*/
     setState(() {});
   }
 
