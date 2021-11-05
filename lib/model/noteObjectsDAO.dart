@@ -78,31 +78,25 @@ class NoteObjectsDAO {
     await db.rawDelete('DELETE FROM notebook WHERE uid = $uid');
   }
 
-  Future<void> noteBookColorChange(int id, int color) async {
+  Future<void> noteBookColorChange(int uid, int color) async {
     final db = await database1;
-    await db.rawUpdate('UPDATE eisenmemo SET ischecked=$isChecked WHERE id=$id');
+    await db.rawUpdate('UPDATE notebooks SET noteBookColor=$color WHERE id=$uid');
   }
 
-  Future<void> updateEisenMemoInDB(int id, String title, String context) async {
-    final db = await database;
-    await db.rawUpdate('UPDATE eisenmemo SET memotitle="$title", memocontext="$context" WHERE id=$id');
+  Future<void> updateNoteInDB(int noteid, String title, String context) async {
+    final db = await database2;
+    await db.rawUpdate('UPDATE notes SET notetitle="$title", notecontext="$context" WHERE id=$noteid');
   }
 
-  Future<void> changeEisenMemoMatrix(int id, int whatMatrix) async {
-    final db = await database;
-    await db.rawUpdate('UPDATE eisenmemo SET whatmatrix="$whatMatrix" WHERE id=$id');
-    print('matrix change done');
-  }
 
-  Future<void> switchEisenMemoFromDB(int targetId, int myId) async {
-    final db = await database;
+  Future<void> switchNoteBookIDFromDB(int targetId, int myId) async {
+    final db = await database1;
     ///분기 로직은 그림2 참고
     print("id-$myId와 id-$targetId 스위치");
-    await db.rawUpdate('UPDATE eisenmemo SET id=-1 WHERE id=$myId');
-    await db.rawUpdate('UPDATE eisenmemo SET id=-2 WHERE id=$targetId');
-    await db.rawUpdate('UPDATE eisenmemo SET id="$myId" WHERE id=-2');
-    await db.rawUpdate('UPDATE eisenmemo SET id="$targetId" WHERE id=-1');
-
+    await db.rawUpdate('UPDATE notebooks SET id=-1 WHERE id=$myId');
+    await db.rawUpdate('UPDATE notebooks SET id=-2 WHERE id=$targetId');
+    await db.rawUpdate('UPDATE notebooks SET id="$myId" WHERE id=-2');
+    await db.rawUpdate('UPDATE notebooks SET id="$targetId" WHERE id=-1');
     return 1;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -21,12 +22,9 @@ class _NoteBookListPage extends State<NoteBookListPage> {
               height: 40,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
-                  child: Icon(
-                    Icons.amp_stories,
-                    color: colorMatcher(0),
-                  ),
+                  child: Container(),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
+                    //Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
                   },
                 ),
                 InkWell(
@@ -38,12 +36,11 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                 ),
                 InkWell(
                     child: Icon(
-                      Icons.settings,
+                      CupertinoIcons.rectangle_grid_2x2,
                       color: colorMatcher(0),
                     ),
                     onTap: () {
-/*                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SettingPage()), (route) => false);*/
-
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => EisenhowerPage()), (route) => false);
                       print("세팅 메뉴로 이동");
                     })
               ])),
