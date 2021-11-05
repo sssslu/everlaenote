@@ -44,7 +44,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                       print("세팅 메뉴로 이동");
                     })
               ])),
-          noteListMaker(getAllNoteBookList(), colorMatcher(1)),
+          noteListMaker(getAllNoteBookList(), colorMatcher(0)),
         ],
       )),
       floatingActionButton: buildSpeedDial(),
@@ -62,32 +62,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
   Column noteListMaker(List<String> l, Color ccolor) {
     return Column(
       children: [
-        InkWell(
-          child: Container(
-              margin: EdgeInsets.fromLTRB(
-                MediaQuery.of(context).size.width * 0.005,
-                MediaQuery.of(context).size.width * 0.005,
-                MediaQuery.of(context).size.width * 0.005,
-                0,
-              ),
-              width: MediaQuery.of(context).size.width * 0.46,
-              height: 25,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: ccolor, width: 2), color: Colors.white),
-              child: Center(
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                  "노트북 리스트",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ]))),
-          onTap: () {
-            print("아무기능 없습니다~");
-          },
-        ),
+
         Container(
           margin: EdgeInsets.fromLTRB(
             MediaQuery.of(context).size.width * 0.005,
@@ -95,8 +70,8 @@ class _NoteBookListPage extends State<NoteBookListPage> {
             MediaQuery.of(context).size.width * 0.005,
             MediaQuery.of(context).size.width * 0.001,
           ),
-          width: MediaQuery.of(context).size.width * 0.46,
-          height: MediaQuery.of(context).size.height * 0.42 - 20,
+          width: MediaQuery.of(context).size.width * 0.95,
+          height: MediaQuery.of(context).size.height -50,
           child: ListView.builder(
             padding: EdgeInsets.all(4),
             itemCount: l.length,
