@@ -339,7 +339,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
 
   void deleteEisenMemo(int id) async {
     await emDAO.deleteEisenMemoFromDB(id);
-    print("id number " + id.toString() + "deleted.");
+    print("id number " + id.toString() + " deleted.");
   }
 
   void checkEisenMemo(int id, int isChecked) async {

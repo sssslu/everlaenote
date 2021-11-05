@@ -14,6 +14,7 @@ class NoteObjectsDAO {
     _database1 = await initDB1();
     return _database1;
   }
+
   Future<Database> get database2 async {
     if (_database2 != null) return _database2;
     _database2 = await initDB2();
@@ -33,6 +34,7 @@ class NoteObjectsDAO {
       },
     );
   }
+
   initDB2() async {
     String path = join(await getDatabasesPath(), 'notes.db');
     return await openDatabase(
@@ -47,7 +49,7 @@ class NoteObjectsDAO {
     );
   }
 
-  Future<bool> insertNoteBook(String notebooktitle,String notebookbrief ,int notebookcolor) async {
+  Future<bool> insertNoteBook(String notebooktitle, String notebookbrief, int notebookcolor) async {
     final db = await database1;
     await db.rawInsert('insert into notebooks(notebooktitle, notebookbrief, notebookcolor) values("$notebooktitle", "$notebookbrief",$notebookcolor)');
     return true;
@@ -60,7 +62,7 @@ class NoteObjectsDAO {
     for (Map<String, dynamic> map in mapList) {
       noteBookList.add(NoteBook.fromMap(map));
     }
-    for(NoteBook m in noteBookList) {
+    for (NoteBook m in noteBookList) {
       print(m.toMap());
     }
     return noteBookList;
@@ -88,9 +90,9 @@ class NoteObjectsDAO {
     await db.rawUpdate('UPDATE notes SET notetitle="$title", notecontext="$context" WHERE id=$noteid');
   }
 
-
   Future<void> switchNoteBookIDFromDB(int targetId, int myId) async {
     final db = await database1;
+
     ///분기 로직은 그림2 참고
     print("id-$myId와 id-$targetId 스위치");
     await db.rawUpdate('UPDATE notebooks SET id=-1 WHERE id=$myId');

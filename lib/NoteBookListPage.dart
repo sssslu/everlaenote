@@ -1,16 +1,20 @@
 import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'public.dart' as p;
+import 'model/noteObjectsDAO.dart';
+import 'model/noteObjects.dart';
 
 class NoteBookListPage extends StatefulWidget {
+
   @override
   _NoteBookListPage createState() => _NoteBookListPage();
 }
 
 class _NoteBookListPage extends State<NoteBookListPage> {
+  NoteObjectsDAO noDao = new NoteObjectsDAO();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +26,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
               height: 40,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
-                  child: Container(),
+                  child: Container(width: 30,),
                   onTap: () {
                     //Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
                   },
@@ -41,75 +45,34 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                     ),
                     onTap: () {
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => EisenhowerPage()), (route) => false);
-                      print("세팅 메뉴로 이동");
+                      print("아이젠하워 페이지로 이동");
                     })
               ])),
-          noteListMaker(getAllNoteBookList(), colorMatcher(0)),
+          Container(
+
+            child: SingleChildScrollView(
+              child: FutureBuilder(
+                future: getAllNoteBooks(),
+                builder:(context, snapshot) {
+
+                }
+              )
+            ),
+          )
+
         ],
       )),
       floatingActionButton: buildSpeedDial(),
     );
   }
 
-  getAllNoteBookList() {
-    List<String> a = ["az"];
-    a.add("adsfasd");
-    a.add("qieirqwej");
-    print(a.toString());
-    return a;
+  getAllNoteBooks() async{
+    List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
+    List<String> s = [];
+    for(NoteBook i in n){
+      s.add(i.noteBookTitle);
+    }
   }
-
-  Column noteListMaker(List<String> l, Color ccolor) {
-    return Column(
-      children: [
-
-        Container(
-          margin: EdgeInsets.fromLTRB(
-            MediaQuery.of(context).size.width * 0.005,
-            MediaQuery.of(context).size.width * 0.005,
-            MediaQuery.of(context).size.width * 0.005,
-            MediaQuery.of(context).size.width * 0.001,
-          ),
-          width: MediaQuery.of(context).size.width * 0.95,
-          height: MediaQuery.of(context).size.height -50,
-          child: ListView.builder(
-            padding: EdgeInsets.all(4),
-            itemCount: l.length,
-            itemBuilder: (BuildContext context, int index) {
-              final item = l[index].hashCode.toString();
-              return Slidable(
-                key: Key(item),
-                child: noteTitleMaker(l, index),
-                actionPane: SlidableDrawerActionPane(),
-                actionExtentRatio: 0.2,
-                direction: Axis.horizontal,
-                actions: <Widget>[
-                  slideMakerDelete(l, index),
-                  IconSlideAction(
-                    color: colorMatcher(6),
-                    icon: Icons.keyboard_arrow_up,
-                    onTap: () => moveUp(l, index),
-                  ),
-                  IconSlideAction(
-                    color: colorMatcher(6),
-                    icon: Icons.keyboard_arrow_down,
-                    onTap: () => moveDown(l, index),
-                  )
-                ],
-              );
-            },
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: ccolor, width: 2),
-          ),
-        ),
-      ],
-    );
-  }
-
-  noteTitleMaker(snapshot, index) {}
 
   Color colorMatcher(int w) {
     switch (w) {
@@ -142,16 +105,6 @@ class _NoteBookListPage extends State<NoteBookListPage> {
     print("down");
     /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);*/
     setState(() {});
-  }
-
-  IconSlideAction slideMakerDelete(dynamic snapshot, int index) {
-    return IconSlideAction(
-        color: Colors.red,
-        icon: CupertinoIcons.delete_solid,
-        onTap: () {
-          /*deleteEisenMemo(snapshot.data[whatmatrix][index].id);*/
-          setState(() {});
-        });
   }
 
   SpeedDial buildSpeedDial() {
