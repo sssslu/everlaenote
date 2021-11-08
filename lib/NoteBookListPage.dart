@@ -18,12 +18,12 @@ class _NoteBookListPage extends State<NoteBookListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Container(
           child: Column(
         children: <Widget>[
           Container(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              height: 40,
+              height: MediaQuery.of(context).size.height*0.08,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
                   child: Container(width: 30,),
@@ -48,17 +48,24 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                       print("아이젠하워 페이지로 이동");
                     })
               ])),
-          Container(
-
-            child: SingleChildScrollView(
+            Container(
+              height: MediaQuery.of(context).size.height*0.9,
               child: FutureBuilder(
                 future: getAllNoteBooks(),
                 builder:(context, snapshot) {
-
+                  if (snapshot.hasData == false) {
+                    return CircularProgressIndicator();
+                  } else
+                    return SingleChildScrollView(
+                      child: Column(
+                      children: [
+                        for(String i in snapshot.data)
+                          Text(i)
+                      ],),
+                    );
                 }
               )
             ),
-          )
 
         ],
       )),
@@ -67,11 +74,18 @@ class _NoteBookListPage extends State<NoteBookListPage> {
   }
 
   getAllNoteBooks() async{
-    List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
+    //List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
     List<String> s = [];
-    for(NoteBook i in n){
+    /*for(NoteBook i in n){
       s.add(i.noteBookTitle);
+    }*/
+    for(int i = 0;i<100;i++) {
+      s.add("sssival");
+      s.add("도대체");
+      s.add("whats wrong with you");
+      s.add("mofo");
     }
+    return s;
   }
 
   Color colorMatcher(int w) {
@@ -137,7 +151,9 @@ class _NoteBookListPage extends State<NoteBookListPage> {
           label: '노트 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () => {},
+          onTap:(){
+          noDao.insertNoteBook("자유 노트", "", 0);
+          },
           onLongPress: () => print('4 CHILD LONG PRESS'),
         ),
       ],

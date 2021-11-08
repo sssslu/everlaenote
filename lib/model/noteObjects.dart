@@ -1,16 +1,14 @@
 class NoteBook {
   //노트북 종류
   int id; //primary key (순서구분용)
-  int uid; //노트 분류 리용 키
   String noteBookTitle;
   String noteBookBrief;
   int noteBookColor;
   ///id INTEGER PRIMARY KEY AUTOINCREMENT, uid INTEGER AUTOINCREMENT,  notebooktitle TEXT NOT NULL, notebookbrief TEXT NOT NULL, notebookcolor INTEGER NOT NULL
 
 
-  NoteBook(int id, int uid, String noteBookTitle, String noteBookBrief, int noteBookColor,) {
+  NoteBook(int id, String noteBookTitle, String noteBookBrief, int noteBookColor,) {
     this.id = id;
-    this.uid = uid;
     this.noteBookTitle = noteBookTitle;
     this.noteBookBrief = noteBookBrief;
     this.noteBookColor = noteBookColor;
@@ -20,7 +18,6 @@ class NoteBook {
 
   NoteBook.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
-    this.uid = map['uid'];
     this.noteBookTitle = map['noteBookTitle'];
     this.noteBookBrief = map['noteBookBrief'];
     this.noteBookColor = map['noteBookColor'];
@@ -29,7 +26,6 @@ class NoteBook {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'uid': uid,
       'noteBookTitle': noteBookTitle,
       'noteBookBrief': noteBookBrief,
       'noteBookColor': noteBookColor,
