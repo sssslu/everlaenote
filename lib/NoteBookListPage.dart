@@ -74,17 +74,17 @@ class _NoteBookListPage extends State<NoteBookListPage> {
   }
 
   getAllNoteBooks() async{
-    //List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
+    List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
     List<String> s = [];
-    /*for(NoteBook i in n){
+    for(NoteBook i in n){
       s.add(i.noteBookTitle);
-    }*/
-    for(int i = 0;i<100;i++) {
+    }
+/*    for(int i = 0;i<100;i++) {
       s.add("sssival");
       s.add("도대체");
       s.add("whats wrong with you");
       s.add("mofo");
-    }
+    }*/
     return s;
   }
 

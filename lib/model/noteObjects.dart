@@ -18,9 +18,9 @@ class NoteBook {
 
   NoteBook.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
-    this.noteBookTitle = map['noteBookTitle'];
-    this.noteBookBrief = map['noteBookBrief'];
-    this.noteBookColor = map['noteBookColor'];
+    this.noteBookTitle = map['notebooktitle'];
+    this.noteBookBrief = map['notebookbrief'];
+    this.noteBookColor = map['notebookcolor'];
   }
 
   Map<String, dynamic> toMap() {
