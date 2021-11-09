@@ -78,7 +78,7 @@ class _SettingPageState extends State<SettingPage> {
                     decoration: BoxDecoration(color: Colors.green.shade200),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(
-                        '똘이에 관하여',
+                        '디자인 편집',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ]),

@@ -35,7 +35,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                 InkWell(
                   onLongPress: () async {},
                   child: Text(
-                    "나의 노트북들",
+                    "노트북들",
                     style: TextStyle(
                       color: p.colorMatcher(0),
                       fontWeight: FontWeight.bold,
@@ -103,25 +103,37 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                                     width: 200,
                                                     color: p.colorMatcher(10),
                                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                                    child: Text("노트삭제")
+                                                    child: Text("노트북 삭제")
                                                   ),
                                                   onTap: (){
                                                     deleteNoteBook(i);
                                                     Navigator.pop(context);
                                                   },
                                                   ),
-                                                  Container(
-                                                    height: 40,
-                                                    width: 200,
-                                                    color: p.colorMatcher(11),
-                                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                  InkWell(child : Container(
+                                                      height: 40,
+                                                      width: 200,
+                                                      color: p.colorMatcher(12),
+                                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                      child: Text("노트북 편집")
                                                   ),
-                                                  Container(
-                                                    height: 40,
-                                                    width: 200,
-                                                    color: p.colorMatcher(12),
-                                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                                  )
+                                                    onTap: (){
+                                                      deleteNoteBook(i);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  InkWell(child : Container(
+                                                      height: 40,
+                                                      width: 200,
+                                                      color: p.colorMatcher(13),
+                                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                      child: Text("노트북 색상 변경")
+                                                  ),
+                                                    onTap: (){
+                                                      deleteNoteBook(i);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -172,13 +184,13 @@ class _NoteBookListPage extends State<NoteBookListPage> {
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
-      overlayColor: Colors.black,
+      overlayColor: p.colorMatcher(0),
       overlayOpacity: 0.25,
       onOpen: () => print('OPENING DIAL'),
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'Speed Dial',
       heroTag: 'speed-dial-hero-tag',
-      backgroundColor: Colors.black,
+      backgroundColor: p.colorMatcher(15),
       foregroundColor: Colors.white,
       elevation: 8.0,
       shape: CircleBorder(),
@@ -186,7 +198,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
         SpeedDialChild(
           child: Icon(Icons.add_box_rounded),
           backgroundColor: p.colorMatcher(6),
-          label: '노트 생성',
+          label: '노트북 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
           onTap: () {
