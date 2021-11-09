@@ -29,13 +29,13 @@ class NoteObjectsDAO {
   }
 
   Future<void> deleteEveryNotesInSpecificNoteBook(String noteBookTitle) async {
-    await db.rawDelete('DELETE FROM notes WHERE notebooktitle="$noteBookTitle"');
+    await db.rawDelete('DELETE FROM notes WHERE noteowner="$noteBookTitle"');
   }
 
   Future<void> deleteNoteBookFromDB(NoteBook notebook) async {
     String ownerName = notebook.noteBookTitle;
-    deleteEveryNotesInSpecificNoteBook(ownerName);
-    await db.rawDelete('DELETE FROM notebook WHERE notebooktitle = "$ownerName"');
+    await deleteEveryNotesInSpecificNoteBook(ownerName);
+    await db.rawDelete('DELETE FROM notebooks WHERE notebooktitle = "$ownerName"');
   }
 
   Future<void> noteBookColorChange(String title, int color) async {

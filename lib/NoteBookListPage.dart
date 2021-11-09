@@ -7,7 +7,6 @@ import 'model/noteObjectsDAO.dart';
 import 'model/noteObjects.dart';
 
 class NoteBookListPage extends StatefulWidget {
-
   @override
   _NoteBookListPage createState() => _NoteBookListPage();
 }
@@ -23,10 +22,12 @@ class _NoteBookListPage extends State<NoteBookListPage> {
         children: <Widget>[
           Container(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              height: MediaQuery.of(context).size.height*0.08,
+              height: MediaQuery.of(context).size.height * 0.08,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
-                  child: Container(width: 30,),
+                  child: Container(
+                    width: 30,
+                  ),
                   onTap: () {
                     //Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
                   },
@@ -34,80 +35,120 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                 InkWell(
                   onLongPress: () async {},
                   child: Text(
-                    "자유 노트북",
-                    style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold, fontSize: 15),
+                    "나의 노트북들",
+                    style: TextStyle(
+                      color: p.colorMatcher(0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
                 InkWell(
                     child: Icon(
                       CupertinoIcons.rectangle_grid_2x2,
-                      color: colorMatcher(0),
+                      color: p.colorMatcher(0),
                     ),
                     onTap: () {
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => EisenhowerPage()), (route) => false);
                       print("아이젠하워 페이지로 이동");
                     })
               ])),
-            Container(
-              height: MediaQuery.of(context).size.height*0.9,
+          Container(
+              height: MediaQuery.of(context).size.height * 0.9,
+              width: MediaQuery.of(context).size.width * 0.99,
               child: FutureBuilder(
-                future: getAllNoteBooks(),
-                builder:(context, snapshot) {
-                  if (snapshot.hasData == false) {
-                    return CircularProgressIndicator();
-                  } else
-                    return SingleChildScrollView(
-                      child: Column(
-                      children: [
-                        for(String i in snapshot.data)
-                          Text(i)
-                      ],),
-                    );
-                }
-              )
-            ),
-
+                  future: getAllNoteBooks(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData == false) {
+                      return CircularProgressIndicator();
+                    } else
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            for (NoteBook i in snapshot.data)
+                              InkWell(
+                                child: Container(
+                                    height: MediaQuery.of(context).size.height * 0.09,
+                                    width: MediaQuery.of(context).size.width * 0.99,
+                                    color: p.colorMatcher(i.noteBookColor),
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 2),
+                                    child: Center(
+                                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                      Text(
+                                        i.noteBookTitle,
+                                        style: TextStyle(color: p.colorMatcher(5), fontSize: 20),
+                                      ),
+                                      Text(
+                                        i.noteBookBrief,
+                                        style: TextStyle(color: p.colorMatcher(5), fontSize: 10),
+                                      ),
+                                    ]))),
+                                onLongPress: () {
+                                  return showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Center(
+                                            child: Text(
+                                              "노트북 편집",
+                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: Container(
+                                              child: Column(
+                                                children: [
+                                                  InkWell(child : Container(
+                                                    height: 40,
+                                                    width: 200,
+                                                    color: p.colorMatcher(10),
+                                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                    child: Text("노트삭제")
+                                                  ),
+                                                  onTap: (){
+                                                    deleteNoteBook(i);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  ),
+                                                  Container(
+                                                    height: 40,
+                                                    width: 200,
+                                                    color: p.colorMatcher(11),
+                                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                  ),
+                                                  Container(
+                                                    height: 40,
+                                                    width: 200,
+                                                    color: p.colorMatcher(12),
+                                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                },
+                              )
+                          ],
+                        ),
+                      );
+                  })),
         ],
       )),
       floatingActionButton: buildSpeedDial(),
     );
   }
 
-  getAllNoteBooks() async{
+  getAllNoteBooks() async {
     List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
-    List<String> s = [];
-    for(NoteBook i in n){
-      s.add(i.noteBookTitle);
-    }
-/*    for(int i = 0;i<100;i++) {
-      s.add("sssival");
-      s.add("도대체");
-      s.add("whats wrong with you");
-      s.add("mofo");
-    }*/
-    return s;
-  }
 
-  Color colorMatcher(int w) {
-    switch (w) {
-      case 1:
-        return Colors.blue;
-      case 2:
-        return Colors.green;
-      case 3:
-        return Colors.redAccent;
-      case 4:
-        return Colors.amber;
-      case 0:
-        return Colors.black87;
-      case 5:
-        return Colors.white;
-      case 6:
-        return Colors.deepPurple;
-    }
-    return Colors.green;
+    return n;
   }
-
+  deleteNoteBook(NoteBook i) async{
+    await noDao.deleteNoteBookFromDB(i);
+    setState(() {});
+  }
   moveUp(dynamic snapshot, int index) async {
     ///moveUp과 moveDown 은 그냥 위 또는 아래에 유효한 객체가 있는지 검사문을 넣지 않았다. 왜냐하면 오류가 나도 꺼지지 않기에.
     print("up");
@@ -141,22 +182,23 @@ class _NoteBookListPage extends State<NoteBookListPage> {
       foregroundColor: Colors.white,
       elevation: 8.0,
       shape: CircleBorder(),
-      // orientation: SpeedDialOrientation.Up,
-      // childMarginBottom: 2,
-      // childMarginTop: 2,
       children: [
         SpeedDialChild(
           child: Icon(Icons.add_box_rounded),
-          backgroundColor: colorMatcher(4),
+          backgroundColor: p.colorMatcher(6),
           label: '노트 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap:(){
-          noDao.insertNoteBook("자유 노트", "", 0);
+          onTap: () {
+            addNote();
           },
           onLongPress: () => print('4 CHILD LONG PRESS'),
         ),
       ],
     );
+  }
+  addNote() async{
+    await noDao.insertNoteBook("자유 노트", "", 0);
+    setState(() {});
   }
 }

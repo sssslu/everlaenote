@@ -129,7 +129,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: colorMatcher(whatMatrix),
+          color: p.colorMatcher(whatMatrix),
         ),
       ),
       onTap: () async {
@@ -140,7 +140,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
     );
   }
 
-  dynamic moveEisenMemo(int id) {
+moveEisenMemo(int id) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -194,7 +194,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                   key: _formKey,
                   child: SingleChildScrollView(
                     child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(c.whatMatrix), width: 3)),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: p.colorMatcher(c.whatMatrix), width: 3)),
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -274,7 +274,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                 Form(
                   key: _formKey,
                   child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: colorMatcher(whatmatrix), width: 3)),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: p.colorMatcher(whatmatrix), width: 3)),
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: MediaQuery.of(context).size.height * 0.5,
                     child: SingleChildScrollView(
@@ -351,7 +351,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
   void initState() {
     super.initState();
     Screen.keepOn(true);
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,);
   }
 
   @override
@@ -367,7 +367,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                 InkWell(
                   child: Icon(
                     Icons.amp_stories,
-                    color: colorMatcher(0),
+                    color: p.colorMatcher(0),
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
@@ -385,13 +385,13 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                   },
                   child: Text(
                     "Everlaenote",
-                    style: TextStyle(color: colorMatcher(0), fontWeight: FontWeight.bold, fontSize: 15),
+                    style: TextStyle(color: p.colorMatcher(0), fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                 ),
                 InkWell(
                     child: Icon(
                       Icons.settings,
-                      color: colorMatcher(0),
+                      color: p.colorMatcher(0),
                     ),
                     onTap: () {
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SettingPage()), (route) => false);
@@ -409,15 +409,15 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        mMaker(snapshot, "긴급 & 중요", 1, colorMatcher(1)),
-                        mMaker(snapshot, "긴급 & 안중요", 2, colorMatcher(2)),
+                        mMaker(snapshot, "긴급 & 중요", 1, p.colorMatcher(1)),
+                        mMaker(snapshot, "긴급 & 안중요", 2, p.colorMatcher(2)),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        mMaker(snapshot, "안긴급 & 중요", 3, colorMatcher(3)),
-                        mMaker(snapshot, "안긴급 & 안중요", 4, colorMatcher(4)),
+                        mMaker(snapshot, "안긴급 & 중요", 3, p.colorMatcher(3)),
+                        mMaker(snapshot, "안긴급 & 안중요", 4, p.colorMatcher(4)),
                       ],
                     ),
                   ]);
@@ -455,7 +455,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                 ),
               ]))),
           onTap: () {
-            print("아무기능 없습니다~");
+            print("원래는 한 매트릭스 전체 삭제, 지금은 아무기능 없습니다~");
           },
         ),
         Container(
@@ -481,12 +481,12 @@ class EisenhowerPageState extends State<EisenhowerPage> {
                 actions: <Widget>[
                   slideMakerDelete(snapshot, index, whatMMatrix - 1),
                   IconSlideAction(
-                    color: colorMatcher(6),
+                    color: p.colorMatcher(6),
                     icon: Icons.keyboard_arrow_up,
                     onTap: () => moveUp(snapshot, index, whatMMatrix - 1),
                   ),
                   IconSlideAction(
-                    color: colorMatcher(6),
+                    color: p.colorMatcher(6),
                     icon: Icons.keyboard_arrow_down,
                     onTap: () => moveDown(snapshot, index, whatMMatrix - 1),
                   )
@@ -575,7 +575,6 @@ class EisenhowerPageState extends State<EisenhowerPage> {
             ],
           )),
         );
-        break;
       case 2:
         return Container(
           child: Center(
@@ -601,7 +600,6 @@ class EisenhowerPageState extends State<EisenhowerPage> {
             ],
           )),
         );
-        break;
       case 3:
         return Container(
           child: Center(
@@ -663,7 +661,6 @@ class EisenhowerPageState extends State<EisenhowerPage> {
             ],
           )),
         );
-        break;
       case 5:
         return Container(
           child: Center(
@@ -757,7 +754,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
       children: [
         SpeedDialChild(
           child: Icon(Icons.crop_square),
-          backgroundColor: colorMatcher(4),
+          backgroundColor: p.colorMatcher(4),
           label: '안긴급&안중요',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
@@ -766,7 +763,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         ),
         SpeedDialChild(
           child: Icon(Icons.crop_square),
-          backgroundColor: colorMatcher(3),
+          backgroundColor: p.colorMatcher(3),
           label: '긴급&안중요',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
@@ -775,7 +772,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         ),
         SpeedDialChild(
           child: Icon(Icons.crop_square),
-          backgroundColor: colorMatcher(2),
+          backgroundColor: p.colorMatcher(2),
           label: '안긴급&중요',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
@@ -784,7 +781,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
         ),
         SpeedDialChild(
           child: Icon(Icons.crop_square),
-          backgroundColor: colorMatcher(1),
+          backgroundColor: p.colorMatcher(1),
           label: '긴급&중요',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
@@ -855,30 +852,7 @@ class EisenhowerPageState extends State<EisenhowerPage> {
       },
     );
   }
-
-  gotoQuickNoteAddPage() {}
-
-  gotoEisenhowerPage() {}
-
-  Color colorMatcher(int w) {
-    switch (w) {
-      case 1:
-        return Colors.blue;
-      case 2:
-        return Colors.green;
-      case 3:
-        return Colors.redAccent;
-      case 4:
-        return Colors.amber;
-      case 0:
-        return Colors.black87;
-      case 5:
-        return Colors.white;
-      case 6:
-        return Colors.deepPurple;
-    }
-    return Colors.green;
-  }
+  
 
   Color randomColorMaker() {
     return Colors.primaries[Random().nextInt(Colors.primaries.length)];
