@@ -37,7 +37,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                   child: Text(
                     "노트북들",
                     style: TextStyle(
-                      color: p.colorMatcher(0),
+                      color: p.colorMatcher(-1),
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -46,7 +46,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                 InkWell(
                     child: Icon(
                       CupertinoIcons.rectangle_grid_2x2,
-                      color: p.colorMatcher(0),
+                      color: p.colorMatcher(-1),
                     ),
                     onTap: () {
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => EisenhowerPage()), (route) => false);
@@ -184,20 +184,20 @@ class _NoteBookListPage extends State<NoteBookListPage> {
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
-      overlayColor: p.colorMatcher(0),
+      overlayColor: p.colorMatcher(-1),
       overlayOpacity: 0.25,
       onOpen: () => print('OPENING DIAL'),
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'Speed Dial',
       heroTag: 'speed-dial-hero-tag',
-      backgroundColor: p.colorMatcher(15),
+      backgroundColor: p.colorMatcher(6),
       foregroundColor: Colors.white,
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
         SpeedDialChild(
-          child: Icon(Icons.add_box_rounded),
-          backgroundColor: p.colorMatcher(6),
+          child: Icon(Icons.add_box_rounded, color: Colors.white,),
+          backgroundColor: p.colorMatcher(-1),
           label: '노트북 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
