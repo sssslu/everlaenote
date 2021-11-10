@@ -35,6 +35,18 @@ Color colorMatcher(int w) {
       return Colors.blue.shade900;
     case 15:
       return Colors.purple.shade800;
+    case 20:
+      return Colors.red.shade800;
+    case 21:
+      return Colors.orange.shade900;
+    case 22:
+      return Colors.amber.shade500;
+    case 23:
+      return Colors.green.shade900;
+    case 24:
+      return Colors.blue.shade900;
+    case 25:
+      return Colors.purple.shade900;
   }
   return Colors.black;
 }
@@ -43,8 +55,8 @@ class PublicDAO {
   static Database _database;
 
   Future<Database> get database async {
+    print("*** GET DB ***");
     if (_database != null) {
-      print("디비 널아님, 디비 그냥 리턴함");
       return _database;
     }
     _database = await initDB();

@@ -13,11 +13,238 @@ class NoteBookListPage extends StatefulWidget {
 
 class _NoteBookListPage extends State<NoteBookListPage> {
   NoteObjectsDAO noDao = new NoteObjectsDAO();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contextController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  getAllNoteBooks() async {
+    List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
+
+    return n;
+  }
+
+  deleteNoteBook(NoteBook i) async {
+    await noDao.deleteNoteBookFromDB(i);
+    setState(() {});
+  }
+
+  moveUp(dynamic snapshot, int index) async {
+    ///moveUp과 moveDown 은 그냥 위 또는 아래에 유효한 객체가 있는지 검사문을 넣지 않았다. 왜냐하면 오류가 나도 꺼지지 않기에.
+    print("up");
+    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);*/
+    setState(() {});
+  }
+
+  moveDown(dynamic snapshot, int index) async {
+    print("down");
+    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);*/
+    setState(() {});
+  }
+
+  addQuickNote() async {
+
+  }
+
+  createNoteBook() {
+
+    _titleController.text = "";
+    _contextController.text = "";
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                "노트북 추가",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            content: Stack(
+              children: <Widget>[
+                Form(
+                  key: _formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _titleController,
+                              decoration: InputDecoration(
+                                labelText: '노트북 이름',
+                                border: UnderlineInputBorder(),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              //Normal textInputField will be displayed
+                              maxLines: 5,
+                              // when user presses enter it will adapt to it
+                              controller: _contextController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                labelText: '설명',
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              child: Text(
+                                "만들기",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () async {
+                                if (_titleController.text == "") {
+                                  return;
+                                }
+                                await noDao.insertNoteBook(_titleController.text, _contextController.text, -1);
+                                Navigator.pop(context);
+                                setState(() {});
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  dynamic editNoteBook(NoteBook c) {
+    _titleController.text = c.noteBookTitle;
+    _contextController.text = c.noteBookBrief;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                "노트북 편집",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            content: Stack(
+              children: <Widget>[
+                Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: p.colorMatcher(c.noteBookColor), width: 3)),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _titleController,
+                              decoration: InputDecoration(
+                                labelText: "노트북 제목",
+                                border: UnderlineInputBorder(),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              //Normal textInputField will be displayed
+                              maxLines: 5,
+                              // when user presses enter it will adapt to it
+                              controller: _contextController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                labelText: '내용',
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              child: Text(
+                                "저장",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () async {
+                                if (_titleController.text == "") {
+                                  return; //TODO 경고창 추가해야함
+                                }
+                                await noDao.updateNoteBookInDB(c.id, _titleController.text, _contextController.text);
+                                Navigator.pop(context);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  SpeedDial buildSpeedDial() {
+    return SpeedDial(
+      marginEnd: 18,
+      marginBottom: 20,
+      icon: Icons.add,
+      activeIcon: Icons.remove,
+      buttonSize: 56.0,
+      visible: true,
+      closeManually: false,
+      curve: Curves.bounceIn,
+      overlayColor: p.colorMatcher(-1),
+      overlayOpacity: 0.25,
+      onOpen: () => print('OPENING DIAL'),
+      onClose: () => print('DIAL CLOSED'),
+      tooltip: 'Speed Dial',
+      heroTag: 'speed-dial-hero-tag',
+      backgroundColor: p.colorMatcher(6),
+      foregroundColor: Colors.white,
+      elevation: 8.0,
+      shape: CircleBorder(),
+      children: [
+        SpeedDialChild(
+          child: Icon(
+            Icons.add_box_rounded,
+            color: Colors.white,
+          ),
+          backgroundColor: p.colorMatcher(-1),
+          label: '노트북 생성',
+          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
+          labelBackgroundColor: Colors.black,
+          onTap: () {
+            createNoteBook();
+          },
+          onLongPress: () => print('4 CHILD LONG PRESS'),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SingleChildScrollView(
           child: Column(
         children: <Widget>[
           Container(
@@ -73,14 +300,14 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                     color: p.colorMatcher(i.noteBookColor),
                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 2),
                                     child: Center(
-                                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                                       Text(
                                         i.noteBookTitle,
                                         style: TextStyle(color: p.colorMatcher(5), fontSize: 20),
                                       ),
                                       Text(
                                         i.noteBookBrief,
-                                        style: TextStyle(color: p.colorMatcher(5), fontSize: 10),
+                                        style: TextStyle(color: p.colorMatcher(5), fontSize: 13),
                                       ),
                                     ]))),
                                 onLongPress: () {
@@ -98,40 +325,54 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                             child: Container(
                                               child: Column(
                                                 children: [
-                                                  InkWell(child : Container(
-                                                    height: 40,
-                                                    width: 200,
-                                                    color: p.colorMatcher(10),
-                                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                                    child: Text("노트북 삭제")
-                                                  ),
-                                                  onTap: (){
-                                                    deleteNoteBook(i);
-                                                    Navigator.pop(context);
-                                                  },
-                                                  ),
-                                                  InkWell(child : Container(
-                                                      height: 40,
-                                                      width: 200,
-                                                      color: p.colorMatcher(12),
-                                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                                      child: Text("노트북 편집")
-                                                  ),
-                                                    onTap: (){
+                                                  InkWell(
+                                                    child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: p.colorMatcher(10),
+                                                            border: Border.all(
+                                                              color: p.colorMatcher(20),
+                                                            ),
+                                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                        height: 40,
+                                                        width: 200,
+                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                        child: Center(child: Text("노트북 삭제"))),
+                                                    onTap: () {
                                                       deleteNoteBook(i);
                                                       Navigator.pop(context);
                                                     },
                                                   ),
-                                                  InkWell(child : Container(
-                                                      height: 40,
-                                                      width: 200,
-                                                      color: p.colorMatcher(13),
-                                                      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                                      child: Text("노트북 색상 변경")
-                                                  ),
-                                                    onTap: (){
-                                                      deleteNoteBook(i);
+                                                  InkWell(
+                                                    child: Container(
+                                                        height: 40,
+                                                        width: 200,
+                                                        decoration: BoxDecoration(
+                                                            color: p.colorMatcher(12),
+                                                            border: Border.all(
+                                                              color: p.colorMatcher(22),
+                                                            ),
+                                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                        child: Center(child: Text("노트북 편집"))),
+                                                    onTap: () async {
                                                       Navigator.pop(context);
+                                                      await editNoteBook(i);
+                                                    },
+                                                  ),
+                                                  InkWell(
+                                                    child: Container(
+                                                        height: 40,
+                                                        width: 200,
+                                                        decoration: BoxDecoration(
+                                                            color: p.colorMatcher(13),
+                                                            border: Border.all(
+                                                              color: p.colorMatcher(23),
+                                                            ),
+                                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                        child: Center(child: Text("노트북 색상 변경"))),
+                                                    onTap: () {
+                                                      setState(() {});
                                                     },
                                                   ),
                                                 ],
@@ -150,67 +391,5 @@ class _NoteBookListPage extends State<NoteBookListPage> {
       )),
       floatingActionButton: buildSpeedDial(),
     );
-  }
-
-  getAllNoteBooks() async {
-    List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
-
-    return n;
-  }
-  deleteNoteBook(NoteBook i) async{
-    await noDao.deleteNoteBookFromDB(i);
-    setState(() {});
-  }
-  moveUp(dynamic snapshot, int index) async {
-    ///moveUp과 moveDown 은 그냥 위 또는 아래에 유효한 객체가 있는지 검사문을 넣지 않았다. 왜냐하면 오류가 나도 꺼지지 않기에.
-    print("up");
-    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);*/
-    setState(() {});
-  }
-
-  moveDown(dynamic snapshot, int index) async {
-    print("down");
-    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);*/
-    setState(() {});
-  }
-
-  SpeedDial buildSpeedDial() {
-    return SpeedDial(
-      marginEnd: 18,
-      marginBottom: 20,
-      icon: Icons.add,
-      activeIcon: Icons.remove,
-      buttonSize: 56.0,
-      visible: true,
-      closeManually: false,
-      curve: Curves.bounceIn,
-      overlayColor: p.colorMatcher(-1),
-      overlayOpacity: 0.25,
-      onOpen: () => print('OPENING DIAL'),
-      onClose: () => print('DIAL CLOSED'),
-      tooltip: 'Speed Dial',
-      heroTag: 'speed-dial-hero-tag',
-      backgroundColor: p.colorMatcher(6),
-      foregroundColor: Colors.white,
-      elevation: 8.0,
-      shape: CircleBorder(),
-      children: [
-        SpeedDialChild(
-          child: Icon(Icons.add_box_rounded, color: Colors.white,),
-          backgroundColor: p.colorMatcher(-1),
-          label: '노트북 생성',
-          labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
-          labelBackgroundColor: Colors.black,
-          onTap: () {
-            addNote();
-          },
-          onLongPress: () => print('4 CHILD LONG PRESS'),
-        ),
-      ],
-    );
-  }
-  addNote() async{
-    await noDao.insertNoteBook("자유 노트", "", 0);
-    setState(() {});
   }
 }

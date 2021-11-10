@@ -43,10 +43,3 @@ class Note {
   String noteContext1; //type 1
 //List<NoteListObj> noteContent2;//type 2 , 추후 기능 추가
 }
-/*class NoteListObj{
-  int id;
-  String noteListObjTitle;
-  String noteListObjContext;
-  int noteListObjColor;
-  String noteListObjOwnerNoteTitle;//해당 노트를 소유한 타입2 노트의 제목
-}*/

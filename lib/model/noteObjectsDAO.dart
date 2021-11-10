@@ -19,8 +19,7 @@ class NoteObjectsDAO {
       noteBookList.add(NoteBook.fromMap(map));
     }
     for (NoteBook m in noteBookList) {
-      print("###\n");
-      print(m.toMap());
+      print("###"+m.toMap().toString()+"###");
     }
     return noteBookList;
   }
@@ -42,9 +41,9 @@ class NoteObjectsDAO {
     await db.rawUpdate('UPDATE notebooks SET notebookcolor=$color WHERE notebooktitle = "$title"');
   }
 
-  Future<void> updateNoteInDB(int noteid, String title, String context) async {
+  Future<void> updateNoteBookInDB(int noteid, String title, String context) async {
     final db = await pbd.database;
-    await db.rawUpdate('UPDATE notes SET notetitle="$title", notecontext="$context" WHERE id=$noteid');
+    await db.rawUpdate('UPDATE notebooks SET notebooktitle="$title", notebookbrief="$context" WHERE id=$noteid');
   }
 
   Future<void> switchNoteBookIDFromDB(int targetId, int myId) async {
