@@ -367,7 +367,8 @@ moveEisenMemo(int id) {
                 InkWell(
                   child: Icon(
                     Icons.amp_stories,
-                    color: p.colorMatcher(-1),
+                    color: p.colorMatcher(0),
+                    size: 40,
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
@@ -385,13 +386,14 @@ moveEisenMemo(int id) {
                   },
                   child: Text(
                     "Everlaenote",
-                    style: TextStyle(color: p.colorMatcher(-1), fontWeight: FontWeight.bold, fontSize: 15),
+                    style: TextStyle(color: p.colorMatcher(0), fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                 ),
                 InkWell(
                     child: Icon(
                       Icons.settings,
-                      color: p.colorMatcher(-1),
+                      color: p.colorMatcher(0),
+                      size: 40,
                     ),
                     onTap: () {
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SettingPage()), (route) => false);
@@ -857,4 +859,6 @@ moveEisenMemo(int id) {
   Color randomColorMaker() {
     return Colors.primaries[Random().nextInt(Colors.primaries.length)];
   }
+
+
 }

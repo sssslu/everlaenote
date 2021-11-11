@@ -51,6 +51,33 @@ Color colorMatcher(int w) {
   return Colors.black;
 }
 
+void alertNotFunctioning(BuildContext context) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('아직 설계중인 기능', style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
+        content: Text(
+          "아직 동작하지 않는 기능입니다. 업데이트를 기다려주세요!",
+          style: TextStyle(fontSize: 13, color: Colors.green),
+        ),
+        actions: <Widget>[
+          InkWell(
+            child: Text(
+              '기다릴게요',
+              style: TextStyle(fontSize: 13, color: Colors.blue),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 class PublicDAO {
   static Database _database;
 
@@ -78,7 +105,13 @@ class PublicDAO {
           "CREATE TABLE notebooks(id INTEGER PRIMARY KEY AUTOINCREMENT,  notebooktitle TEXT NOT NULL, notebookbrief TEXT NOT NULL, notebookcolor INTEGER NOT NULL)",
         );
         await db.execute(
-          "CREATE TABLE notes(id INTEGER PRIMARY KEY AUTOINCREMENT, notetitle TEXT NOT NULL, notetype INTEGER NOT NULL, noteowner STRING NOT NULL, notecontext TEXT NOT NULL)",
+          "CREATE TABLE notenormal(id INTEGER PRIMARY KEY AUTOINCREMENT, noteownerid INTEGER NOT NULL, notetitle TEXT NOT NULL, notecontext TEXT NOT NULL)",
+        );
+        await db.execute(
+          "CREATE TABLE notechecklist(id INTEGER PRIMARY KEY AUTOINCREMENT, noteownerid INTEGER NOT NULL, notetitle TEXT NOT NULL)",
+        );
+        await db.execute(
+          "CREATE TABLE objnotechecklist(id INTEGER PRIMARY KEY AUTOINCREMENT, objownerid INTEGER NOT NULL, objtitle TEXT NOT NULL, objcontext TEXT NOT NULL, objchecked INTEGER NOT NULL)",
         );
       },
     );

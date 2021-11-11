@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'NotesMainPage.dart';
 import 'public.dart' as p;
 import 'model/noteObjectsDAO.dart';
 import 'model/noteObjects.dart';
@@ -104,9 +107,9 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                               ),
                               onPressed: () async {
                                 if (_titleController.text == "") {
-                                  return;
+                                  return; //TODO 노트북 제목 같으면 걸러내는 함수 제작해야함.
                                 }
-                                await noDao.insertNoteBook(_titleController.text, _contextController.text, -1);
+                                await noDao.insertNoteBook(_titleController.text, _contextController.text, randomIntMaker());
                                 Navigator.pop(context);
                                 setState(() {});
                               },
@@ -252,11 +255,13 @@ class _NoteBookListPage extends State<NoteBookListPage> {
               height: MediaQuery.of(context).size.height * 0.08,
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 InkWell(
-                  child: Container(
-                    width: 30,
+                  child: Icon(
+                    CupertinoIcons.search,
+                    color: p.colorMatcher(0),
+                    size: 40,
                   ),
                   onTap: () {
-                    //Navigator.of(context).push(MaterialPageRoute(builder: (context) => NoteBookListPage()));
+                    p.alertNotFunctioning(context);
                   },
                 ),
                 InkWell(
@@ -264,7 +269,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                   child: Text(
                     "노트북들",
                     style: TextStyle(
-                      color: p.colorMatcher(-1),
+                      color: p.colorMatcher(0),
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -272,8 +277,9 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                 ),
                 InkWell(
                     child: Icon(
-                      CupertinoIcons.rectangle_grid_2x2,
-                      color: p.colorMatcher(-1),
+                      CupertinoIcons.return_icon,
+                      color: p.colorMatcher(0),
+                      size: 40,
                     ),
                     onTap: () {
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => EisenhowerPage()), (route) => false);
@@ -297,7 +303,8 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                 child: Container(
                                     height: MediaQuery.of(context).size.height * 0.09,
                                     width: MediaQuery.of(context).size.width * 0.99,
-                                    color: p.colorMatcher(i.noteBookColor),
+
+                                    decoration: BoxDecoration(color: p.colorMatcher(i.noteBookColor),borderRadius: BorderRadius.circular(15), border: Border.all(color: p.colorMatcher(i.noteBookColor), width: 3)),
                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 2),
                                     child: Center(
                                         child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -310,6 +317,9 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                         style: TextStyle(color: p.colorMatcher(5), fontSize: 13),
                                       ),
                                     ]))),
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesMainPage(n: i)));
+                                },
                                 onLongPress: () {
                                   return showDialog(
                                       context: context,
@@ -391,5 +401,10 @@ class _NoteBookListPage extends State<NoteBookListPage> {
       )),
       floatingActionButton: buildSpeedDial(),
     );
+  }
+
+  int randomIntMaker(){
+    //20-25 가 나와야함
+    return Random().nextInt(6) + 20;
   }
 }

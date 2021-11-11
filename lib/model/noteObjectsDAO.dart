@@ -23,6 +23,30 @@ class NoteObjectsDAO {
     }
     return noteBookList;
   }
+  Future<List<NoteNormal>> getAllNoteNormalsFromDB() async {
+    final db = await pbd.database;
+    List<Map<String, dynamic>> mapList = await db.query("notenormal");
+    List<NoteNormal> noteNormalList = [];
+    for (Map<String, dynamic> map in mapList) {
+      noteNormalList.add(NoteNormal.fromMap(map));
+    }
+    for (NoteNormal m in noteNormalList) {
+      print("###"+m.toMap().toString()+"###");
+    }
+    return noteNormalList;
+  }
+  Future<List<NoteChecklist>> getAllNoteChecklistsFromDB() async {
+    final db = await pbd.database;
+    List<Map<String, dynamic>> mapList = await db.query("notechecklist");
+    List<NoteChecklist> noteChecklistList = [];
+    for (Map<String, dynamic> map in mapList) {
+      noteChecklistList.add(NoteChecklist.fromMap(map));
+    }
+    for (NoteChecklist m in noteChecklistList) {
+      print("###"+m.toMap().toString()+"###");
+    }
+    return noteChecklistList;
+  }
 
   Future<void> deleteEveryNotesInSpecificNoteBook(String noteBookTitle) async {
     final db = await pbd.database;

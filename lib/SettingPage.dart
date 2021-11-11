@@ -43,7 +43,7 @@ class _SettingPageState extends State<SettingPage> {
                   )),
               InkWell(
                   onTap: () {
-                    alertNotFunctioning(context);
+                    p.alertNotFunctioning(context);
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
@@ -57,7 +57,7 @@ class _SettingPageState extends State<SettingPage> {
                   )),
               InkWell(
                   onTap: () {
-                    alertNotFunctioning(context);
+                    p.alertNotFunctioning(context);
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
@@ -71,7 +71,7 @@ class _SettingPageState extends State<SettingPage> {
                   )),
               InkWell(
                   onTap: () {
-                    alertNotFunctioning(context);
+                    p.alertNotFunctioning(context);
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
@@ -85,7 +85,7 @@ class _SettingPageState extends State<SettingPage> {
                   )),
               InkWell(
                   onTap: () {
-                    alertNotFunctioning(context);
+                    p.alertNotFunctioning(context);
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
@@ -117,30 +117,4 @@ class _SettingPageState extends State<SettingPage> {
         ));
   }
 
-  void alertNotFunctioning(BuildContext context) async {
-    await showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('아직 설계중인 기능', style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
-          content: Text(
-            "아직 동작하지 않는 기능입니다. 업데이트를 기다려주세요!",
-            style: TextStyle(fontSize: 13, color: Colors.green),
-          ),
-          actions: <Widget>[
-            InkWell(
-              child: Text(
-                '기다릴게요',
-                style: TextStyle(fontSize: 13, color: Colors.blue),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
