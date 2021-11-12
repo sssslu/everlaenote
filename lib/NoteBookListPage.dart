@@ -4,6 +4,7 @@ import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'ColorSelectPage.dart';
 import 'NotesMainPage.dart';
 import 'public.dart' as p;
 import 'model/noteObjectsDAO.dart';
@@ -340,12 +341,12 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                                         decoration: BoxDecoration(
                                                             color: p.colorMatcher(10),
                                                             border: Border.all(
-                                                              color: p.colorMatcher(20),
+                                                              color: p.colorMatcher(5),
                                                             ),
                                                             borderRadius: BorderRadius.all(Radius.circular(20))),
                                                         height: 40,
                                                         width: 200,
-                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
                                                         child: Center(child: Text("노트북 삭제"))),
                                                     onTap: () {
                                                       deleteNoteBook(i);
@@ -359,10 +360,10 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                                         decoration: BoxDecoration(
                                                             color: p.colorMatcher(12),
                                                             border: Border.all(
-                                                              color: p.colorMatcher(22),
+                                                              color: p.colorMatcher(5),
                                                             ),
                                                             borderRadius: BorderRadius.all(Radius.circular(20))),
-                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
                                                         child: Center(child: Text("노트북 편집"))),
                                                     onTap: () async {
                                                       Navigator.pop(context);
@@ -376,13 +377,13 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                                         decoration: BoxDecoration(
                                                             color: p.colorMatcher(13),
                                                             border: Border.all(
-                                                              color: p.colorMatcher(23),
+                                                              color: p.colorMatcher(5),
                                                             ),
                                                             borderRadius: BorderRadius.all(Radius.circular(20))),
                                                         margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
                                                         child: Center(child: Text("노트북 색상 변경"))),
                                                     onTap: () {
-                                                      setState(() {});
+                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ColorSelectPage()));
                                                     },
                                                   ),
                                                 ],
