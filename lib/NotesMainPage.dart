@@ -27,197 +27,39 @@ class _NotesMainPage extends State<NotesMainPage> {
   final TextEditingController _contextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  Future<List<CommonNoteForDisplay>> getAllNotes() async {
+  Future<List<CommonNoteForDisplay>> getAllNotesInSpecificNoteBook() async {
     List<NoteChecklist> nc = [];
     List<NoteNormal> nn = [];
     List<CommonNoteForDisplay> cn = [];
+
+    //TODO : 오너id 로 거르는 과정이 필요함.
     nc = await noDao.getAllNoteChecklistsFromDB();
     nn = await noDao.getAllNoteNormalsFromDB();
 
+    print("nc 내의 정보 : " + nc.toString());
     for (NoteChecklist i in nc) {
       CommonNoteForDisplay k;
       k.originalId = i.id;
       k.title = i.noteTitle;
-      k.brief = "체크리스트 노트";
+      k.context = "체크리스트 노트";
       k.type = 2;
       cn.add(k);
     }
-    print("타입 2 노트 배열 저장 완료");
-
+    print("nc 타입 2 노트 배열 저장 완료");
+    print("nn 내의 정보 : " + nn.toString());
     for (NoteNormal i in nn) {
-      CommonNoteForDisplay k;
-      k.originalId = i.id;
-      k.title = i.noteTitle;
-      k.brief = i.noteContext;
-      k.type = 1;
+      print("@@@@@@@@@");
+      CommonNoteForDisplay k = new CommonNoteForDisplay(i.id, i.noteTitle, i.noteContext);
       cn.add(k);
+      print("#########");
     }
-    print("타입 1 노트 배열 저장 완료");
+    print("nn 타입 1 노트 배열 저장 완료");
 
     return cn;
   }
 
-  deleteNoteBook(NoteBook i) async {
-    await noDao.deleteNoteBookFromDB(i);
-    setState(() {});
-  }
 
   addQuickNote() async {}
-
-  createNoteBook() {
-    _titleController.text = "";
-    _contextController.text = "";
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Center(
-              child: Text(
-                "노트북 추가",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            content: Stack(
-              children: <Widget>[
-                Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _titleController,
-                            decoration: InputDecoration(
-                              labelText: '노트북 이름',
-                              border: UnderlineInputBorder(),
-                              fillColor: Colors.white,
-                              filled: true,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            minLines: 1,
-                            //Normal textInputField will be displayed
-                            maxLines: 5,
-                            // when user presses enter it will adapt to it
-                            controller: _contextController,
-                            decoration: InputDecoration(
-                              fillColor: Colors.white,
-                              labelText: '설명',
-                              filled: true,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            child: Text(
-                              "만들기",
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                            ),
-                            onPressed: () async {
-                              if (_titleController.text == "") {
-                                return; //TODO 노트북 제목 같으면 걸러내는 함수 제작해야함.
-                              }
-                              await noDao.insertNoteBook(_titleController.text, _contextController.text, randomIntMaker());
-                              Navigator.pop(context);
-                              setState(() {});
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  dynamic editNoteBook(NoteBook c) {
-    _titleController.text = c.noteBookTitle;
-    _contextController.text = c.noteBookBrief;
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Center(
-              child: Text(
-                "노트북 편집",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            content: Stack(
-              children: <Widget>[
-                Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(color: p.colorMatcher(c.noteBookColor), width: 3)),
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _titleController,
-                              decoration: InputDecoration(
-                                labelText: "노트북 제목",
-                                border: UnderlineInputBorder(),
-                                fillColor: Colors.white,
-                                filled: true,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              //Normal textInputField will be displayed
-                              maxLines: 5,
-                              // when user presses enter it will adapt to it
-                              controller: _contextController,
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                labelText: '내용',
-                                filled: true,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              child: Text(
-                                "저장",
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
-                              onPressed: () async {
-                                if (_titleController.text == "") {
-                                  return; //TODO 경고창 추가해야함
-                                }
-                                await noDao.updateNoteBookInDB(c.id, _titleController.text, _contextController.text);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
 
   SpeedDial buildSpeedDial() {
     return SpeedDial(
@@ -249,7 +91,12 @@ class _NotesMainPage extends State<NotesMainPage> {
           label: '일반 노트 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () {},
+          onTap: () async{
+            await noDao.newNote(n.id, "dummy note","dum dum dum" );
+            setState(() {
+
+            });
+          },
         ),
         SpeedDialChild(
           child: Icon(
@@ -257,7 +104,7 @@ class _NotesMainPage extends State<NotesMainPage> {
             color: Colors.white,
           ),
           backgroundColor: p.colorMatcher(-1),
-          label: '체크리스트 생성',
+          label: '체크리스트 노트 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
           onTap: () {},
@@ -289,7 +136,7 @@ class _NotesMainPage extends State<NotesMainPage> {
                   child: Text(
                     n.noteBookTitle,
                     style: TextStyle(
-                      color: p.colorMatcher(-1),
+                      color: p.colorMatcher(n.noteBookColor),
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -308,7 +155,7 @@ class _NotesMainPage extends State<NotesMainPage> {
               height: MediaQuery.of(context).size.height * 0.9,
               width: MediaQuery.of(context).size.width * 0.99,
               child: FutureBuilder(
-                  future: getAllNotes(),
+                  future: getAllNotesInSpecificNoteBook(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData == false) {
                       return CircularProgressIndicator();
@@ -330,7 +177,7 @@ class _NotesMainPage extends State<NotesMainPage> {
                                         style: TextStyle(color: p.colorMatcher(-1), fontSize: 20),
                                       ),
                                       Text(
-                                        i.brief,
+                                        i.context,
                                         style: TextStyle(color: p.colorMatcher(-1), fontSize: 13),
                                       ),
                                     ]))),
@@ -351,14 +198,20 @@ class _NotesMainPage extends State<NotesMainPage> {
   }
 
   int randomIntMaker() {
-    //20-25 가 나와야함
+    //20-25
     return Random().nextInt(6) + 20;
   }
 }
 
 class CommonNoteForDisplay {
-  int originalId;
-  int type;
-  String title;
-  String brief = ""; //노트체크리스트스 인 경우 요약내용이 들어오지 않으므로 여기서 초기화.
+  int originalId = -1;
+  int type = 0;
+  String title = "";
+  String context = ""; //노트체크리스트스 인 경우 요약내용이 들어오지 않으므로 여기서 초기화.
+CommonNoteForDisplay(int a, String b, String c){
+  this.originalId =a;
+  this.type = 0;
+  this.title = b;
+  this.context = c;
+}
 }

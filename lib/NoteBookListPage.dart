@@ -45,12 +45,9 @@ class _NoteBookListPage extends State<NoteBookListPage> {
     setState(() {});
   }
 
-  addQuickNote() async {
-
-  }
+  addQuickNote() async {}
 
   createNoteBook() {
-
     _titleController.text = "";
     _contextController.text = "";
     return showDialog(
@@ -67,59 +64,58 @@ class _NoteBookListPage extends State<NoteBookListPage> {
               children: <Widget>[
                 Form(
                   key: _formKey,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _titleController,
-                              decoration: InputDecoration(
-                                labelText: '노트북 이름',
-                                border: UnderlineInputBorder(),
-                                fillColor: Colors.white,
-                                filled: true,
-                              ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _titleController,
+                            decoration: InputDecoration(
+                              labelText: '노트북 이름',
+                              border: UnderlineInputBorder(),
+                              fillColor: Colors.white,
+                              filled: true,
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              //Normal textInputField will be displayed
-                              maxLines: 5,
-                              // when user presses enter it will adapt to it
-                              controller: _contextController,
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                labelText: '설명',
-                                filled: true,
-                              ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            //Normal textInputField will be displayed
+                            maxLines: 5,
+                            // when user presses enter it will adapt to it
+                            controller: _contextController,
+                            decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              labelText: '설명',
+                              filled: true,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              child: Text(
-                                "만들기",
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
-                              onPressed: () async {
-                                if (_titleController.text == "") {
-                                  return; //TODO 노트북 제목 같으면 걸러내는 함수 제작해야함.
-                                }
-                                await noDao.insertNoteBook(_titleController.text, _contextController.text, randomIntMaker());
-                                Navigator.pop(context);
-                                setState(() {});
-                              },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            child: Text(
+                              "만들기",
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
-                          )
-                        ],
-                      ),
+                            onPressed: () async {
+                              if (_titleController.text == "") {
+                                return; //TODO 노트북 제목 같으면 걸러내는 함수 제작해야함.
+                              }
+                              await noDao.insertNoteBook(_titleController.text, _contextController.text, randomIntMaker());
+                              Navigator.pop(context);
+                              setState(() {});
+                            },
+                          ),
+                        )
+                      ],
                     ),
-
+                  ),
                 ),
               ],
             ),
@@ -190,7 +186,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                 if (_titleController.text == "") {
                                   return; //TODO 경고창 추가해야함
                                 }
-                                await noDao.updateNoteBookInDB(c.id, _titleController.text, _contextController.text);
+                                await noDao.updateNoteBook(c.id, _titleController.text, _contextController.text);
                                 Navigator.pop(context);
                               },
                             ),
@@ -304,8 +300,10 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                 child: Container(
                                     height: MediaQuery.of(context).size.height * 0.09,
                                     width: MediaQuery.of(context).size.width * 0.99,
-
-                                    decoration: BoxDecoration(color: p.colorMatcher(i.noteBookColor),borderRadius: BorderRadius.circular(15), border: Border.all(color: p.colorMatcher(i.noteBookColor), width: 3)),
+                                    decoration: BoxDecoration(
+                                        color: p.colorMatcher(i.noteBookColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(color: p.colorMatcher(i.noteBookColor), width: 3)),
                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 2),
                                     child: Center(
                                         child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -318,7 +316,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                         style: TextStyle(color: p.colorMatcher(5), fontSize: 13),
                                       ),
                                     ]))),
-                                onTap: (){
+                                onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesMainPage(n: i)));
                                 },
                                 onLongPress: () {
@@ -382,8 +380,9 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                                             borderRadius: BorderRadius.all(Radius.circular(20))),
                                                         margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
                                                         child: Center(child: Text("노트북 색상 변경"))),
-                                                    onTap: () {
-                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ColorSelectPage()));
+                                                    onTap: () async {
+                                                      await noDao.noteBookColorChange(i.noteBookTitle, randomIntMaker());
+                                                      setState(() {});
                                                     },
                                                   ),
                                                 ],
@@ -404,7 +403,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
     );
   }
 
-  int randomIntMaker(){
+  int randomIntMaker() {
     //20-25 가 나와야함
     return Random().nextInt(6) + 20;
   }

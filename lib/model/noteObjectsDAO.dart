@@ -7,7 +7,7 @@ class NoteObjectsDAO {
 
   Future<bool> insertNoteBook(String notebooktitle, String notebookbrief, int notebookcolor) async {
     final db = await pbd.database;
-    print(await db.rawInsert('insert into notebooks(notebooktitle, notebookbrief, notebookcolor) values("$notebooktitle", "$notebookbrief",$notebookcolor)'));
+    await db.rawInsert('insert into notebooks(notebooktitle, notebookbrief, notebookcolor) values("$notebooktitle", "$notebookbrief",$notebookcolor)');
     return true;
   }
 
@@ -65,10 +65,11 @@ class NoteObjectsDAO {
     await db.rawUpdate('UPDATE notebooks SET notebookcolor=$color WHERE notebooktitle = "$title"');
   }
 
-  Future<void> updateNoteBookInDB(int noteid, String title, String context) async {
+  Future<void> updateNoteBook(int noteid, String title, String context) async {
     final db = await pbd.database;
     await db.rawUpdate('UPDATE notebooks SET notebooktitle="$title", notebookbrief="$context" WHERE id=$noteid');
   }
+
 
   Future<void> switchNoteBookIDFromDB(int targetId, int myId) async {
     ///분기 로직은 그림2 참고
@@ -78,5 +79,10 @@ class NoteObjectsDAO {
     await db.rawUpdate('UPDATE notebooks SET id=-2 WHERE id=$targetId');
     await db.rawUpdate('UPDATE notebooks SET id="$myId" WHERE id=-2');
     await db.rawUpdate('UPDATE notebooks SET id="$targetId" WHERE id=-1');
+  }
+
+  Future<void> newNote(int ownerID, String title, String context) async {
+    final db = await pbd.database;
+    await db.rawInsert('insert into notenormal(noteownerid, notetitle, notecontext) values("$ownerID", "$title","$context")');
   }
 }
