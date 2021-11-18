@@ -29,7 +29,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(color: Colors.redAccent.shade200),
+                    decoration: BoxDecoration(color: p.colorMatcher(10)),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(
                         '체크박스 켜기',
@@ -47,21 +47,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(color: Colors.deepOrange.shade200),
-                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(
-                        '애벌레 사용 꿀팁',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ]),
-                  )),
-              InkWell(
-                  onTap: () {
-                    p.alertNotFunctioning(context);
-                  },
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(color: Colors.yellow.shade200),
+                    decoration: BoxDecoration(color: p.colorMatcher(11)),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(
                         '고급 설정',
@@ -75,7 +61,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(color: Colors.green.shade200),
+                    decoration: BoxDecoration(color: p.colorMatcher(12)),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(
                         '디자인 편집',
@@ -89,11 +75,25 @@ class _SettingPageState extends State<SettingPage> {
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(color: Colors.blue.shade200),
+                    decoration: BoxDecoration(color: p.colorMatcher(13)),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(
+                        '애벌레 사용 꿀팁',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: p.colorMatcher(5)),
+                      ),
+                    ]),
+                  )),
+              InkWell(
+                  onTap: () {
+                    p.alertNotFunctioning(context);
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    decoration: BoxDecoration(color: p.colorMatcher(14)),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(
                         '개발자 도와주기',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: p.colorMatcher(5)),
                       ),
                     ]),
                   )),
