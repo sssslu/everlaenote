@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'NoteCreationType1.dart';
+import 'NoteCreationType2.dart';
+import 'NoteViewType1.dart';
+import 'NoteViewType2.dart';
 import 'public.dart' as p;
 import 'model/noteObjectsDAO.dart';
 import 'model/noteObjects.dart';
@@ -25,9 +28,8 @@ class _NotesMainPage extends State<NotesMainPage> {
 
   NoteObjectsDAO noDao = new NoteObjectsDAO();
 
-
   Future<List<CommonNoteForDisplay>> getAllNotesInSpecificNoteBook() async {
-    print("노트북 아이디 : "+n.id.toString());
+    print("노트북 아이디 : " + n.id.toString());
     List<NoteChecklist> nc = [];
     List<NoteNormal> nn = [];
     List<CommonNoteForDisplay> cn = [];
@@ -54,7 +56,6 @@ class _NotesMainPage extends State<NotesMainPage> {
 
     return cn;
   }
-
 
   addQuickNote() async {}
 
@@ -88,11 +89,10 @@ class _NotesMainPage extends State<NotesMainPage> {
           label: '일반 노트 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () async{
-            await noDao.newNote(n.id, "dummy note","dum dum dum" );
-            setState(() {
-
-            });
+          onTap: () async {
+            await noDao.newNote(n.id, "dummy note", "dum dum dum");
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType1(n: this.n)));
+            setState(() {});
           },
         ),
         SpeedDialChild(
@@ -105,7 +105,7 @@ class _NotesMainPage extends State<NotesMainPage> {
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
           onTap: () {
-             p.alertNotFunctioning(context);
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType2(n: this.n)));
           },
         ),
       ],
@@ -181,9 +181,13 @@ class _NotesMainPage extends State<NotesMainPage> {
                                       ),
                                     ]))),
                                 onTap: () {
-                                  if (i.type == 1){ print("1타입 노트 상세 보기");
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType1(n: this.n)));}
-                                  if (i.type == 2) print("2타입 노트 상세 보기");
+                                  if (i.type == 1) {
+                                    print("1타입 노트 상세 보기");
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType1(n: this.n)));
+                                  } else if (i.type == 2) {
+                                    print("2타입 노트 상세 보기");
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType2(n: this.n)));
+                                  }
                                 },
                                 onLongPress: () {},
                               )
@@ -208,11 +212,11 @@ class CommonNoteForDisplay {
   int type = 0;
   String title = "";
   String context = ""; //노트체크리스트스 인 경우 요약내용이 들어오지 않으므로 여기서 초기화.
-CommonNoteForDisplay(int a, String b, String c, int d){
-  this.originalId =a;
-  this.type = 0;
-  this.title = b;
-  this.context = c;
-  this.type = d;
-}
+  CommonNoteForDisplay(int a, String b, String c, int d) {
+    this.originalId = a;
+    this.type = 0;
+    this.title = b;
+    this.context = c;
+    this.type = d;
+  }
 }

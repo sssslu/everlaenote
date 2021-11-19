@@ -27,9 +27,17 @@ class _NotesCreationType1 extends State<NotesCreationType1> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-        child: Column(
-        children: <Widget>[
-        Container(height: MediaQuery.of(context).size.height*0.1,color: p.colorMatcher(1),), Container(height: MediaQuery.of(context).size.height*0.9,color: p.colorMatcher(2),)
-        ])));}
-
+            child: Column(children: <Widget>[
+      Container(
+        height: MediaQuery.of(context).size.height * 0.1,width: double.infinity,
+        color: p.colorMatcher(1),
+        child: Text("노트 생성 페이지 입니다."),
+      ),
+      Container(
+        height: MediaQuery.of(context).size.height * 0.9,width: double.infinity,
+        color: p.colorMatcher(2),
+        child: Text("내용쓰기 내용쓰기 내용내용내용."),
+      )
+    ])));
+  }
 }
