@@ -309,11 +309,11 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                                         child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                                       Text(
                                         i.noteBookTitle,
-                                        style: TextStyle(color: p.colorMatcher(5), fontSize: 20),
+                                        style: TextStyle(color: p.colorMatcher(-1), fontSize: 20),
                                       ),
                                       Text(
                                         i.noteBookBrief,
-                                        style: TextStyle(color: p.colorMatcher(5), fontSize: 13),
+                                        style: TextStyle(color: p.colorMatcher(-1), fontSize: 13),
                                       ),
                                     ]))),
                                 onTap: () {
@@ -404,7 +404,6 @@ class _NoteBookListPage extends State<NoteBookListPage> {
   }
 
   int randomIntMaker() {
-    //20-25 가 나와야함
-    return Random().nextInt(6) + 20;
+    return Random().nextInt(6) + 10;
   }
 }

@@ -79,7 +79,7 @@ class _SettingPageState extends State<SettingPage> {
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(
                         '애벌레 사용 꿀팁',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: p.colorMatcher(5)),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ]),
                   )),
@@ -93,7 +93,7 @@ class _SettingPageState extends State<SettingPage> {
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(
                         '개발자 도와주기',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: p.colorMatcher(5)),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ]),
                   )),

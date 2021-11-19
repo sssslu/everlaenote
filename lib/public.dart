@@ -24,23 +24,23 @@ Color colorMatcher(int w) {
     case 6:
       return Colors.deepPurple.shade900;
     case 10:
-      return Colors.red.shade600;
+      return Colors.red.shade200;
     case 11:
-      return Colors.orange.shade700;
+      return Colors.orange.shade200;
     case 12:
-      return Colors.amber.shade600;
+      return Colors.amber.shade200;
     case 13:
-      return Colors.lightGreenAccent.shade700;
+      return Colors.lightGreenAccent.shade200;
     case 14:
-      return Colors.green.shade800;
+      return Colors.green.shade200;
     case 15:
-      return Colors.lightBlue.shade600;
+      return Colors.lightBlue.shade200;
     case 16:
-      return Colors.blue.shade900;
+      return Colors.blue.shade200;
     case 17:
-      return Colors.purple.shade700;
+      return Colors.purple.shade200;
     case 18:
-      return Colors.blueGrey.shade700;
+      return Colors.blueGrey.shade200;
     case 20:
       return Colors.red.shade800;
     case 21:

@@ -23,9 +23,9 @@ class NoteObjectsDAO {
     }
     return noteBookList;
   }
-  Future<List<NoteNormal>> getAllNoteNormalsFromDB() async {
+  Future<List<NoteNormal>> getAllNoteNormalsFromDB(int ownerId) async {
     final db = await pbd.database;
-    List<Map<String, dynamic>> mapList = await db.query("notenormal");
+    List<Map<String, dynamic>> mapList = await db.rawQuery("SELECT * FROM notenormal WHERE noteownerid=$ownerId");
     List<NoteNormal> noteNormalList = [];
     for (Map<String, dynamic> map in mapList) {
       noteNormalList.add(NoteNormal.fromMap(map));
@@ -35,9 +35,9 @@ class NoteObjectsDAO {
     }
     return noteNormalList;
   }
-  Future<List<NoteChecklist>> getAllNoteChecklistsFromDB() async {
+  Future<List<NoteChecklist>> getAllNoteChecklistsFromDB(int ownerId) async {
     final db = await pbd.database;
-    List<Map<String, dynamic>> mapList = await db.query("notechecklist");
+    List<Map<String, dynamic>> mapList = await db.rawQuery("SELECT * FROM notechecklist WHERE noteownerid=$ownerId");
     List<NoteChecklist> noteChecklistList = [];
     for (Map<String, dynamic> map in mapList) {
       noteChecklistList.add(NoteChecklist.fromMap(map));
@@ -48,16 +48,17 @@ class NoteObjectsDAO {
     return noteChecklistList;
   }
 
-  Future<void> deleteEveryNotesInSpecificNoteBook(String noteBookTitle) async {
+  Future<void> deleteEveryNotesInSpecificNoteBook(NoteBook notebook) async {
     final db = await pbd.database;
-    await db.rawDelete('DELETE FROM notes WHERE noteowner="$noteBookTitle"');
+    await db.rawDelete('DELETE FROM notenormal WHERE noteownerid=${notebook.id}');
+    await db.rawDelete('DELETE FROM notechecklist WHERE noteownerid=${notebook.id}');
   }
 
   Future<void> deleteNoteBookFromDB(NoteBook notebook) async {
     final db = await pbd.database;
-    String ownerName = notebook.noteBookTitle;
-    await deleteEveryNotesInSpecificNoteBook(ownerName);
-    await db.rawDelete('DELETE FROM notebooks WHERE notebooktitle = "$ownerName"');
+    String title = notebook.noteBookTitle;
+    await deleteEveryNotesInSpecificNoteBook(notebook);
+    await db.rawDelete('DELETE FROM notebooks WHERE notebooktitle = "$title"');
   }
 
   Future<void> noteBookColorChange(String title, int color) async {

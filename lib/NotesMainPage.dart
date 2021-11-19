@@ -4,6 +4,7 @@ import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'NoteCreationType1.dart';
 import 'public.dart' as p;
 import 'model/noteObjectsDAO.dart';
 import 'model/noteObjects.dart';
@@ -23,18 +24,16 @@ class _NotesMainPage extends State<NotesMainPage> {
   _NotesMainPage({@required this.n});
 
   NoteObjectsDAO noDao = new NoteObjectsDAO();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contextController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+
 
   Future<List<CommonNoteForDisplay>> getAllNotesInSpecificNoteBook() async {
+    print("노트북 아이디 : "+n.id.toString());
     List<NoteChecklist> nc = [];
     List<NoteNormal> nn = [];
     List<CommonNoteForDisplay> cn = [];
 
-    //TODO : 오너id 로 거르는 과정이 필요함.
-    nc = await noDao.getAllNoteChecklistsFromDB();
-    nn = await noDao.getAllNoteNormalsFromDB();
+    nc = await noDao.getAllNoteChecklistsFromDB(n.id);
+    nn = await noDao.getAllNoteNormalsFromDB(n.id);
 
     print("nc 내의 정보 : " + nc.toString());
     for (NoteChecklist i in nc) {
@@ -48,10 +47,8 @@ class _NotesMainPage extends State<NotesMainPage> {
     print("nc 타입 2 노트 배열 저장 완료");
     print("nn 내의 정보 : " + nn.toString());
     for (NoteNormal i in nn) {
-      print("@@@@@@@@@");
-      CommonNoteForDisplay k = new CommonNoteForDisplay(i.id, i.noteTitle, i.noteContext);
+      CommonNoteForDisplay k = new CommonNoteForDisplay(i.id, i.noteTitle, i.noteContext, 1);
       cn.add(k);
-      print("#########");
     }
     print("nn 타입 1 노트 배열 저장 완료");
 
@@ -107,7 +104,9 @@ class _NotesMainPage extends State<NotesMainPage> {
           label: '체크리스트 노트 생성',
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
-          onTap: () {},
+          onTap: () {
+             p.alertNotFunctioning(context);
+          },
         ),
       ],
     );
@@ -182,7 +181,8 @@ class _NotesMainPage extends State<NotesMainPage> {
                                       ),
                                     ]))),
                                 onTap: () {
-                                  if (i.type == 1) print("1타입 노트 상세 보기");
+                                  if (i.type == 1){ print("1타입 노트 상세 보기");
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType1(n: this.n)));}
                                   if (i.type == 2) print("2타입 노트 상세 보기");
                                 },
                                 onLongPress: () {},
@@ -198,8 +198,8 @@ class _NotesMainPage extends State<NotesMainPage> {
   }
 
   int randomIntMaker() {
-    //20-25
-    return Random().nextInt(6) + 20;
+    //10-15
+    return Random().nextInt(6) + 10;
   }
 }
 
@@ -208,10 +208,11 @@ class CommonNoteForDisplay {
   int type = 0;
   String title = "";
   String context = ""; //노트체크리스트스 인 경우 요약내용이 들어오지 않으므로 여기서 초기화.
-CommonNoteForDisplay(int a, String b, String c){
+CommonNoteForDisplay(int a, String b, String c, int d){
   this.originalId =a;
   this.type = 0;
   this.title = b;
   this.context = c;
+  this.type = d;
 }
 }
