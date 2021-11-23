@@ -187,12 +187,10 @@ class _NotesMainPage extends State<NotesMainPage> {
                                       ),
                                     ]))),
                                 onTap: () {
-                                  if (i.type == 1) {
-                                    print("1타입 노트 상세 보기");
+                                  if (i.type == 1) {;
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType1(noteId: i.originalId)));
                                   } else if (i.type == 2) {
-                                    print("2타입 노트 상세 보기");
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType2(n: this.n)));
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType2(n: this.n)));//todo 얘도 고쳐야함 완성하면.
                                   }
                                 },
                                 onLongPress: () {
