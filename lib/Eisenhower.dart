@@ -412,13 +412,13 @@ moveEisenMemo(int id) {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         mMaker(snapshot, "긴급 & 중요", 1, p.colorMatcher(1)),
-                        mMaker(snapshot, "긴급 & 안중요", 2, p.colorMatcher(2)),
+                        mMaker(snapshot, "안긴급 & 중요", 2, p.colorMatcher(2)),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        mMaker(snapshot, "안긴급 & 중요", 3, p.colorMatcher(3)),
+                        mMaker(snapshot, "긴급 & 안중요", 3, p.colorMatcher(3)),
                         mMaker(snapshot, "안긴급 & 안중요", 4, p.colorMatcher(4)),
                       ],
                     ),
