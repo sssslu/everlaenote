@@ -90,8 +90,7 @@ class _NotesMainPage extends State<NotesMainPage> {
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
           onTap: () async {
-            await noDao.newNote(n.id, "dummy note", "dum dum dum");
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType1(n: this.n)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType1(n: this.n)));//여기 페이지에서 제목, 내용, 타입1 로 노트 생성
             setState(() {});
           },
         ),
@@ -105,11 +104,18 @@ class _NotesMainPage extends State<NotesMainPage> {
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType2(n: this.n)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType2(n: this.n)));// 여기페이지에서 제목, "체크리스트", 타입 2로 노트 생성
           },
         ),
       ],
     );
+  }
+
+  deleteNote(CommonNoteForDisplay i) async{
+
+  }
+  editNote(CommonNoteForDisplay i)async{
+
   }
 
   @override
@@ -167,29 +173,84 @@ class _NotesMainPage extends State<NotesMainPage> {
                                 child: Container(
                                     height: MediaQuery.of(context).size.height * 0.09,
                                     width: MediaQuery.of(context).size.width * 0.99,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: p.colorMatcher(-1), width: 3)),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: p.colorMatcher(n.noteBookColor), width: 3)),
                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 2),
                                     child: Center(
                                         child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                                       Text(
                                         i.title,
-                                        style: TextStyle(color: p.colorMatcher(-1), fontSize: 20),
+                                        style: TextStyle(color: p.colorMatcher(0), fontSize: 20),
                                       ),
                                       Text(
                                         i.context,
-                                        style: TextStyle(color: p.colorMatcher(-1), fontSize: 13),
+                                        style: TextStyle(color: p.colorMatcher(0), fontSize: 13),
                                       ),
                                     ]))),
                                 onTap: () {
                                   if (i.type == 1) {
                                     print("1타입 노트 상세 보기");
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType1(n: this.n)));
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType1(noteId: i.originalId)));
                                   } else if (i.type == 2) {
                                     print("2타입 노트 상세 보기");
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType2(n: this.n)));
                                   }
                                 },
-                                onLongPress: () {},
+                                onLongPress: () {
+                                  return showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Center(
+                                            child: Text(
+                                              "노트 편집",
+                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: Container(
+                                              child: Column(
+                                                children: [
+                                                  InkWell(
+                                                    child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: p.colorMatcher(10),
+                                                            border: Border.all(
+                                                              color: p.colorMatcher(5),
+                                                            ),
+                                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                        height: 40,
+                                                        width: 200,
+                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
+                                                        child: Center(child: Text("노트 삭제"))),
+                                                    onTap: () {
+                                                      deleteNote(i);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  InkWell(
+                                                    child: Container(
+                                                        height: 40,
+                                                        width: 200,
+                                                        decoration: BoxDecoration(
+                                                            color: p.colorMatcher(12),
+                                                            border: Border.all(
+                                                              color: p.colorMatcher(5),
+                                                            ),
+                                                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                        margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
+                                                        child: Center(child: Text("노트북 편집"))),
+                                                    onTap: () async {
+                                                      Navigator.pop(context);
+                                                      await editNote(i);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                },
                               )
                           ],
                         ),

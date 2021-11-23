@@ -831,29 +831,6 @@ moveEisenMemo(int id) {
         });
   }
 
-  void gotoNoteBookListPage(BuildContext context) async {
-    await showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('자유 노트북 및 다이어리 북 리스트'),
-          content: Text("아직 지원하지 않는 기능입니다. 빠른 시일 안에 제작 될 예정입니다."),
-          actions: <Widget>[
-            InkWell(
-              child: Text(
-                '기다릴게요',
-                style: TextStyle(fontSize: 13, color: Colors.blue),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
   
 
   Color randomColorMaker() {

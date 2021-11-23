@@ -86,4 +86,10 @@ class NoteObjectsDAO {
     final db = await pbd.database;
     await db.rawInsert('insert into notenormal(noteownerid, notetitle, notecontext) values("$ownerID", "$title","$context")');
   }
+  Future<NoteNormal> getNoteNormalByID(int nnID) async{
+    final db = await pbd.database;
+    List<Map<String, dynamic>> mapList =  await db.rawQuery("SELECT * FROM notenormal WHERE id=$nnID");
+    NoteNormal n = NoteNormal.fromMap(mapList[0]);//하나밖에없으므로
+    return n;
+  }
 }
