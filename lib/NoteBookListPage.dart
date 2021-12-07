@@ -4,7 +4,6 @@ import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'ColorSelectPage.dart';
 import 'NotesMainPage.dart';
 import 'public.dart' as p;
 import 'model/noteObjectsDAO.dart';
@@ -23,7 +22,6 @@ class _NoteBookListPage extends State<NoteBookListPage> {
 
   getAllNoteBooks() async {
     List<NoteBook> n = await noDao.getAllNoteBooksFromDB();
-
     return n;
   }
 
@@ -31,21 +29,6 @@ class _NoteBookListPage extends State<NoteBookListPage> {
     await noDao.deleteNoteBookFromDB(i);
     setState(() {});
   }
-
-  moveUp(dynamic snapshot, int index) async {
-    ///moveUp과 moveDown 은 그냥 위 또는 아래에 유효한 객체가 있는지 검사문을 넣지 않았다. 왜냐하면 오류가 나도 꺼지지 않기에.
-    print("up");
-    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index - 1].id, snapshot.data[whatMatrix][index].id);*/
-    setState(() {});
-  }
-
-  moveDown(dynamic snapshot, int index) async {
-    print("down");
-    /*await emdao.switchEisenMemoFromDB(snapshot.data[whatMatrix][index + 1].id, snapshot.data[whatMatrix][index].id);*/
-    setState(() {});
-  }
-
-  addQuickNote() async {}
 
   createNoteBook() {
     _titleController.text = "";
@@ -107,6 +90,7 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                               if (_titleController.text == "") {
                                 return; //TODO 노트북 제목 같으면 걸러내는 함수 제작해야함.
                               }
+
                               await noDao.insertNoteBook(_titleController.text, _contextController.text, randomIntMaker());
                               Navigator.pop(context);
                               setState(() {});

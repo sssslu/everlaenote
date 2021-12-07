@@ -4,10 +4,8 @@ import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'NoteCreationType1.dart';
-import 'NoteCreationType2.dart';
-import 'NoteViewType1.dart';
-import 'NoteViewType2.dart';
+import 'noteNormal/NoteCreationType1.dart';
+import 'noteNormal/NoteViewType1.dart';
 import 'public.dart' as p;
 import 'model/noteObjectsDAO.dart';
 import 'model/noteObjects.dart';
@@ -90,7 +88,7 @@ class _NotesMainPage extends State<NotesMainPage> {
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
           onTap: () async {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType1(n: this.n)));//여기 페이지에서 제목, 내용, 타입1 로 노트 생성
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType1(noteBookId: this.n.id)));//여기 페이지에서 제목, 내용, 타입1 로 노트 생성
             setState(() {});
           },
         ),
@@ -104,7 +102,7 @@ class _NotesMainPage extends State<NotesMainPage> {
           labelStyle: TextStyle(fontSize: 14.0, color: Colors.white),
           labelBackgroundColor: Colors.black,
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType2(n: this.n)));// 여기페이지에서 제목, "체크리스트", 타입 2로 노트 생성
+            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesCreationType2(n: this.n)));// 여기페이지에서 제목, "체크리스트", 타입 2로 노트 생성
           },
         ),
       ],
@@ -190,7 +188,7 @@ class _NotesMainPage extends State<NotesMainPage> {
                                   if (i.type == 1) {;
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType1(noteId: i.originalId)));
                                   } else if (i.type == 2) {
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType2(n: this.n)));//todo 얘도 고쳐야함 완성하면.
+                                    //Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotesViewType2(n: this.n)));
                                   }
                                 },
                                 onLongPress: () {

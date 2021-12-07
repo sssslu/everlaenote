@@ -2,24 +2,23 @@ import 'package:everlaenote/Eisenhower.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'public.dart' as p;
-import 'model/noteObjectsDAO.dart';
-import 'model/noteObjects.dart';
+import '../public.dart' as p;
+import '../model/noteObjectsDAO.dart';
+import '../model/noteObjects.dart';
 
-class NotesViewType1 extends StatefulWidget {
+class NotesEditType1 extends StatefulWidget {
   final int noteId;
 
-  NotesViewType1({Key key, @required this.noteId}) : super(key: key);
+  NotesEditType1({Key key, @required this.noteId}) : super(key: key);
 
   @override
-  _NotesViewType1 createState() => _NotesViewType1(noteId: noteId);
+  _NotesEditType1 createState() => _NotesEditType1(noteId: noteId);
 }
 
-class _NotesViewType1 extends State<NotesViewType1> {
+class _NotesEditType1 extends State<NotesEditType1> {
   final int noteId;
-  final int noteType;
 
-  _NotesViewType1({ @required this.noteId, @required this.noteType});
+  _NotesEditType1({ @required this.noteId});
 
   NoteObjectsDAO noDao = new NoteObjectsDAO();
 
