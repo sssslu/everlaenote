@@ -30,9 +30,14 @@ class _NoteBookListPage extends State<NoteBookListPage> {
     setState(() {});
   }
 
-  createNoteBook() {
+  createNoteBook() async {
     _titleController.text = "";
     _contextController.text = "";
+    List<NoteBook> tmpN = await getAllNoteBooks();
+    List<String> tmpNT = [];
+    for (NoteBook i in tmpN) {
+      tmpNT.add(i.noteBookTitle);
+    }
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -88,7 +93,10 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                             ),
                             onPressed: () async {
                               if (_titleController.text == "") {
-                                return; //TODO 노트북 제목 같으면 걸러내는 함수 제작해야함.
+                                return;
+                              }
+                              else if (tmpNT.contains(_titleController.text)) {
+                                return;
                               }
 
                               await noDao.insertNoteBook(_titleController.text, _contextController.text, randomIntMaker());
@@ -107,9 +115,14 @@ class _NoteBookListPage extends State<NoteBookListPage> {
         });
   }
 
-  dynamic editNoteBook(NoteBook c) {
+  dynamic editNoteBook(NoteBook c) async{
     _titleController.text = c.noteBookTitle;
     _contextController.text = c.noteBookBrief;
+    List<NoteBook> tmpN = await getAllNoteBooks();
+    List<String> tmpNT = [];
+    for (NoteBook i in tmpN) {
+      tmpNT.add(i.noteBookTitle);
+    }
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -168,7 +181,10 @@ class _NoteBookListPage extends State<NoteBookListPage> {
                               ),
                               onPressed: () async {
                                 if (_titleController.text == "") {
-                                  return; //TODO 경고창 추가해야함
+                                  return;
+                                }
+                                if(tmpNT.contains(_titleController.text)){
+                                  return;
                                 }
                                 await noDao.updateNoteBook(c.id, _titleController.text, _contextController.text);
                                 Navigator.pop(context);

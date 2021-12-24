@@ -1,5 +1,4 @@
 import 'package:everlaenote/Eisenhower.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../public.dart' as p;
@@ -7,6 +6,7 @@ import '../model/noteObjectsDAO.dart';
 import '../model/noteObjects.dart';
 
 class NotesCreationType1 extends StatefulWidget {
+  //todo 여기를 수정해야함
   final int noteBookId;
 
   NotesCreationType1({Key key, @required this.noteBookId}) : super(key: key);
@@ -18,41 +18,48 @@ class NotesCreationType1 extends StatefulWidget {
 class _NotesCreationType1 extends State<NotesCreationType1> {
   final int noteBookId;
 
-  _NotesCreationType1({ @required this.noteBookId});
+  _NotesCreationType1({@required this.noteBookId});
 
   NoteObjectsDAO noDao = new NoteObjectsDAO();
-
-  Future<NoteNormal> getNoteInfo() async {
-    return await noDao.getNoteNormalByID(noteBookId);
-  }
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    //여기서 제목과 내용 받아서 새로운 노트노멀 만들어야함
     return Scaffold(
-        body:
-        FutureBuilder(
-            future: getNoteInfo(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData == false) {
-                return CircularProgressIndicator();
-              } else
-                return SingleChildScrollView(
-                  child: Column(children: [
-                    Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.1, width: double.infinity,
-                      color: p.colorMatcher(4),
-                      child: Text(snapshot.data.noteTitle),
-                    ),
-                    Container(height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.9, width: double.infinity, color: p.colorMatcher(5), child: Text(snapshot.data.noteContext))
-                  ]),
-                );
-            }
+      body:
+        SingleChildScrollView(
+          child: Column(children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey,
+              child: TextField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: '노트 제목',
+                  border: UnderlineInputBorder(),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height*0.92,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.green,
+              child: TextField(
+                controller: _contextController,
+                decoration: InputDecoration(
+                  labelText: '내용',
+                  border: UnderlineInputBorder(),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+              ),
+            ),
+          ]),
         )
     );
   }

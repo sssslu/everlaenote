@@ -9,6 +9,8 @@ SharedPreferences pref;
 
 Color colorMatcher(int w) {
   switch (w) {
+
+    //////////////////////////////////////////////EISEN & UTILITY COLOR
     case 0:
       return Colors.black87;
     case 1:
@@ -23,30 +25,26 @@ Color colorMatcher(int w) {
       return Colors.white;
     case 6:
       return Colors.deepPurple.shade900;
+    //////////////////////////////////////////////NOTEBOOK COLOR
     case 10:
       return Colors.red.shade200;
     case 11:
       return Colors.orange.shade200;
     case 12:
-      return Colors.amber.shade200;
+      return Colors.amber.shade400;
     case 13:
       return Colors.lightGreenAccent.shade200;
     case 14:
-      return Colors.green.shade200;
-    case 15:
-      return Colors.lightBlue.shade200;
-    case 16:
       return Colors.blue.shade200;
-    case 17:
-      return Colors.purple.shade200;
-    case 18:
-      return Colors.blueGrey.shade200;
+    case 15:
+      return Colors.purple.shade400;
+   //////////////////////////////////////////////NOTEBOOK TITLE COLOR
     case 20:
       return Colors.red.shade800;
     case 21:
       return Colors.orange.shade900;
     case 22:
-      return Colors.amber.shade500;
+      return Colors.amber.shade700;
     case 23:
       return Colors.green.shade900;
     case 24:

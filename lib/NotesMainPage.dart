@@ -139,7 +139,7 @@ class _NotesMainPage extends State<NotesMainPage> {
                   child: Text(
                     n.noteBookTitle,
                     style: TextStyle(
-                      color: p.colorMatcher(n.noteBookColor),
+                      color: p.colorMatcher(n.noteBookColor+10),//더진하게
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
